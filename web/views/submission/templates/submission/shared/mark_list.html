@@ -1,0 +1,264 @@
+{% import "jinja_functions.html" as common %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            
+            {% if not admin %}
+                var password_local = localStorage.getItem( "session_key" );
+                var displayed_name = decrypt( "{{ displayed_name }}", password_local );
+            {% endif %}
+            
+            var marks_list = {};
+            {% if not admin %}
+                {% for file in files %}
+                    marks_list[ "{{ file[ 'uuid' ] }}" ] = {
+                        "id": "{{ file[ 'id' ] }}",
+                        "uuid": "{{ file[ 'uuid' ] }}",
+                        "filename": decrypt( "{{ file[ 'filename' ] }}", password_local )
+                    };
+                {% endfor %}
+            {% else %}
+                {% for file in files %}
+                    marks_list[ "{{ file[ 'uuid' ] }}" ] = {
+                        "id": "{{ file[ 'id' ] }}",
+                        "uuid": "{{ file[ 'uuid' ] }}",
+                        "filename": "Mark {{ file[ 'id' ] }}"
+                    };
+                {% endfor %}
+            {% endif %}
+            
+            update_search_result = function()
+            {
+                var searched = $( "#search_bar" ).val();
+                searched = searched.toLowerCase();
+                
+                _.forEach( marks_list, function( mark )
+                {
+                    var tmp = [];
+                    _.forEach( mark, function( d )
+                    {
+                        tmp.push( d.toLowerCase().indexOf( searched ) );
+                    } );
+                    
+                    if( Math.max( ...tmp ) > -1 )
+                    {
+                        $( "#mark_" + mark[ 'uuid' ] ).show();
+                    } else {
+                        $( "#mark_" + mark[ 'uuid' ] ).hide();
+                    }
+                } );
+            }
+            
+            mark_missing_informations = {};
+            {% for file in files %}
+                mark_missing_informations[ "{{ file[ 'uuid' ] }}" ] = [];
+                {% for field in info_fields %}
+                    {% if file[ field ] %}
+                        mark_missing_informations[ "{{ file[ 'uuid' ] }}" ].push( "{{ field }}" );
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+            
+            var delete_mark = function( file_uuid )
+            {
+                $( "<div />" )
+                    .attr( "id", "delete_confirmation" )
+                    .text( "Do you really want to delete this mark?" )
+                    .dialog( {
+                        title: "Confirm mark deletion",
+                        modal: true,
+                        buttons: {
+                            "OK": function()
+                            {
+                                $.ajax( {
+                                    {% if admin %}
+                                        url: "{{ url_for( 'submission.admin_submission_mark_delete', submission_id = submission_id ) }}",
+                                    {% else %}
+                                        url: "{{ url_for( 'submission.submission_mark_delete', submission_id = submission_id ) }}",
+                                    {% endif %}
+                                    dataType: "json",
+                                    method: "POST",
+                                    data: {
+                                        "mark_id": file_uuid
+                                    },
+                                    success: function( data )
+                                    {
+                                        $( "#delete_confirmation" ).remove();
+                                        $( "#mark_" + file_uuid ).remove();
+                                    },
+                                    error: function( data )
+                                    {
+                                        $( "#delete_confirmation" ).remove();
+                                    }
+                                } );
+                            },
+                            "Cancel": function()
+                            {
+                                $( this ).dialog( "close" );
+                            },
+                        },
+                        close: function()
+                        {
+                            $( this ).remove();
+                        }
+                    } );
+            }
+        </script>
+        
+        <style type="text/css">
+            .icnml_mark_list_div {
+                position: relative
+            }
+        </style>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <div class="icnml_search_bar">
+                <input id="search_bar" placeholder="Search for a file..."/>
+            </div>
+            
+            <div class="icnml_list_of_boxes">
+                {% for file in files %}
+                    <div id="mark_{{ file[ 'uuid' ] }}">
+                        <div class="ui-widget-header ui-corner-top icnml_box_top" id="mark_{{ file[ 'uuid' ] }}_filename">-</div>
+                        <div class="ui-widget-content ui-corner-bottom icnml_box_content">
+                            <div
+                                id="mark_{{ file[ 'uuid' ] }}"
+                                class="icnml_pointer icnml_mark_list_div"
+                                style="background-image: url( {{ url_for( 'image.image_file_serve', file_id = file[ 'uuid' ] ) }} )">
+                                    {{ common.checked_ok( "mark_" + file[ 'uuid' ] + "_checked_ok" ) }}
+                                    {{ common.checked_exclamation( "mark_" + file[ 'uuid' ] + "_checked_error" ) }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div id="zoom_slider"></div>
+            <div id="tool_tip_missing_information"></div>
+        </div>
+        <script type="text/javascript">
+            $( "#search_bar" ).on( "keyup", update_search_result );
+            $( "#search_bar" ).focus();
+            
+            {% if not admin %}
+                {% for file in files %}
+                    $( "#mark_{{ file[ 'uuid' ] }}" ).on( "click", function()
+                    {
+                        window.location.href = "{{ url_for( 'submission.submission_mark', submission_id = submission_id, mark_id = file[ 'uuid' ] ) }}";
+                    } );
+                {% endfor %}
+            {% else %}
+                {% for file in files %}
+                    $( "#mark_{{ file[ 'uuid' ] }}" ).on( "click", function()
+                    {
+                        window.location.href = "{{ url_for( 'submission.admin_submission_mark', submission_id = submission_id, mark_id = file[ 'uuid' ] ) }}";
+                    } );
+                {% endfor %}
+            {% endif %}
+            
+            {% for file in files %}
+                $( "#mark_{{ file[ 'uuid' ] }}" ).on( "contextmenu", function(){
+                    delete_mark( "{{ file[ 'uuid' ] }}" );
+                } );
+            {% endfor %}
+            
+            // Information regarding the missing fields for each mark
+            _.forEach( mark_missing_informations, function( missing, uuid )
+            {
+                if( missing.length === 0 )
+                {
+                    $( "#mark_" + uuid + "_checked_ok" ).css( "visibility", "visible" );
+                } else {
+                    $( "#mark_" + uuid + "_checked_error" )
+                        .css( "visibility", "visible" )
+                        .on( "mouseenter", function( event ){
+                            var offset = $( this ).offset();
+                            
+                            $( "#tool_tip_missing_information" )
+                                .html( "missing information:<br/>" + missing.join( ", " ) )
+                                .css( "visibility", "visible" )
+                                .css( "top", offset.top - 30 )
+                                .css( "left", offset.left + 20 )
+                        } )
+                        .on( "mouseleave", function( event ){
+                            $( "#tool_tip_missing_information" )
+                                .css( "visibility", "hidden" )
+                        } )
+                }
+            } )
+            
+            // Set the mark name
+            _.forEach( marks_list, function( mark )
+            {
+                $( "#mark_" + mark[ "uuid" ] + "_filename" ).text( mark[ "filename" ] );
+            } )
+            
+            $( "#icnml_navigation_submissions" )
+                .addClass( "activated" );
+            
+            {% if not admin %}
+                $( "#navloc" ).append(
+                    $( "<a />" )
+                        .attr( "href", "{{ url_for( 'submission.submission_list' ) }}" )
+                        .text( "Submissions" )
+                )
+                .append(
+                    $( "<span />" ).text( ">" )
+                )
+                .append(
+                    $( "<a />" )
+                        .attr( "href", "{{ url_for( 'submission.submission_upload_tenprintmark', submission_id = submission_id ) }}" )
+                        .text( displayed_name )
+                )
+                .append(
+                    $( "<span />" ).text( ">" )
+                )
+                .append(
+                    $( "<a />" )
+                        .attr( "href", "{{ url_for( 'submission.submission_mark_list', submission_id = submission_id, mark_type = 'all' ) }}" )
+                        .text( "Marks" )
+                )
+                .append(
+                    $( "<span />" ).text( ">" )
+                )
+                .append(
+                    $( "<span />" ).text( "{{ mark_type }}" )
+                );
+            {% else %}
+                $( "#navloc" ).append(
+                    $( "<a />" )
+                        .attr( "href", "{{ url_for( 'submission.admin_submission_list' ) }}" )
+                        .text( "Submissions" )
+                )
+                .append(
+                    $( "<span />" ).text( ">" )
+                )
+                .append(
+                    $( "<a />" )
+                        .attr( "href", "{{ url_for( 'submission.admin_submission_home', submission_id = submission_id ) }}" )
+                        .text( "{{ displayed_name }}" )
+                )
+                .append(
+                    $( "<span />" ).text( ">" )
+                )
+                .append(
+                    $( "<span />" ).text( "Marks" )
+                );
+            {% endif %}
+        </script>
+    </body>
+</html>
+        

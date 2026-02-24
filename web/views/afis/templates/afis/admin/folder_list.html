@@ -1,0 +1,151 @@
+{% import "jinja_functions.html" as common %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <style type="text/css">
+            .list_of_boxes_fingers_outer, .list_of_boxes_palms_outer {
+                width: fit-content;
+                width: -moz-fit-content;
+                margin-bottom: 30px;
+            }
+            .list_of_boxes_fingers {
+                display: grid;
+                grid-template-columns: repeat( 5, 1fr );
+                grid-gap: 10px;
+            }
+            .list_of_boxes_palms {
+                display: grid;
+                grid-template-columns: 1fr 2fr 2fr 2fr 2fr 1fr;
+                grid-gap: 10px;
+            }
+        </style>
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+        </script>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <div class="icnml_tp_oneperpage">
+                <div class="list_of_boxes_fingers_outer">
+                    <div class="list_of_boxes_fingers">
+                        {% for n in [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ] %}
+                            <div id="segment_outer_div">
+                                <div class="ui-widget-header ui-corner-top icnml_box_top">{{ segments_position_code.get( n ) }} (F{{ n }})</div>
+                                <div class="ui-widget-content ui-corner-bottom icnml_box_content">
+                                    <div id="segment_{{ n }}" style="position: relative">
+                                        <span>segment not available</span>
+                                        {{ common.checked_question( "segment_" + n|e + "_checked_error" ) }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="list_of_boxes_palms_outer">
+                    <div class="list_of_boxes_palms">
+                        <div></div>
+                        {% for n in [ 24, 27, 25, 22 ] %}
+                            <div id="segment_outer_div">
+                                <div class="ui-widget-header ui-corner-top icnml_box_top">{{ segments_position_code.get( n ) }} (F{{ n }})</div>
+                                <div class="ui-widget-content ui-corner-bottom icnml_box_content">
+                                    <div id="segment_{{ n }}" style="position: relative">
+                                        <span>segment not available</span>
+                                        {{ common.checked_question( "segment_" + n|e + "_checked_error" ) }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="tool_tip_missing_information"></div>
+        
+        <script type="text/javascript">
+            {% for s in segments_list %}
+                $( "#segment_{{ s[ 'pc' ] }}" )
+                    .addClass( "icnml_pointer" )
+                    .css( "background-image", "url( {{ url_for( 'image.image_segment_serve', tenprint_id = s[ 'tenprint' ], pc = s[ 'pc' ] ) }}  )" );
+                    
+                $( "#segment_{{ s[ 'pc' ] }} > span" )
+                    .text( "" );
+                
+                {% if s[ 'folder_uuid' ] != None %}
+                    $( "#segment_{{ s[ 'pc' ] }}" )
+                        .parent()
+                        .parent()
+                        .on( "click", function( event ){
+                            window.location = "{{ url_for( 'afis.admin_show_target', uuid = s[ 'folder_uuid' ] ) }}";
+                        } )
+                {% else %}
+                    $( "#segment_{{ s[ 'pc' ] }}" )
+                        .parent()
+                        .parent()
+                        .on( "click", function( event ){
+                            window.location = "{{ url_for( 'afis.admin_create_new_target_and_redirect', submission_id = submission_uuid, pc = s[ 'pc' ] ) }}";
+                        } )
+                        
+                    $( "#segment_{{ s[ 'pc' ] }}_checked_error" )
+                        .css( "visibility", "visible" );
+                {% endif %}
+            {% endfor %}
+            
+            {% for pc in [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 22, 24, 25, 27 ] %}
+                {% if not pc in annotations %}
+                    $( "#segment_{{ pc }}_checked_error" )
+                        .css( "visibility", "visible" )
+                        .on( "mouseenter", function( event ){
+                            var offset = $( this ).offset();
+                            
+                            $( "#tool_tip_missing_information" )
+                                .html( "No target for this segment" )
+                                .css( "visibility", "visible" )
+                                .css( "top", offset.top - 30 )
+                                .css( "left", offset.left + 20 )
+                        } )
+                        .on( "mouseleave", function( event ){
+                            $( "#tool_tip_missing_information" )
+                                .css( "visibility", "hidden" )
+                        } )
+                {% endif %}
+            {% endfor %}
+            
+            $( "#icnml_navigation_submissions" )
+                .addClass( "activated" );
+            
+            $( "#navloc" ).append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'submission.admin_submission_list' ) }}" )
+                    .text( "Submissions" )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'submission.admin_submission_home', submission_id = submission_uuid ) }}" )
+                    .text( "{{ username }}" )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<span />" ).text( "Targets" )
+            );
+        </script>
+    </body>
+</html>
+

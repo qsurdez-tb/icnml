@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+
+            var uuid_list = [];
+            {% for uuid in uuid_list %}
+                uuid_list.push( "{{ uuid }}" );
+            {% endfor %}
+            
+            update_search_result = function()
+            {
+                var searched = $( "#search_bar" ).val();
+                searched = searched.toLowerCase().substr( 0, 18 );
+                
+                var tmp = [];
+                _.forEach( uuid_list, function( uuid )
+                {
+                    tmp.push( uuid.toLowerCase().indexOf( searched ) != -1 );
+                } );
+                var sum = tmp.reduce( function( a, b ){ return a + b; }, 0 );
+
+                if( sum == 1 )
+                {
+                    window.location.href = "{{ url_for( 'uuid.autoopen', uuid = '<uuid>' ) }}".replace( "%3Cuuid%3E", searched );
+                } else {
+                    $( "#search_counts" ).text( sum + " / " + uuid_list.length );
+                }
+            }
+        </script>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <div id="filter_notes" style="width: 500px;">
+                <input id="search_bar" placeholder="Search for an UUID and auto-open when only one found in the database...">
+            </div>
+            <div id="search_counts"></div>
+        </div>
+        <script type="text/javascript">
+            $( "#icnml_navigation_uuidsearch" )
+                .addClass( "activated" );
+            
+            $( "#search_bar" ).on( "keyup", update_search_result );
+            $( "#search_bar" ).focus();
+        </script>
+    </body>
+</html>
+

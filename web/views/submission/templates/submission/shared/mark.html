@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <style type="text/css">
+            .button_list {
+                margin-top: 50px;
+            }
+            .button_list > div > a {
+                width: 60%;
+                margin-bottom: 10px;
+            }
+            #location_img {
+                position: relative;
+                background-image: url( '{{ url_for( 'files.send_static_files', subpath = 'location/main.png' ) }}' );
+                background-repeat: no-repeat;
+                background-size: 100%;
+            }
+            #location_img > img {
+                width: auto;
+            }
+            #location_img > div {
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 100%;
+                z-index: -1;
+                background-repeat: no-repeat;
+                background-size: 100%;
+            }
+            .left_button {
+                position: absolute;
+                left: 20px;
+            }
+        </style>
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+
+            {% if admin %}
+                var filename = "{{ file[ 'uuid' ] }}";
+            {% else %}
+                var password_local = localStorage.getItem( "session_key" );
+                var nickname = decrypt( "{{ nickname }}", password_local );
+                var filename = decrypt( "{{ file[ 'filename' ] }}", password_local );
+                filename = truncate( filename, 18 );
+            {% endif %}
+            
+            var current_pfsp = "{{ current_pfsp }}";
+            if( current_pfsp === "None" )
+            {
+                current_pfsp = [];
+            } else {
+                current_pfsp = current_pfsp.split( "," );
+            }
+            
+            var new_field = function( field_name )
+            {
+                var add_new_field_to_db = function()
+                {
+                    var field = $( "#new_field_confirmation_input" ).val() || null;
+                    
+                    $.ajax( {
+                        url: "{{ url_for( 'shared.add_new_field' ) }}",
+                        dataType: "json",
+                        method: "POST",
+                        data: {
+                            field: field,
+                            field_name: field_name
+                        },
+                        success: function( data )
+                        {
+                            $( "#delete_confirmation" ).remove();
+                            window.location.reload();
+                        },
+                        error: function( data )
+                        {
+                            $( "#delete_confirmation" ).remove();
+                        }
+                    } );
+                };
+    
+                $( "<div />" )
+                    .attr( "id", "new_field_confirmation" )
+                    .text( "What is the new " + field_name + " you'd like to add?" )
+                    .append(
+                        $( "<input />" )
+                            .attr( "id", "new_field_confirmation_input" )
+                            .css( "margin-top", "10px" )
+                    )
+                    .dialog( {
+                        title: "New " + field_name,
+                        modal: true,
+                        buttons: {
+                            "OK": add_new_field_to_db,
+                            "Cancel": function()
+                            {
+                                $( this ).dialog( "close" );
+                            },
+                        },
+                        close: function()
+                        {
+                            $( this ).remove();
+                        }
+                    } );
+                
+                $( "#new_field_confirmation_input" ).on( "keypress", function( event )
+                {
+                    if( event.keyCode == 13 )
+                    {
+                        add_new_field_to_db();
+                    }
+                } );
+                
+                $( "#new_field_confirmation_input" ).focus();
+            }
+            
+            var update_note_db = function()
+            {
+                var note = $( "#file_note" ).val() || null;
+                
+                $.ajax( {
+                    url: "{{ url_for( 'submission.submission_file_set_note', submission_id = submission_id, file_uuid = file[ 'uuid' ] ) }}",
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        note: note
+                    }
+                } );
+            }
+            
+            var update_field_db = function( field )
+            {
+                var field_value = [];
+                
+                $.each( $( "#file_{{ file[ 'uuid' ] }}_" + field + " > select > option:checked" ), function() {
+                    field_value.push( $( this ).val() );
+                } );
+                if( field_value.length === 0 )
+                    field_value = null;
+                else
+                    field_value = field_value.join( "," )
+                
+                $.ajax( {
+                    url: "{{ url_for( 'submission.submission_mark_set_field', submission_id = submission_id, mark_id = file[ 'uuid' ] ) }}",
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                       value: field_value,
+                       field: field,
+                    }
+                } );
+            }
+            
+            {% if admin %}
+                var download_image = function()
+                {
+                    window.location = "{{ url_for( 'image.admin_download_file_full_resolution', file_id = file[ 'uuid' ] ) }}";
+                }
+            {% endif %}
+            
+            var delete_mark = function()
+            {
+                $( "<div />" )
+                    .attr( "id", "delete_confirmation" )
+                    .text( "Do you really want to delete this mark?" )
+                    .dialog( {
+                        title: "Confirm mark deletion",
+                        modal: true,
+                        buttons: {
+                            "OK": function()
+                            {
+                                $.ajax( {
+                                    {% if admin %}
+                                        url: "{{ url_for( 'submission.admin_submission_mark_delete', submission_id = submission_id, mark_id = file[ 'uuid' ] ) }}",
+                                    {% else %}
+                                        url: "{{ url_for( 'submission.submission_mark_delete', submission_id = submission_id, mark_id = file[ 'uuid' ] ) }}",
+                                    {% endif %}
+                                    dataType: "json",
+                                    success: function( data )
+                                    {
+                                        $( "#delete_confirmation" ).remove();
+                                        
+                                        if( ! data.error )
+                                        {
+                                            {% if admin %}
+                                                window.location = "{{ url_for( 'submission.admin_submission_mark_list', submission_id = submission_id, mark_type = file[ 'file_type' ] ) }}";
+                                            {% else %}
+                                                window.location = "{{ url_for( 'submission.submission_mark_list', submission_id = submission_id, mark_type = file[ 'file_type' ] ) }}";
+                                            {% endif %}
+                                        } else {
+                                            toastr.error( "Error while deleting the mark" );
+                                        }
+                                    },
+                                    error: function( data )
+                                    {
+                                        $( "#delete_confirmation" ).remove();
+                                    }
+                                } );
+                            },
+                            "Cancel": function()
+                            {
+                                $( this ).dialog( "close" );
+                            },
+                        },
+                        close: function()
+                        {
+                            $( this ).remove();
+                        }
+                    } );
+            }
+            
+            var set_pfsp = function()
+            {
+                var updateMapCoordinates = function( data, fac )
+                {
+                    data.children( "area" ).each( function( i )
+                    {
+                        $( this )[ 0 ].coords = $( this )[ 0 ].coords
+                            .split( "," )
+                            .map( x => x * fac )
+                            .join( "," );
+                    } );
+                }
+                var updateSelection = function( data, faded_out_current_selection )
+                {
+                    var location_base_url = "{{ url_for( 'files.send_static_files', subpath = 'location' ) }}";
+                    
+                    var d = [ "main" ]
+                        .concat( data )
+                        .filter( x => x != "None" )
+                        .filter( x => x != "" )
+                        .map( x => "url( " + location_base_url + "/" + x + ".png )" )
+                        .join( ", " );
+                    
+                    $( "#location_img" )
+                        .css( "background-image", d );
+                    
+                    if( faded_out_current_selection )
+                    {
+                        var d = current_pfsp
+                            .filter( x => x != "None" )
+                            .filter( x => x != "" )
+                            .map( x => "url( " + location_base_url + "/" + x + ".png )" )
+                            .join( ", " );
+                        
+                        $( "#location_img > div" )
+                            .css( "background-image", d )
+                            .css( "opacity", "0.3" );
+                    } else {
+                        $( "#location_img > div" )
+                            .css( "background-image", "" )
+                            .css( "opacity", "" );
+                    }
+                }
+                var update_pfsp_db = function( data )
+                {
+                    if( data !== null )
+                    {
+                        $( "#pfsp" ).val( data.join( ", " ) );
+                        data = data.join( "," )
+                    }
+                    
+                    $.ajax( {
+                        url: "{{ url_for( 'submission.submission_mark_pfsp_set', submission_id = submission_id, mark_id = file[ 'uuid' ] ) }}",
+                        dataType: "json",
+                        method: "POST",
+                        data: {
+                            pfsp: data
+                        },
+                        error: function()
+                        {
+                            toastr.error( "Error while saving the location data" );
+                        }
+                    } );
+                }
+                
+                var pfsp_div = $( "<div />" ).html( `
+                    <div id="pfsp">
+                        <div id="location_img">
+                            <img src="{{ url_for( 'files.send_static_files', subpath = 'location/empty.png' ) }}" usemap="#location_map" />
+                            <div></div>
+                        </div>
+                        <map id="Map" name="location_map" class="location_map">
+                            {% for zone in pfsp_zones %}
+                                <area
+                                    shape="polygon"
+                                    id="area_{{ zone[ 'sel' ] | join( '_' ) }}"
+                                    coords="{{ zone[ 'coords' ] }}"
+                                    data-selection="{{ zone[ 'sel' ] | join( ',' ) }}"
+                                    data-desc="{{ zone[ 'desc' ] }}"
+                                    data-zone="{{ zone[ 'zone' ] }}"
+                                    data-lat="{{ zone[ 'lat' ] }}"
+                                />
+                            {% endfor %}
+                        </map>
+                    </div>
+                ` );
+                
+                $( "<div />" )
+                    .attr( "id", "set_pfsp_dialog" )
+                    .text( "Click on the corresponding location for the Close Non Match correspondance" )
+                    .append( pfsp_div )
+                    .dialog( {
+                        title: "CNM PFSP",
+                        modal: true,
+                        width: ( $( window ).height() * 0.7 * 1243 / 656 ) + 33,
+                        height: $( window ).height() * 0.7 + 140,
+                        buttons: {
+                            clean: {
+                                class: "left_button",
+                                text: "Unset all locations",
+                                click: function(){
+                                    current_pfsp = [];
+                                    updateSelection( current_pfsp );
+                                }
+                            },
+                            "Cancel": function()
+                            {
+                                $( this ).dialog( "close" );
+                            },
+                            save: {
+                                id: "save_button",
+                                text: "Save",
+                                click: function(){
+                                    update_pfsp_db( current_pfsp );
+                                    $( this ).dialog( "close" );
+                                }
+                            },
+                        },
+                        open: function()
+                        {
+                            var imgheight = $( "#set_pfsp_dialog" ).height() - 32;
+                            $( "#location_img > img" ).css( "height", imgheight );
+                            
+                            $( "#save_button" ).focus();
+                            
+                            // Action for the PFSP zones
+                            
+                            updateMapCoordinates( $( "#Map" ), $( "#location_img" ).height() / 656 );
+                            
+                            var areas = new Array();
+                            {% for zone in pfsp_zones %}
+                                areas.push( "#area_{{ zone[ 'sel' ] | join( '_' ) }}" );
+                            {% endfor %}
+                            
+                            for( var i = 0; i < areas.length; i++ )
+                            {
+                                $( areas[ i ] )
+                                    .mouseover( function()
+                                    {
+                                        var s = $( this )[ 0 ].dataset.selection.split( "," );
+                                        updateSelection( s, true );
+                                    } )
+                                    .mouseout( function()
+                                    {
+                                        updateSelection( current_pfsp, false );
+                                    } )
+                                    .on( "click", function()
+                                    {
+                                        var s = $( this )[ 0 ].dataset.selection.split( "," );
+                                        
+                                        current_pfsp.push( ...s );
+                                        current_pfsp = current_pfsp.filter( ( v, i, a ) => a.indexOf( v ) === i );
+                                        
+                                        i = current_pfsp.indexOf( "" )
+                                        if( i >= 0 )
+                                            current_pfsp.splice( i, 1 );
+                                        
+                                        updateSelection( current_pfsp );
+                                    } );
+                            }
+                            
+                            updateSelection( current_pfsp );
+                            
+                            var dialog_div = $( this );
+                            $( ".ui-widget-overlay" ).bind( "click", function()
+                            {
+                                dialog_div.dialog( "close" );
+                            } );
+                        },
+                        close: function()
+                        {
+                            $( this ).remove();
+                        }
+                    } );
+            }
+        </script>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content icnml_lp_oneperpage">
+            <form id="icnml_file_update_{{ file[ 'uuid' ] }}">
+                <div class="ui-widget-header ui-corner-top icnml_box_top">File '<span id="header_filename">-</span>'</div>
+                <div class="ui-widget-content ui-corner-bottom icnml_box_content_central">
+                    <div class="icnml_lp_cardbox">
+                        <div
+                            class="icnml_100percent_img"
+                            style="background-image: url( {{ url_for( 'image.image_file_serve', file_id = file[ 'uuid' ] ) }} )">
+                        </div>
+                        <div>
+                            <div class="icnml_box_fields">
+                                <div>Name</div>
+                                <div id="box_filename"></div>
+                                
+                                <div>Format</div>
+                                <div>{{ file[ 'format' ] }}</div>
+                                
+                                <div>Resolution</div>
+                                <div>{{ file[ 'resolution' ] }} dpi</div>
+                                
+                                <div>Width</div>
+                                <div>{{ file[ 'width' ] }} px</div>
+                                
+                                <div>Height</div>
+                                <div>{{ file[ 'height' ] }} px</div>
+                                
+                                <div>Size</div>
+                                <div>{{ file[ 'size' ] }} Mo</div>
+                                
+                                <div>Upload time</div>
+                                <div id="file_{{ file[ 'uuid' ] }}_uploadtime">-</div>
+                                
+                                <div>Detection</div>
+                                <div id="file_{{ file[ 'uuid' ] }}_detection">
+                                    <select multiple id="file_{{ file[ 'uuid' ] }}_detection_select" data-placeholder="select..." class="chosen-select">
+                                        {% for dt in all_detection_technics %}
+                                            <option value="{{ dt[ 'id' ] }}">{{ dt[ 'name' ] }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                
+                                <div>Surface</div>
+                                <div>
+                                    <div id="file_{{ file[ 'uuid' ] }}_surface">
+                                        <select multiple id="file_{{ file[ 'uuid' ] }}_surface_select" data-placeholder="select..." class="chosen-select">
+                                            {% for s in all_surfaces %}
+                                                <option value="{{ s[ 'id' ] }}">{{ s[ 'name' ] }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <a id="add_a_new_surface" style="cursor: pointer;">Add a new surface</a>
+                                    </div>
+                                </div>
+                                
+                                <div>Activity</div>
+                                <div>
+                                    <div id="file_{{ file[ 'uuid' ] }}_activity">
+                                        <select multiple id="file_{{ file[ 'uuid' ] }}_activity_select" data-placeholder="select..." class="chosen-select">
+                                            {% for a in all_activities %}
+                                                <option value="{{ a[ 'id' ] }}">{{ a[ 'name' ] }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <a id="add_a_new_activity" style="cursor: pointer;">Add a new activity</a>
+                                    </div>
+                                </div>
+
+                                <div>Distortion</div>
+                                <div>
+                                    <div id="file_{{ file[ 'uuid' ] }}_distortion">
+                                        <select multiple id="file_{{ file[ 'uuid' ] }}_distortion_select" data-placeholder="select..." class="chosen-select">
+                                            {% for d in all_distortions %}
+                                                <option value="{{ d[ 'id' ] }}">{{ d[ 'name' ] }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <a id="add_a_new_distortion" style="cursor: pointer;">Add a new distortion</a>
+                                    </div>
+                                </div>
+                                
+                                <div>Location</div>
+                                <div>
+                                    <input id="pfsp" name="pfsp" type="text" value="" placeholder="Click to set the location..." readonly/>
+                                </div>
+                                
+                                <div>Notes</div>
+                                <div><textarea rows="6" id="file_note" placeholder="Public notes">{{ file[ 'note' ] }}</textarea></div>
+                            </div>
+                            <div class="icnml_center">
+                                <div class="button_list">
+                                    {% if admin %}
+                                        <div id="download_full_res_button_div">
+                                            <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="download_button">
+                                                <span class="ui-button-text" id="next_button_span_text">Download image</span>
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                    <div id="delete_button_div">
+                                        <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="delete_button">
+                                            <span class="ui-button-text" id="delete_button_span_text">Delete mark</span>
+                                        </a>
+                                    </div>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </body>
+    <script type="text/javascript">
+        $( "#header_filename" ).text( filename );
+        $( "#box_filename" ).text( filename );
+
+        $( "#file_note" ).on( "change", update_note_db );
+        
+        _.forEach( [ "detection", "surface", "activity", "distortion" ], function( f ){
+            $( "#file_{{ file[ 'uuid' ] }}_" + f + " > select" ).on( "change", function(){ update_field_db( f ); } )
+        } );
+
+        $( "#file_{{ file[ 'uuid' ] }}_uploadtime" )
+            .text( moment.utc( "{{ file[ 'creation_time' ] }}" ).local().format( "MMMM Do YYYY, HH:mm:ss" ) );
+        
+        {% if admin %}
+            $( "#download_button" ).on( "click", download_image );
+        {% endif %}
+        $( "#delete_button" ).on( "click", delete_mark );
+       
+        _.forEach( [ "detection", "surface", "activity", "distortion" ], function( f )
+        {
+            $( "#file_{{ file[ 'uuid' ] }}_" + f + "_select" )
+                .chosen( {
+                    search_contains: true,
+                    width: "100%"
+                } );
+        } );
+
+        var detection_technics = "{{ detection_technics }}".split( "," );
+        $( "#file_{{ file[ 'uuid' ] }}_detection_select" ).val( detection_technics ).trigger( "chosen:updated" );
+        
+        var surface = "{{ surface }}".split( "," );
+        $( "#file_{{ file[ 'uuid' ] }}_surface_select" ).val( surface ).trigger( "chosen:updated" );
+        
+        var activity = "{{ activity }}".split( "," );
+        $( "#file_{{ file[ 'uuid' ] }}_activity_select" ).val( activity ).trigger( "chosen:updated" );
+        
+        var distortion = "{{ distortion }}".split( "," );
+        $( "#file_{{ file[ 'uuid' ] }}_distortion_select" ).val( distortion ).trigger( "chosen:updated" );
+
+        _.forEach( [ "surface", "activity", "distortion" ], function( f ){
+            $( "#add_a_new_" + f ).on( "click", function(){ new_field( f ); } );
+        } );
+        
+        $( "#pfsp" )
+            .val( current_pfsp.join( ", " ) )
+            .on( "click", set_pfsp );
+            
+        $( "#icnml_navigation_submissions" )
+            .addClass( "activated" );
+        
+        {% if admin %}
+            $( "#navloc" ).append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'submission.admin_submission_list' ) }}" )
+                    .text( "Submissions" )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'submission.admin_submission_home', submission_id = submission_id ) }}" )
+                    .text( "{{ username }}" )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'submission.admin_submission_mark_list', submission_id = submission_id ) }}" )
+                    .text( "Marks" )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<span />" ).text( filename )
+            );
+            
+        {% else %}
+            $( "#navloc" ).append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'submission.submission_list' ) }}" )
+                    .text( "Submissions" )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'submission.submission_upload_tenprintmark', submission_id = submission_id ) }}" )
+                    .text( nickname )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'submission.submission_mark_list', submission_id = submission_id ) }}" )
+                    .text( "Marks" )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<span />" ).text( filename )
+            );
+        {% endif %}
+
+    </script>
+</html>
+

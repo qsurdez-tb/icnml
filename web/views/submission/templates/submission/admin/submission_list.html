@@ -1,0 +1,116 @@
+{% import "jinja_functions.html" as common %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+
+            var donors = {};
+            {% for donor in donors %}
+                donors[ "{{ donor[ 'uuid' ] }}" ] = {
+                    "uuid": "{{ donor[ 'uuid' ] }}",
+                    "username": "{{ donor[ 'username' ] }}"
+                };
+            {% endfor %}
+            
+            update_search_result = function()
+            {
+                var searched = $( "#search_bar" ).val();
+                searched = searched.toLowerCase();
+                
+                _.forEach( donors, function( donor )
+                {
+                    var tmp = [];
+                    _.forEach( donor, function( d )
+                    {
+                        tmp.push( d.toLowerCase().indexOf( searched ) );
+                    } );
+                    
+                    if( Math.max( ...tmp ) > -1 )
+                    {
+                        $( "#donor_" + donor[ "uuid" ] + "_outer_div" ).show();
+                    } else {
+                        $( "#donor_" + donor[ "uuid" ] + "_outer_div" ).hide();
+                    }
+                } );
+            }
+        </script>
+        
+        <style type="text/css">
+            :root {
+                --imgsize: 120px;
+            }
+        </style>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <div class="icnml_search_bar">
+                <input id="search_bar" placeholder="Search for a donor..."/>
+            </div>
+            <div class="icnml_list_of_boxes">
+                {% for donor in donors %}
+                    <div id="donor_{{ donor[ 'uuid' ] }}_outer_div">
+                        <div class="ui-widget-header ui-corner-top icnml_box_top" id="donor_{{ donor[ 'id' ] }}_nickname">{{ donor[ 'username' ] }}</div>
+                        <div class="ui-widget-content ui-corner-bottom icnml_box_content">
+                            <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only icnml_button_square" id="edit_{{ donor[ 'id' ] }}_button" role="button" aria-disabled="false">
+                                <span>View</span>
+                                {{ common.checked_exclamation( "donor_" + donor[ 'uuid' ] + "_checked_error" ) }}
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <script type="text/javascript">
+            $( "#search_bar" ).on( "keyup", update_search_result );
+            $( "#search_bar" ).focus();
+            
+            {% for donor in donors %}
+                $( "#edit_{{ donor[ 'id' ] }}_button" ).on( "click", function()
+                {
+                    window.location = "{{ url_for( 'submission.admin_submission_home', submission_id = donor[ 'uuid' ] ) }}";
+                } );
+            {% endfor %}
+            
+            $.ajax( {
+                url: "{{ url_for( 'submission.get_submission_missing_information_all', submission_id = 'all' ) }}",
+                dataType: "json",
+                method: "GET",
+                success: function( data )
+                {
+                    if( ! data.error )
+                    {
+                        _.forEach( data.data, function( donor ){
+                            $( "#donor_" + donor + "_checked_error" ).css( "visibility", "visible" );
+                        } );
+                    } else {
+                        toastr.error( "Error while loading the potential missing informations for all donors" );
+                    }
+                },
+                error: function( data )
+                {
+                    toastr.error( "Network error" );
+                }
+            } );
+            
+            $( "#icnml_navigation_submissions" )
+                .addClass( "activated" );
+            
+            $( "#navloc" ).append(
+                $( "<span />" ).text( "Submissions" )
+            );
+        </script>
+    </body>
+</html>

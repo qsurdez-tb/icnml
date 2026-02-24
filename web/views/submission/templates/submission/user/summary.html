@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            
+            var password_local = localStorage.getItem( "session_key" );
+            var nickname = decrypt( "{{ nickname }}", password_local );
+        </script>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content"></div>
+        
+        <script type="text/javascript">
+            $( "#icnml_navigation_submissions" )
+                .addClass( "activated" );
+            
+            $( "#navloc" ).append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'submission.submission_list' ) }}" )
+                    .text( "Submissions" )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'submission.submission_upload_tenprintmark', submission_id = submission_id ) }}" )
+                    .text( nickname )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<span />" ).text( "Summary" )
+            );
+        </script>
+    </body>
+</html>
+

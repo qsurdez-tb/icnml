@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            submission_id = "{{ submission_id }}";
+            
+            var password_local = localStorage.getItem( "session_key" );
+        </script>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <form class="icnml_form">
+                <div class="ui-widget-header ui-corner-top icnml_box_top">Submission form</div>
+                <div class="ui-widget-content ui-corner-bottom icnml_box_content_central">
+                    <div class="icnml_box_fields">
+                        <div style="text-align: right;">
+                            <label for="upload_nickname">Submission nickname</label>
+                        </div>
+                        <div>
+                            <input id="upload_nickname" name="upload_nickname" type="text" />
+                        </div>
+                        
+                        <div style="text-align: right;">
+                            <label for="email">Donor e-mail</label>
+                        </div>
+                        <div>
+                            <input id="email" name="email" type="text" />
+                        </div>
+                        
+                        <div style="text-align: right;">
+                            <label for="email_confirmation">Donor e-mail confirmation</label>
+                        </div>
+                        <div>
+                            <input id="email_confirmation" name="email_confirmation" type="text" />
+                        </div>
+                    </div>
+                    
+                    <div id="icnml_sub_error" class="icnml_box_error"></div>
+                    
+                    <div class="icnml_button">
+                        <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="next_button" role="button" aria-disabled="false">
+                            <span class="ui-button-text">Next</span>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <script type="text/javascript">
+            var validate_form = function()
+            {
+                $( "#icnml_sub_error" ).text( "" );
+                
+                var upload_nickname = $( "#upload_nickname" ).val() || null;
+                upload_nickname = encrypt( upload_nickname, password_local );
+                
+                var email = $( "#email" ).val();
+                var email_conf = $( "#email_confirmation" ).val();
+                
+                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                var valid = re.test( String( email ).toLowerCase() );
+                
+                if( ! email )
+                {
+                    $( "#icnml_sub_error" )
+                        .text( "The e-mail can not be empty" );
+                }
+                else if( email !== email_conf )
+                {
+                    $( "#icnml_sub_error" )
+                        .text( "The e-mail fields does not match" );
+                } else if( ! valid )
+                {
+                    $( "#icnml_sub_error" )
+                        .text( "Non valid email address" );
+                } else {
+                    $.ajax( {
+                        url: "{{ url_for( 'submission.submission_do_new' ) }}",
+                        dataType: "json",
+                        method: "POST",
+                        data: {
+                            upload_nickname: upload_nickname,
+                            email: email
+                        },
+                        success: function( data )
+                        {
+                            if( ! data.error )
+                            {
+                                toastr.success( "Case id: " + data.id, "Case created" );
+                                
+                                var url = "{{ url_for( 'submission.submission_consent_form', submission_id = '-' ) }}";
+                                url = url.replace( "-", data.id );
+                                location.href = url;
+                            
+                            } else {
+                                toastr.error( data.message, "Case not created" );
+                            }
+                        }
+                    } );
+                }
+            }
+            
+            $( "#next_button" ).on( "click", validate_form );
+            
+            $( "#upload_nickname" ).on( "keyup", function( event )
+            {
+                if( event.keyCode == 13 )
+                {
+                    $( "#email" ).focus();
+                }
+            } );
+            $( "#email" ).on( "keyup", function( event )
+            {
+                if( event.keyCode == 13 )
+                {
+                    $( "#email_confirmation" ).focus();
+                }
+            } );
+            $( "#email_confirmation" ).on( "keyup", function( event )
+            {
+                if( event.keyCode == 13 )
+                {
+                    validate_form();
+                }
+            } );
+            
+            $( "#icnml_navigation_newdonor" )
+                .addClass( "activated" );
+            
+            $( "#navloc" ).append(
+                $( "<span />" ).text( "New submission" )
+            );
+            
+            $( "#upload_nickname" ).focus();
+        </script>
+    </body>
+</html>
+        

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+
+        <style>
+            #submissions_list > table {
+                width: 100%;
+            }
+            tr:nth-child( even ) {
+                background: rgb( 200, 200, 200 );
+            }
+            tr:nth-child( odd ) {
+                background: rgb( 222, 222, 222 );
+            }
+            tr:hover {
+                cursor: pointer;
+                background: rgb( 240, 240, 240 );
+            }
+        </style>
+
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            
+            var files_type_counts = {};
+            {% for donor in donors %}
+                files_type_counts[ "{{ donor[ 'uuid' ] }}" ] = {};
+            {% endfor %}
+            {% for c in counts %}
+                files_type_counts[ "{{ c[ 'uuid' ] }}" ][ "{{ c[ 'name' ] }}" ] = "{{ c[ 'nb' ] }}";
+            {% endfor %}
+            {% for s in segments %}
+                files_type_counts[ "{{ s[ 'uuid' ] }}" ][ "segments" ] = "{{ s[ 'nb' ] }}";
+            {% endfor %}
+            {% for t in targets %}
+                files_type_counts[ "{{ t[ 'uuid' ] }}" ][ "targets" ] = "{{ t[ 'nb' ] }}";
+            {% endfor %}
+        </script>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <div id="submissions_list">
+                <table>
+                    <tr>
+                        <th>Donor</th>
+                        <th>UUID</th>
+                        <th>LT target</th>
+                        <th>LT incidental</th>
+                        <th>TP finger</th>
+                        <th>TP palms</th>
+                        <th>Segments</th>
+                        <th>Targets</th>
+                    </tr>
+                    {% for donor in donors %}
+                        <tr id="tr_donor_{{ donor[ 'uuid' ] }}">
+                            <td>{{ donor[ 'username' ] }}</td>
+                            <td>{{ donor[ 'uuid' ] }}</td>
+                            {% for c in [ 'mark_target', 'mark_incidental', 'tenprint_card_front', 'tenprint_card_back', 'segments', 'targets' ] %}
+                                <td><span id="c_{{ donor[ 'uuid' ] }}_{{ c }}"></span></td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        
+        <script type="text/javascript">
+            {% for donor in donors %}
+                {% for c in [ 'mark_target', 'mark_incidental', 'tenprint_card_front', 'tenprint_card_back', 'segments', 'targets' ] %}
+                    $( "#c_{{ donor[ 'uuid' ] }}_{{ c }}" ).text( files_type_counts[ "{{ donor[ 'uuid' ] }}" ][ "{{ c }}" ] );
+                {% endfor %}
+                $( "#tr_donor_{{ donor[ 'uuid' ] }}" ).on( "click", function()
+                {
+                    window.location = "{{ url_for( 'submission.admin_submission_home', submission_id = donor[ 'uuid' ] ) }}";
+                } )
+            {% endfor %}
+            
+            $( "#icnml_navigation_adminsubmissionstable" )
+                .addClass( "activated" );
+            
+            $( "#navloc" ).append(
+                $( "<span />" ).text( "Submissions" )
+            );
+        </script>
+    </body>
+</html>

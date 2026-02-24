@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+        </script>
+        
+        <style type="text/css">
+            :root {
+                --imgsize: 350px;
+            }
+        </style>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <div class="icnml_list_of_boxes">
+                {% if nb_tenprint > 0 %}
+                    {% for tenprint in tenprint_cards %}
+                        <div>
+                            <div class="ui-widget-header ui-corner-top icnml_box_top">{{ tenprint[ 'uuid' ] }}</div>
+                            <div class="ui-widget-content ui-corner-bottom icnml_box_content">
+                                <div style="background-image: url( {{ url_for( 'image.image_file_serve', file_id = tenprint[ 'uuid' ] ) }} )"></div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div>No tenprint card stored in ICNML for your account.</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <script type="text/javascript">
+            $( "#icnml_navigation_tenprints" )
+                .addClass( "activated" );
+            
+            $( "#navloc" ).append(
+                $( "<span />" ).text( "My user profile" )
+            );
+        </script>
+    </body>
+</html>
+        

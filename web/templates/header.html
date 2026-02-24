@@ -1,0 +1,76 @@
+<div class="icnml_logo icnml_header_bg">
+    {%if baseurl == "" %}
+        <a href="/">ICNML</a>
+    {% else %}
+        <a href="{{ baseurl }}">ICNML</a>
+    {% endif %}
+</div>
+<div class="icnml_navloc icnml_header_bg" id="navloc"></div>
+<div class="icnml_user_info icnml_header_bg">
+    <span>{{ session[ 'username' ] }}</span>
+    <span>|</span>
+    <span><a href="{{ url_for( 'login.user_totp_config' ) }}">Update TOTP</a></span>
+    <span>|</span>
+    <span><a href="{{ url_for( 'login.webauthn_admin' ) }}">Security keys</a></span>
+    <span>|</span>
+    <span><a href="{{ url_for( 'login.logout' ) }}">Logout</a></span>
+</div>
+
+<div id="icnml_backtothetop" class="icnml_backtothetop">
+    <svg width="40px" height="40px" viewBox="0 0 314.069 314.069" >
+        <path style="fill: #303e4d;" d="M293.003,78.531C249.646,3.436,153.619-22.295,78.529,21.061C3.434,64.411-22.297,160.443,21.067,235.542
+            c43.35,75.087,139.375,100.822,214.465,57.467C310.628,249.648,336.371,153.621,293.003,78.531z M219.835,265.802
+            c-60.067,34.685-136.894,14.114-171.576-45.961C13.577,159.762,34.161,82.943,94.23,48.261
+            c60.071-34.69,136.894-14.106,171.578,45.971C300.493,154.308,279.906,231.118,219.835,265.802z M168.132,121.034
+            c-3.066-3.07-7.077-4.599-11.097-4.599c-4.018,0-8.031,1.529-11.101,4.599l-44.409,44.406c-6.133,6.128-6.133,16.078,0,22.206
+            v-0.009c6.129,6.132,16.076,6.132,22.201,0l33.308-33.299l33.298,33.299c6.135,6.132,16.077,6.132,22.201,0v0.009
+            c6.135-6.128,6.135-16.078,0-22.206L168.132,121.034z" />
+    </svg>
+</div>
+
+<script type="text/javascript">
+    $( "#icnml_backtothetop" ).on( "click", function( event )
+    {
+        event.preventDefault();
+        $( "html, body" ).animate( { scrollTop: 0 }, "fast" );
+        return false;
+    } );
+    
+    window.onscroll = function()
+    {
+        if( window.pageYOffset > 37 )
+            $( "#icnml_backtothetop" ).css( "top", "30px" );
+        else
+            $( "#icnml_backtothetop" ).css( "top", "-40px" );
+    };
+    
+    envtype = "{{ envtype }}";
+    if( envtype !== "" )
+    {
+        document.write( '<div class="ribbon-wrapper"><div class="ribbon">' + envtype + '</div></div>' );
+    }
+
+    var onMove = function( e, percentage )
+    {
+        zoom_level = 100 +  5 * percentage;
+        document.documentElement.style.setProperty( "--imgsize", zoom_level + "px" );
+    }
+    setTimeout( function()
+    {
+        if( $( "#zoom_slider" ).length > 0 )
+        {
+            var zoomslider = new RangeSlider( $( "#zoom_slider" ), {
+                fgColour: "#647180",
+                percentage: 40,
+                onMove: onMove,
+                onDown: onMove,
+                pollLimit: 50
+            } );
+        }
+    }, 0 );
+
+    $( document ).on( "contextmenu", function( e ){
+        e.preventDefault();
+        e.stopPropagation();
+    } );
+</script>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style type="text/css">
+            .notes {
+                color: rgb( 125, 125, 125 );
+                font-size: 0.8em;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 style="margin: 0px">ICNML</h1>
+        <h4 style="margin-top: 0px">International Close Non-Matches Library</h4>
+        
+        You have been added as donor to the ICNML project.
+        
+        <br />
+        
+        Your username is : {{ username }}
+        
+        <br />
+        
+        To connect and configure your account, click the following link: <a href="{{ url }}">Login</a>
+        
+        <br />
+        <br />
+        
+        <div class="notes">
+            If your email client can not open directly the reset link, copy and paste the following link to your internet browser:
+            <br />
+            {{ url }}
+        </div>
+        
+    </body>
+</html>

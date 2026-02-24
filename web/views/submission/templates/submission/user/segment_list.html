@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            var password_local = localStorage.getItem( "session_key" );
+            var filename = decrypt( "{{ filename }}", password_local );
+            filename = truncate( filename, 18 );
+            var nickname = decrypt( "{{ nickname }}", password_local );
+        </script>
+        
+        <style type="text/css">
+            :root {
+                --imgsize: 300px;
+            }
+        </style>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <div class="icnml_list_of_boxes">
+                {% if nb_segments > 0 %}
+                    {% for segment in segments %}
+                        <div id="tp_segment_{{ segment[ 'pc' ] }}">
+                            <div class="ui-widget-header ui-corner-top icnml_box_top" id="tp_segment_{{ segment[ 'pc' ] }}_filename">{{ segment[ 'name' ] }}</div>
+                            <div class="ui-widget-content ui-corner-bottom icnml_box_content">
+                                <div
+                                    id="edit_{{ segment[ 'pc' ] }}"
+                                    class="icnml_pointer"
+                                    style="background-image: url( {{ url_for( 'image.image_segment_serve', tenprint_id = tenprint_id, pc = segment[ 'pc' ] ) }} )"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div>No segments at the moment. Go back to the tenprint page and update the segmentation information</div>
+                {% endif %}
+            </div>
+        </div>
+        <script type="text/javascript">
+            $( "#icnml_navigation_submissions" )
+                .addClass( "activated" );
+            
+            {% for segment in segments %}
+                $( "#edit_{{ segment[ 'pc' ] }}" ).on( "click", function()
+                {
+                    window.location.href = "{{ url_for( 'submission.submission_segment', submission_id = submission_id, tenprint_id = tenprint_id, pc = segment[ 'pc' ] ) }}";
+                })
+            {% endfor %}
+            
+            $( "#navloc" ).append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'submission.submission_list' ) }}" )
+                    .text( "Submissions" )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'submission.submission_upload_tenprintmark', submission_id = submission_id ) }}" )
+                    .text( nickname )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'submission.submission_tenprint_list', submission_id = submission_id ) }}" )
+                    .text( "Tenprints" )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'submission.submission_tenprint', submission_id = submission_id, tenprint_id = tenprint_id ) }}" )
+                    .text( filename )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<span />" ).text( "Segments" )
+            );
+        </script>
+    </body>
+</html>
+        

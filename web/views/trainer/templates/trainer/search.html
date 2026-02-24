@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <style type="text/css">
+            .mark_listing {
+                display: grid;
+                grid-gap: 10px;
+                grid-template-columns: var( --gt );
+            }
+            .mark_outer {
+                position: relative;
+                
+                border: 1px solid #AAAAAA;
+                border-radius: 10px;
+                background-color: #fff;
+                padding: 10px;
+                box-sizing: border-box;
+                box-shadow: 3px 3px 5px 0px rgba( 32, 33, 36, 0.2 );
+                overflow-y: hidden;
+                overflow-x: hidden;
+                
+                width: 100%;
+                height: auto;
+                
+                display: grid;
+                grid-gap: 10px;
+                grid-template-columns: var( --imgsize ) 1fr;
+            }
+            
+            .mark_info {
+                display: grid;
+                grid-gap: 5px;
+                grid-column-gap: 20px;
+                grid-template-columns: auto 1fr;
+            }
+            
+            .menu_top {
+                margin-bottom: 20px;
+                display: grid;
+                grid-gap: 5px;
+                grid-column-gap: 20px;
+                grid-template-columns: auto 1fr;
+            }
+            
+            .mark_details {
+                display: grid;
+                grid-gap: 10px;
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 1fr auto;
+                height: 100%;
+            }
+        </style>
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            var currentFolder = "";
+            current_exercise_folder = "{{ current_exercise_folder }}";
+            if(current_exercise_folder){
+                currentFolder = current_exercise_folder;
+            }
+            
+            current_view = "full";
+            
+            var surfaces = {};
+            {% for s in surfaces %}
+                surfaces[ "{{ s[ 'id' ] }}" ] = "{{ s[ 'name' ] }}";
+            {% endfor %}
+            
+            var all_detection_technics = {};
+            {% for dt in all_detection_technics %}
+                all_detection_technics[ "{{ dt[ 'id' ] }}" ] = "{{ dt[ 'name' ] }}";
+            {% endfor %}
+            
+            var pfsp2fpc = {};
+            {% for pfsp, fpc in pfsp2fpc.iteritems() %}
+                pfsp2fpc[ "{{ pfsp }}" ] = [];
+                
+                {% for f in fpc %}
+                    pfsp2fpc[ "{{ pfsp }}" ].push( "{{ f }}" );
+                {% endfor %}
+            {% endfor %}
+            
+            var pfsp_desc = {};
+            {% for pfsp, desc in pfspdesc.iteritems() %}
+                pfsp_desc[ "{{ pfsp }}" ] = "{{ desc }}";
+            {% endfor %}
+            
+            var pfsp_fpc_search = {};
+            {% for pfsp, fpc in pfsp_fpc_search.iteritems() %}
+                pfsp_fpc_search[ "{{ pfsp }}" ] = "{{ fpc }}";
+            {% endfor %}
+            var donors_gp = {};
+            {% for donor in donors_gp %}
+                donors_gp[ "{{ donor.id }}_F{{ donor.fpc }}" ] = "{{ donor.name }}";
+            {% endfor %}
+
+            var marks = {};
+            {% for mark in marks %}
+                marks[ "{{ mark[ 'uuid' ] }}" ] = {
+                    "uuid": "{{ mark[ 'uuid' ] }}",
+                    "id": "{{ mark[ 'id' ] }}",
+                    "pfsp": "{{ mark[ 'pfsp' ] }}".split( "," ),
+                    "pfsp_desc": [],
+                    "gp": [],
+                    "submission_uuid": "{{ mark[ 'submission_uuid' ] }}",
+                    "surface": [],
+                    "dt": [],
+                    "note": "{{ mark[ 'note' ] | default( '', true ) }}"
+                };
+                _.forEach( "{{ mark[ 'surface' ] }}".split( "," ), function( s )
+                {
+                    marks[ "{{ mark[ 'uuid' ] }}" ][ "surface" ].push( surfaces[ s ] );
+                } );
+                _.forEach( "{{ mark[ 'detection_technic' ] }}".split( "," ), function( dt )
+                {
+                    marks[ "{{ mark[ 'uuid' ] }}" ][ "dt" ].push( all_detection_technics[ dt ] );
+                } );
+                _.forEach( "{{ mark[ 'pfsp' ] }}".split( "," ), function( pfsp )
+                {
+                    marks[ "{{ mark[ 'uuid' ] }}" ][ "pfsp_desc" ].push( pfsp_desc[ pfsp ] );
+                    var f = pfsp_fpc_search[ pfsp ] || null;
+                    if( f !== null )
+                        marks[ "{{ mark[ 'uuid' ] }}" ][ "gp" ] = donors_gp[ "{{ mark[ 'userid' ] }}_F" + f ] || "-";
+                } );
+            {% endfor %}
+
+            var update_filter_search = function()
+            {
+                var selected = $( this ).val().split( " " );
+                
+                _.forEach( marks, function( m ){
+                    var tmp = [];
+                    
+                    _.forEach( selected, function( s )
+                    {
+                        var tmp2 = [];
+
+                        if( s !== "" )
+                        {
+                            _.forEach( m, function( mm )
+                            {
+                                if( Array.isArray( mm ) )
+                                    mm = mm.join( " " );
+
+                                tmp2.push( mm.toLowerCase().indexOf( s.toLowerCase() ) );
+                            } );
+                            
+                            tmp.push( Math.max( ...tmp2 ) );
+                        }
+                    } );
+                    
+                    if( Math.min( ...tmp ) != -1 )
+                    {
+                        $( "#outer_div_mark_" + m[ "uuid" ] ).show();
+                    } else {
+                        $( "#outer_div_mark_" + m[ "uuid" ] ).hide();
+                    }
+                } );
+            }
+            
+            var mark_details = function( event )
+            {
+                var target = event.currentTarget.id.replace( "outer_div_mark_", "" );
+                var exemplar = "";
+
+                target_ref = [];
+                target_fpc = [];
+                display_ref = 0;
+                
+                _.forEach( marks[ target ][ "pfsp" ], function( pfsp )
+                {
+                    _.forEach( pfsp2fpc[ pfsp ], function( fpc )
+                    {
+                        target_ref.push( refs[ marks[ target ][ "submission_uuid" ] ][ fpc ] );
+                        target_fpc.push( fpc );
+                    } );
+                } );
+                if( target_fpc.length > 1 )
+                {
+                    var duplicates = [];
+                    var checked = [];
+                    
+                    for( i in target_fpc )
+                    {
+                        var tmp = target_ref[ i ] + "_" + target_fpc[ i ];
+                        if( checked.indexOf( tmp ) > -1 )
+                        {
+                            duplicates.push( 1 );
+                        } else {
+                            duplicates.push( 0 );
+                            checked.push( tmp );
+                        }
+                    }
+                    target_ref = target_ref.filter( function( val, index, arr ){ return !duplicates[ index ] } );
+                    target_fpc = target_fpc.filter( function( val, index, arr ){ return !duplicates[ index ] } );
+                }
+                
+                var get_ref_css_image_link = function()
+                {
+                    var target_ref_img_url = "{{ url_for( 'image.image_segment_serve', tenprint_id = 'uuid', pc = 'fpc' ) }}";
+                    target_ref_img_url = target_ref_img_url.replace( "uuid", target_ref[ display_ref ] );
+                    target_ref_img_url = target_ref_img_url.replace( "fpc", target_fpc[ display_ref ] );
+                    exemplar = target_ref[ display_ref ];
+                    return target_ref_img_url;
+                }
+                
+                $( "<div />" )
+                    .attr( "id", "mark_details_dialog" )
+                    .append(
+                        $( "<div/>" )
+                            .attr( "class", "mark_details" )
+                            .append(
+                                $( "<div/>" )
+                                    .append( $( "<div />" )
+                                        .attr( "id", "mark_details_left" )
+                                        .attr( "style", "background-image:url( {{ url_for( 'image.image_file_serve', file_id = '<uuid>' ) }} )".replace( "%3Cuuid%3E", target ) )
+                                        .addClass( "icnml_100percent_img" )
+                                    )
+                            )
+                            .append(
+                                $( "<div/>" )
+                                    .attr( "id", "mark_details_right" )
+                                    .attr( "style", "background-image:url( " + get_ref_css_image_link() + " )" )
+                                    .addClass( "icnml_100percent_img" )
+                            )
+                            .append( $( "<div />" ) )
+                            .append(
+                                $( "<div />" )
+                                    .attr( "id", "pre_next_div" )
+                                    .css( "text-align", "center" )
+                                    .append(
+                                        $( "<span />" )
+                                            .attr( "id", "previous_ref" )
+                                            .css( "cursor", "pointer" )
+                                            .text( "Previous" )
+                                            .on( "click", function()
+                                            {
+                                                display_ref -= 1;
+                                                display_ref = display_ref % target_ref.length;
+                                                
+                                                $( "#mark_details_right" )
+                                                    .attr( "style", "background-image:url( " + get_ref_css_image_link() + " )" )
+                                                    .addClass( "icnml_100percent_img" )
+                                            } )
+                                    )
+                                    .append( $( "<span />" ).css( "margin-left", "10px" ).css( "margin-right", "10px" ).text( "|" ) )
+                                    .append(
+                                        $( "<span />" )
+                                            .attr( "id", "next_ref" )
+                                            .css( "cursor", "pointer" )
+                                            .text( "Next" )
+                                            .on( "click", function()
+                                            {
+                                                display_ref += 1;
+                                                display_ref = display_ref % target_ref.length;
+                                                
+                                                $( "#mark_details_right" )
+                                                    .attr( "style", "background-image:url( " + get_ref_css_image_link() + " )" )
+                                                    .addClass( "icnml_100percent_img" )
+                                            } )
+                                    )
+                            )
+                    )
+                    .dialog( {
+                        title: "Details about the mark 'Mark " + marks[ target ][ 'id' ] + "'",
+                        modal: true,
+                        resizable: false,
+                        width: $( window ).width() * 0.8,
+                        height: $( window ).height() * 0.8,
+                        buttons: {
+                            "Add this mark": function(){
+                                add_to_current_exerciselist( target, currentFolder);
+                            },
+                            "Add selected exemplar": function(){
+                                add_exemplar_to_current_exerciselist( exemplar, currentFolder );
+                            },
+                            "Add tenprint card(s)": function(){
+                                add_tenprint_card( marks[target]["submission_uuid"], currentFolder );
+                            },
+                            "Close": function(){
+                                $( this ).dialog( "close" );
+                            }
+                        },
+                        close: function()
+                        {
+                            $( this ).remove();
+                        },
+                        open: function()
+                        {
+                            var dialog_div = $( this );
+                            $( ".ui-widget-overlay" ).bind( "click", function()
+                            {
+                                dialog_div.dialog( "close" );
+                            } );
+                            
+                            if( target_ref.length == 1 )
+                                $( "#pre_next_div" ).remove();
+                        }
+                    } );
+            }
+            
+            var add_to_current_exerciselist = function( mark, folder )
+            {
+                $.ajax( {
+                    url: "{{ url_for( 'trainer.add_mark_to_list' ) }}",
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        mark: mark,
+                        folder: folder
+                    },
+                    success: function( data ){
+                        if( ! data.error )
+                        {
+                            toastr.success( "Case added to the folder" );
+                            $( "#mark_details_dialog" ).remove();
+                        } else {
+                            toastr.error( "Case not added to the list" );
+                        }
+                    },
+                    error: function(){
+                        toastr.error( "Network error" );
+                    }
+                } );
+            }
+            var add_exemplar_to_current_exerciselist = function( mark, folder )
+            {
+                $.ajax( {
+                    url: "{{ url_for( 'trainer.add_exemplar_to_list' ) }}",
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        mark: mark,
+                        folder: folder
+                    },
+                    success: function( data ){
+                        if( ! data.error )
+                        {
+                            toastr.success( "Exemplar added to the folder" );
+                            $( "#mark_details_dialog" ).remove();
+                        } else {
+                            toastr.error( "Exemplar not added to the list" );
+                        }
+                    },
+                    error: function(){
+                        toastr.error( "Network error" );
+                    }
+                } );
+            }
+            var add_tenprint_card = function( uuid, folder )
+            {   
+                if(folder == ""){
+                    toastr.error("No folder selected");
+                }else{
+                    $.ajax( {
+                    url: "{{ url_for( 'trainer.add_tenprint_to_exercise' ) }}",
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        uuid : uuid,
+                        folder : folder
+                    },
+                    success: function( data ){
+                        if( ! data.error )
+                        {
+                            toastr.success( "Tenprint card added to the folder" );
+                            $( "#mark_details_dialog" ).remove();
+                        } else {
+                            toastr.error( "Tenprint card not added to the list" );
+                        }
+                    },
+                    error: function(){
+                        toastr.error( "Network error" );
+                    }
+                } );
+              }
+                
+            }
+            var view_toggle_to_full = function()
+            {
+                current_view = "full";
+                document.documentElement.style.setProperty( "--gt", "repeat( auto-fill, minmax( 600px, 1fr ) )" );
+                $( ".mark_info_outer" ).show();
+            }
+            var view_toggle_to_mini = function()
+            {
+                current_view = "mini";
+                document.documentElement.style.setProperty( "--gt", "repeat( auto-fill, calc( var( --imgsize ) + 2 * var( --imgmargin ) ) )" );
+                $( ".mark_info_outer" ).hide();
+            }
+           
+            var update_current_case_session = function()
+            {
+                currentFolder = $( "#ex_list_select > option:checked" ).val();
+                var selected = $( "#ex_list_select > option:checked" ).val() || null;
+                
+                $.ajax( {
+                    url: "{{ url_for( 'trainer.set_current_folder_id' ) }}",
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        current_folder_id: selected
+                    }
+                } );
+            }
+            
+            var refs = {};
+            {% for submission_id, value in refs.iteritems() %}
+                var tmp = {};
+                
+                {% for fpc, tenprint_id in value.iteritems() %}
+                    tmp[ "{{ fpc }}" ] = "{{ tenprint_id }}";
+                {% endfor %}
+                
+                refs[ "{{ submission_id }}" ] = tmp;
+            {% endfor %}
+        </script>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <div class="menu_top">
+                <div id="filter_notes" style="width: 500px;">
+                    <input id="filter_search" placeholder="Search in all fields...">
+                </div>
+                <div style="max-width: 200px">
+                    <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="toggle_view_button" role="button" aria-disabled="false">
+                        <span class="ui-button-text" id="toggle_view_button">Toggle view</span>
+                    </a>
+                </div>
+                <select id="ex_list_select" data-placeholder="select a folder..." class="chosen-select">
+                    {% for ex in all_exercises_list %}
+                        <option value="{{ ex[ 'uuid' ] }}">{{ ex[ 'name' ] }} ({{ ex[ 'creationtime' ] }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mark_listing">
+                {% for mark in marks %}
+                    <div id="outer_div_mark_{{ mark[ 'uuid' ] }}" class="mark_outer">
+                        <div class="icnml_variable_img" style="background-image:url( {{ url_for( 'image.image_file_serve', file_id = mark[ 'uuid' ] ) }} )"></div>
+                        <div class="mark_info_outer">
+                            <div class="mark_info">
+                                <div>Name</div>
+                                <div>Mark {{ mark[ 'id' ] }}</div>
+                                
+                                <div>UUID</div>
+                                <div>{{ mark[ 'uuid' ] }}</div>
+                                
+                                <div>Donor</div>
+                                <div id="mark_{{ mark[ 'uuid' ] }}_donor">{{ mark[ 'username' ] }}</div>
+                                
+                                <div>Position</div>
+                                <div id="mark_{{ mark[ 'uuid' ] }}_pfsp"></div>
+                                
+                                <div>General pattern</div>
+                                <div id="mark_{{ mark[ 'uuid' ] }}_gp"></div>
+                                
+                                <div>Surface</div>
+                                <div id="mark_{{ mark[ 'uuid' ] }}_surface">-</div>
+                                
+                                <div>Detection technic</div>
+                                <div id="mark_{{ mark[ 'uuid' ] }}_dt">-</div>
+
+                                <div>Notes</div>
+                                <div id="mark_{{ mark[ 'uuid' ] }}_note">{{ mark[ 'note' ] | default( "-", true ) }}</div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div id="zoom_slider"></div>
+        </div>
+        
+        <script type="text/javascript">
+            {% for mark in marks %}
+                $( "#mark_{{ mark[ 'uuid' ] }}_pfsp" )
+                    .text( marks[ "{{ mark[ 'uuid' ] }}" ][ "pfsp" ].join( ", " ) );
+                
+                $( "#mark_{{ mark[ 'uuid' ] }}_gp" )
+                    .text( marks[ "{{ mark[ 'uuid' ] }}" ][ "gp" ] );
+                
+                $( "#mark_{{ mark[ 'uuid' ] }}_surface" )
+                    .text( marks[ "{{ mark[ 'uuid' ] }}" ][ "surface" ].join( ", " ) );
+                
+                $( "#mark_{{ mark[ 'uuid' ] }}_dt" )
+                    .html( marks[ "{{ mark[ 'uuid' ] }}" ][ "dt" ].join( "<br>" ) );
+            {% endfor %}
+
+            $( "#toggle_view_button" ).on( "click", function()
+            {
+                if( current_view === "full" )
+                    view_toggle_to_mini();
+                else
+                    view_toggle_to_full();
+            } );
+            
+            $( "#filter_search" ).on( "keyup", update_filter_search );
+            $( "#filter_search" ).focus();
+            
+            $( ".mark_outer" ).on( "click", mark_details );
+            
+            setTimeout( view_toggle_to_full, 0 );
+            
+            $( "#ex_list_select" )
+                .chosen( {
+                    search_contains: true,
+                    width: "100%"
+                } );
+            $( "#ex_list_select" ).val( "{{ current_exercise_folder }}" ).trigger( "chosen:updated" );
+            $( "#ex_list_select" ).on( "change", update_current_case_session )
+
+            $( "#icnml_navigation_trainersearch" )
+                .addClass( "activated" );
+        </script>
+    </body>
+</html>
+        

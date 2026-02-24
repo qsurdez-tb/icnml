@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+
+        <style>
+            .left_button {
+                position: absolute;
+                left: 20px;
+            }
+            #trainee_list > table {
+                width: 100%;
+            }
+            tr:nth-child( even ) {
+                background: rgb( 200, 200, 200 );
+            }
+            tr:nth-child( odd ) {
+                background: rgb( 222, 222, 222 );
+            }
+            textarea {
+                padding: 10px;
+                width: calc( 100% - 20px );
+            }
+        </style>
+
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+
+            var get_help_add_new_users = function()
+            {
+                $( "<div />" )
+                    .attr( "id", "new_users_help" )
+                    .append(
+                        $( "<div />" )
+                            .css( "margin-bottom", "10px" )
+                            .text( "To add a list of users to a particular list of cases, simply paste in the field a list of emails addresses separated by a new line, as follows:" )
+                    )
+                    .append(
+                        $( "<textarea />" )
+                            .css( "margin-bottom", "10px" )
+                            .attr( "rows", "5" )
+                            .text( "user1@police.state\nsecond.user@police.state\n" )
+                    )
+                    .append(
+                        $( "<div />" )
+                            .text( "By clicking the 'Add new users' button, a set of users account will be generated into ICNML. On the page describing the exercise, you will be able to send the invitations emails to all users. It's recommended to add yourself to the self of users, even if you dont want to complete the set of cases, to check that the reception of invitations email has been done correctly. You can always add new users." )
+                    )
+                    .dialog( {
+                        title: "Add new users",
+                        width: $( window ).width() * 0.3,
+                        height: "auto",
+                        modal: true,
+                        buttons: {
+                            "Got it!": function()
+                            {
+                                $( this ).dialog( "close" );
+                            },
+                        },
+                        close: function()
+                        {
+                            $( this ).remove();
+                        }
+                    } );
+
+            }
+            
+            var process_new_users = function()
+            {
+                var users_list = $( "#new_users_confirmation_area" ).val() || "";
+                users_list = users_list.replace( "\n", ";" );
+
+                $.ajax( {
+                    url: "{{ url_for( 'trainer.add_users_to_folder', folder_id = folder ) }}",
+                    dataType: "json",
+                    data: {
+                        "users": users_list
+                    },
+                    method: "POST",
+                    success: function( data )
+                    {
+                        if( !data.error )
+                        {
+                            toastr.success( "Users added" );
+                            setTimeout( function(){ window.location.reload(); }, 1000 );
+                        } else {
+                            toastr.error( data.msg, "Server error" );
+                        }
+                        $( "#new_users_confirmation" ).remove();
+                    },
+                    error: function( data )
+                    {
+                        toastr.error( "User not added", "Network error" );
+                        $( "#new_users_confirmation" ).remove();
+                    }
+                } );
+            }
+            
+            var validateEmail = function( email )
+            {
+                var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return re.test(String(email).toLowerCase());
+            }
+            
+            var count_new_users = function()
+            {
+                var users_list = $( "#new_users_confirmation_area" ).val() || "";
+                users_list = users_list.split( "\n" );
+                
+                nb = 0;
+                _.forEach( users_list, function( user )
+                {
+                    if( validateEmail( user ) )
+                        nb += 1;
+                } );
+                
+                if( nb == 0 )
+                {
+                    $( "#add_new_users_button" ).hide();
+                } else {
+                    $( "#add_new_users_button" ).show();
+                    if( nb == 1 )
+                        $( "#add_new_users_button" ).text( "Add " + nb + " new user" );
+                    else if( nb >= 2 )
+                        $( "#add_new_users_button" ).text( "Add " + nb + " new users" );
+                }
+            }
+            
+            var add_users_dialog = function()
+            {
+                $( "<div />" )
+                    .attr( "id", "new_users_confirmation" )
+                    .append(
+                        $( "<div />" )
+                            .text( "List of users to add to this folder:" )
+                    )
+                    .append(
+                        $( "<textarea />" )
+                            .attr( "id", "new_users_confirmation_area" )
+                            .attr( "rows", "15" )
+                            .css( "margin-top", "10px" )
+                    )
+                    .dialog( {
+                        title: "Add new users",
+                        width: $( window ).width() * 0.5,
+                        height: "auto",
+                        modal: true,
+                        buttons: {
+                            help: {
+                                class: "left_button",
+                                text: "Get help!",
+                                click: get_help_add_new_users
+                            },
+                            newusers: {
+                                id: "add_new_users_button",
+                                text: "Add new users",
+                                click: process_new_users
+                            },
+                            "Cancel": function()
+                            {
+                                $( this ).dialog( "close" );
+                            },
+                        },
+                        open: function()
+                        {
+                            $( "#new_users_confirmation_area" ).focus();
+                            $( "#new_users_confirmation_area" ).keyup( count_new_users );
+                            $( "#add_new_users_button" ).hide();
+                        },
+                        close: function()
+                        {
+                            $( this ).remove();
+                        }
+                    } );
+
+            }
+            
+            var remove_user = function( user_id )
+            {
+                $.ajax( {
+                    url: "{{ url_for( 'trainer.remove_user_from_folder', folder_id = folder ) }}",
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        "user_id": user_id
+                    },
+                    success: function( data )
+                    {
+                        if( !data.error )
+                        {
+                            toastr.success( "User deleted from folder" );
+                            setTimeout( function(){ window.location.reload(); }, 1000 );
+                        } else {
+                            toastr.error( "User not deleted", "Server side error" );
+                        }
+                    }
+                } );
+            }
+        </script>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <div id="actions" style="margin-bottom: 10px;">
+                <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="add_users" role="button" aria-disabled="false">
+                    <span class="ui-button-text" id="add_users_button_text">Add new users</span>
+                </a>
+            </div>
+            <div id="trainee_list">
+                <table>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                    {% for trainee in trainee_list %}
+                        <tr>
+                            <td>{{ trainee[ 'username' ] }}</td>
+                            <td>{{ trainee[ 'email' ] }}</td>
+                            <td>
+                                <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="remove_user_{{ trainee[ 'user_id' ] }}" role="button" aria-disabled="false">
+                                    <span class="ui-button-text" id="remove_users_button_text">Remove</span>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        
+        <script type="text/javascript">
+            $( "#add_users" ).on( "click", add_users_dialog );
+           
+            {% for trainee in trainee_list %}
+                $( "#remove_user_{{ trainee[ 'user_id' ] }}" ).on( "click", function(){
+                    remove_user( "{{ trainee[ 'user_id' ] }}" )
+                } );
+            {% endfor %}
+            
+            $( "#icnml_navigation_exercises" )
+                .addClass( "activated" );
+            
+            $( "#navloc" ).append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'trainer.exercises_list' ) }}" )
+                    .text( "Folder" )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<span />" ).text( "{{ folder_name }}" )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<span />" ).text( "Trainee list"  )
+            );
+        </script>
+    </body>
+</html>

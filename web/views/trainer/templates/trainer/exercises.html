@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+
+            var create_new_exercise = function()
+            {
+                var create_new_exercise_to_db = function()
+                {
+                    var casename = $( "#new_exercise_confirmation_input" ).val() || null;
+
+                    $.ajax( {
+                        url: "{{ url_for( 'trainer.exercises_new' ) }}",
+                        dataType: "json",
+                        data: {
+                            "name": casename
+                        },
+                        method: "POST",
+                        success: function( data )
+                        {
+                            if( !data.error )
+                                toastr.success( "Case created" );
+                            
+                            else
+                                toastr.error( data.msg, "Server error" );
+                            
+                            $( "#new_exercise_confirmation" ).remove();
+                        },
+                        error: function( data )
+                        {
+                            toastr.error( "Case not created", "Network error" );
+                            $( "#new_exercise_confirmation" ).remove();
+                        }
+                    } );
+                }
+
+                $( "<div />" )
+                    .attr( "id", "new_exercise_confirmation" )
+                    .text( "What is the name of the exercise?" )
+                    .append(
+                        $( "<input />" )
+                            .attr( "id", "new_exercise_confirmation_input" )
+                            .css( "margin-top", "10px" )
+                    )
+                    .dialog( {
+                        title: "New exercise",
+                        modal: true,
+                        buttons: {
+                            "OK": create_new_exercise_to_db,
+                            "Cancel": function()
+                            {
+                                $( this ).dialog( "close" );
+                            },
+                        },
+                        close: function()
+                        {
+                            $( this ).remove();
+                        }
+                    } );
+
+                $( "#new_exercise_confirmation_input" ).on( "keypress", function( event )
+                {
+                    if( event.keyCode == 13 )
+                    {
+                        create_new_exercise_to_db();
+                    }
+                } );
+                
+                $( "#new_exercise_confirmation_input" ).focus();
+            }
+            
+            var update_search_result = function()
+            {
+                var searched = $( "#search_bar" ).val();
+                searched = searched.toLowerCase();
+                
+                _.forEach( ex_list, function( ex )
+                {
+                    var tmp = [];
+                    _.forEach( ex, function( e )
+                    {
+                        tmp.push( e.toLowerCase().indexOf( searched ) );
+                    } );
+                    
+                    if( Math.max( ...tmp ) > -1 )
+                    {
+                        $( "#tr_ex_" + ex[ "uuid" ] ).show();
+                    } else {
+                        $( "#tr_ex_" + ex[ "uuid" ] ).hide();
+                    }
+                } );
+            }
+            
+            var change_ex_name = function( ex, name )
+            {
+                var change_ex_name_db = function()
+                {
+                    var new_name = $( "#rename_exercise_confirmation_input" ).val() || null;
+
+                    $.ajax( {
+                        url: "{{ url_for( 'trainer.exercises_rename' ) }}",
+                        dataType: "json",
+                        data: {
+                            "uuid": ex,
+                            "name": new_name
+                        },
+                        method: "POST",
+                        success: function( data )
+                        {
+                            if( !data.error )
+                                toastr.success( "Case renamed" );
+                            
+                            else
+                                toastr.error( data.msg, "Server error" );
+                            
+                            $( "#rename_exercise_confirmation" ).remove();
+
+                            location.reload();
+                        },
+                        error: function( data )
+                        {
+                            toastr.error( "Case renamed", "Network error" );
+                            $( "#rename_exercise_confirmation" ).remove();
+                        }
+                    } );
+                }
+
+                $( "<div />" )
+                    .attr( "id", "rename_exercise_confirmation" )
+                    .text( "What is the new name for this exercise?" )
+                    .append(
+                        $( "<input />" )
+                            .attr( "id", "rename_exercise_confirmation_input" )
+                            .css( "margin-top", "10px" )
+                    )
+                    .dialog( {
+                        title: "Rename the case '" + name + "'",
+                        modal: true,
+                        buttons: {
+                            "OK": change_ex_name_db,
+                            "Cancel": function()
+                            {
+                                $( this ).dialog( "close" );
+                            },
+                        },
+                        close: function()
+                        {
+                            $( this ).remove();
+                        },
+                        open: function()
+                        {
+                            var dialog_div = $( this );
+                            $( ".ui-widget-overlay" ).bind( "click", function()
+                            {
+                                dialog_div.dialog( "close" );
+                            } );
+                        }
+                    } );
+
+                $( "#rename_exercise_confirmation_input" ).focus();
+                $( "#rename_exercise_confirmation_input" ).on( "keypress", function( event )
+                {
+                    if( event.keyCode == 13 )
+                    {
+                        change_ex_name_db();
+                    }
+                } );
+            }
+
+            var ex_list = {};
+            {% for ex in ex_list %}
+                ex_list[ "{{ ex[ 'uuid' ] }}" ] = {
+                    "uuid": "{{ ex[ 'uuid' ] }}",
+                    "name": "{{ ex[ 'name' ] }}",
+                    "creation": "{{ ex[ 'creationtime' ] }}",
+                    "username": "{{ ex[ 'username' ] | default( "-", true ) }}"
+                }
+            {% endfor %}
+            
+            var marks_count = {};
+            {% for uuid, nb in marks_count.iteritems() %}
+                marks_count[ "{{ uuid }}" ] = {{ nb }};
+            {% endfor %}
+        </script>
+        <style>
+            #ex_list > table {
+                width: 100%;
+            }
+            tr:nth-child( even ) {
+                background: rgb( 200, 200, 200 );
+            }
+            tr:nth-child( odd ) {
+                background: rgb( 222, 222, 222 );
+            }
+        </style>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <div id="new_exercise_button_div">
+                <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="new_exercise_button" role="button" aria-disabled="false">
+                    <span class="ui-button-text" id="new_exercise_button_text">Create new exercise</span>
+                </a>
+            </div>
+            <div class="icnml_search_bar">
+                <input id="search_bar" placeholder="Search a exercise list..."/>
+            </div>
+            <div id="ex_list">
+                <table>
+                    <tr>
+                        <th>Name</th>
+                        <th>Creation time</th>
+                        <th>UUID</th>
+                        <th>Marks</th>
+                        {% if admin %}
+                            <th>Trainer</th>
+                        {% endif %}
+                        <th></th>
+                    </tr>
+                    {% for ex in ex_list %}
+                        <tr id="tr_ex_{{ ex[ 'uuid' ] }}">
+                            <td>{{ ex[ 'name' ] }}</td>
+                            <td>{{ ex[ 'creationtime' ] }}</td>
+                            <td>{{ ex[ 'uuid' ] }}</td>
+                            <td id="nb_marks_{{ ex[ 'uuid' ] }}">0</td>
+                            {% if admin %}
+                                <td>{{ ex[ 'username' ]  }}</td>
+                            {% endif %}
+                            <td>
+                                <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="rename_exercise_{{ ex[ 'uuid' ] }}" role="button" aria-disabled="false">
+                                    <span class="ui-button-text" id="rename_exercise_{{ ex[ 'uuid' ] }}_button_text">Rename</span>
+                                </a>
+                                <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="show_case_{{ ex[ 'uuid' ] }}" role="button" aria-disabled="false">
+                                    <span class="ui-button-text" id="show_case_{{ ex[ 'uuid' ] }}_button_text">Show</span>
+                                </a>
+                                <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="trainee_case_{{ ex[ 'uuid' ] }}" role="button" aria-disabled="false">
+                                    <span class="ui-button-text" id="trainee_case_{{ ex[ 'uuid' ] }}_button_text">Users</span>
+                                </a>
+                                <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="download_folder_{{ ex[ 'uuid' ] }}" role="button" aria-disabled="false">
+                                    <span class="ui-button-text" id="download_folder_{{ ex[ 'uuid' ] }}_button_text">Download</span>
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        
+        <script type="text/javascript">
+            $( "#search_bar" ).on( "keyup", update_search_result );
+            $( "#search_bar" ).focus();
+            
+            {% for ex in ex_list %}
+                $( "#rename_exercise_{{ ex[ 'uuid' ] }}" ).on( "click", function()
+                {
+                    change_ex_name( "{{ ex[ 'uuid' ] }}", "{{ ex[ 'name' ] }}" );
+                } )
+                
+                $( "#show_case_{{ ex[ 'uuid' ] }}" ).on( "click", function()
+                {
+                    window.location = "{{ url_for( 'trainer.show_folder_content', folder_id = ex[ 'uuid' ] ) }}";
+                } )
+                
+                $( "#trainee_case_{{ ex[ 'uuid' ] }}" ).on( "click", function()
+                {
+                    window.location = "{{ url_for( 'trainer.show_folder_trainee', folder_id = ex[ 'uuid' ] ) }}";
+                } )
+
+                $( "#download_folder_{{ ex[ 'uuid' ] }}" ).on( "click", function()
+                {
+                    toastr.info( "Preparing the ZIP file, this may take a minute..." );
+                    window.location.href = "{{ url_for( 'afis.download_exercise_folder', uuid = ex[ 'uuid' ] ) }}";
+                } );
+                
+                $( "#nb_marks_{{ ex[ 'uuid' ] }}" ).text( marks_count[ "{{ ex[ 'uuid' ] }}" ] || 0 );
+            {% endfor %}
+
+            $( "#new_exercise_button" ).on( "click", create_new_exercise );
+            $( "#icnml_navigation_exercises" )
+                .addClass( "activated" );
+        </script>
+    </body>
+</html>
+        

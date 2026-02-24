@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style type="text/css">
+            .notes {
+                color: rgb( 125, 125, 125 );
+                font-size: 0.8em;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 style="margin: 0px">ICNML</h1>
+        <h4 style="margin-top: 0px">International Close Non-Matches Library</h4>
+        
+        Someone (probably yourself) asked a password reset for your account.
+        Click the following link to proceed the password reset procedure:         
+        <br />
+        
+        This reset link in only valid for the user "{{ username }}".
+        
+        <br />
+        
+        <a href="{{ url }}">Reset link</a>
+        
+        <br />
+        <br />
+        
+        This link is valid for 24 hours.
+
+        <br />
+        <br />
+        
+        <div class="notes">
+            If your email client can not open directly the reset link, copy and paste the following link to your internet browser:
+            <br />
+            {{ url }}
+        </div>
+    </body>
+</html>

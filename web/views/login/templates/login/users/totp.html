@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            secret = "{{ secret }}";
+            
+            var display_totp_message = function( class_type, message )
+            {
+                clear_totp_message()
+                
+                if( class_type == "error" )
+                {
+                    $( "#message_totp" )
+                        .css( "visibility", "visible" )
+                        .addClass( "icnml_box_error" )
+                        .text( message );
+                        
+                } else if( class_type == "ok" ) {
+                    $( "#message_totp" )
+                        .css( "visibility", "visible" )
+                        .addClass( "icnml_box_ok" )
+                        .text( message );
+                }
+            }
+            var clear_totp_message = function()
+            {
+                $( "#message_totp" )
+                    .css( "visibility", "hidden" )
+                    .removeClass( "icnml_box_error" )
+                    .removeClass( "icnml_box_ok" )
+                    .text( "" );
+            }
+            
+            var is_totp_valid = function( token )
+            {
+                otplib.authenticator.options = { window: 10 };
+                return otplib.authenticator.check( token, secret );
+            }
+            
+            var get_user_totp_token = function()
+            {
+                var user_entry = $( "#user_entry_totp" ).val();
+                user_entry = user_entry.replace( /\D/g, '' );
+                return user_entry;
+            }
+            
+            var validate_user_totp_entry = function( event )
+            {
+                var user_entry = get_user_totp_token();
+                
+                if( is_totp_valid( user_entry ) )
+                {
+                    $( "#validate_button" )
+                        .text( "Validating..." )
+                        .off( "click" );
+                    
+                    $.ajax( {
+                        url: "{{ url_for( 'login.set_secret' ) }}",
+                        dataType: "json",
+                        success: function( data )
+                        {
+                            if( ! data.error )
+                            {
+                                location.href = "{{ url_for( 'base.home' ) }}";
+                            } else {
+                                $( "#validate_button" )
+                                    .text( "Error..." )
+                                    .off( "click" );
+                                    
+                                display_totp_message( "error", "Error on the server while validating. Retry later or contact the administrator." );
+                            }
+                        },
+                        error: function( data )
+                        {
+                            $( "#validate_button" )
+                                .text( "Error..." )
+                                .off( "click" );
+                                
+                            display_totp_message( "error", "Error on the server while validating. Retry later or contact the administrator." );
+                        }
+                    } );
+                    
+                } else {
+                    $( "#user_entry_totp" )
+                        .val( '' )
+                        .focus();
+                    
+                    display_totp_message( "error", "TOTP not valid" );
+                }
+            }
+            
+            var live_validate_totp = function( event )
+            {
+                clear_totp_message();
+                    
+                if( event.keyCode == 13 )
+                {
+                    validate_user_totp_entry();
+                    
+                } else {
+                    var user_entry = get_user_totp_token();
+                    if( is_totp_valid( user_entry ) )
+                    {
+                        display_totp_message( "ok", "Valid TOTP token" )
+                        
+                    } else if( user_entry.length == 6 ) {
+                        display_totp_message( "error", "TOTP not valid" );
+                        
+                    } else if( user_entry.length > 6 ) {
+                        display_totp_message( "error", "The TOTP value is only 6 digits long" );
+                    }
+                }
+            }
+            
+            var set_secret = function()
+            {
+                $( "<div />" )
+                    .attr( "id", "totp_confirmation" )
+                    .append(
+                        $( "<div />" )
+                            .css( "margin-bottom", "10px" )
+                            .text( "Enter the current value of the TOTP as displayed on your phone:" )
+                    )
+                    .append(
+                        $( "<input />" )
+                            .css( "margin-bottom", "10px" )
+                            .attr( "id", "user_entry_totp" )
+                            .on( "keyup", live_validate_totp )
+                    )
+                    .append(
+                        $( "<div />" )
+                            .attr( "id", "message_totp" )
+                            .text( "" )
+                    )
+                    .dialog( {
+                        title: "TOTP confirmation",
+                        modal: true,
+                        width: "400px",
+                        buttons: {
+                            help: {
+                                id: "help_button_confirmation",
+                                class: "left_button",
+                                text: "Get help",
+                                click: function(){ window.open( "{{ url_for( 'login.totp_help' ) }}", "_blank" ); }
+                            },
+                            validate: {
+                                id: "validate_button",
+                                text: "Validate",
+                                click: validate_user_totp_entry
+                            },
+                            "Cancel": function()
+                            {
+                                $( this ).dialog( "close" );
+                            },
+                        },
+                        open: function()
+                        {
+                            var dialog_div = $( this );
+                            
+                            $( ".ui-widget-overlay" ).bind( "click", function()
+                            {
+                                dialog_div.dialog( "close" );
+                            } );
+                        },
+                        close: function()
+                        {
+                            $( this ).remove();
+                        }
+                    } );
+            }
+        </script>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content icnml_central">
+            <div class="ui-widget-header ui-corner-top icnml_box_top">Time-based One Time Password</div>
+            <div class="ui-widget-content ui-corner-bottom icnml_box_content_central">
+            
+                <div class="icnml_center">
+                    <div>The configuration of a second factor is mendatory to be able to login in ICNML. <br/> To get help, click <a href="{{ url_for( 'login.totp_help' ) }}" target="_blank">HERE</a></div>
+                    <div style="min-height: 378px">
+                        <img alt="qrcode" id="icnml_qrcode" width="100%" src="{{ url_for( 'login.user_totp_qrcode', uid = random_value ) }}">
+                    </div>
+                    
+                    <div style="text-align: center; margin-bottom: 10px;">
+                        <div>Secret value:</div>
+                        <input class="icnml_monospace" id="totp_secret_value" size="52" value="{{ secret }}"/>
+                    </div>
+                    
+                    <div class="icnml_button" style="margin-top: 10px;">
+                        <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="help_button" role="button" aria-disabled="false" href="{{ url_for( 'login.totp_help' ) }}" target="_blank">
+                            <span class="ui-button-text">Get help</span>
+                        </a>
+                        
+                        <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="set_secret_button" role="button" aria-disabled="false">
+                            <span class="ui-button-text">Validate</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script type="text/javascript">
+        $( "#set_secret_button" ).on( "click", set_secret );
+    </script>
+</html>
+

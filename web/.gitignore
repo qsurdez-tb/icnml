@@ -1,0 +1,8 @@
+tests/
+cert.pem
+key.pem
+void.py
+*.pyc
+*.ignore
+venv/*
+doc/build/

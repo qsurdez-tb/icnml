@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <style type="text/css">
+            .icnml_signin_list {
+                display: grid;
+                grid-gap: 10px;
+                grid-template-columns: repeat( auto-fit, minmax( 200px, max-content ) );
+                grid-auto-rows: min-content;
+            }
+        </style>
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            homeurl = "{{ url_for( 'base.home' ) }}";
+            begin_activate_url = "{{ url_for( 'login.webauthn_begin_activate' ) }}";
+            verify_url = "{{ url_for( 'login.webauthn_verify' ) }}";
+            begin_assertion_url = "{{ url_for( 'login.webauthn_begin_assertion' ) }}";
+            verify_assertion_url = "{{ url_for( 'login.webauthn_verify_assertion' ) }}";
+        </script>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <div class="icnml_signin_list">
+                {% for user in users %}
+                    <div>
+                        <div class="ui-widget-header ui-corner-top icnml_box_top">{{ user[ 'first_name' ] }} {{ user[ 'last_name' ] }}</div>
+                        <div id="icnml_homepage_form" class="ui-widget-content ui-corner-bottom icnml_box_content_central">
+                            <div id="icnml_box_fields" class="icnml_box_fields">
+                                <div style="text-align: right;">
+                                    <label for="first_name">First name</label>
+                                </div>
+                                <div>
+                                    <input id="first_name" name="first_name" type="text" value="{{ user[ 'first_name' ] }}" />
+                                </div>
+                                
+                                <div style="text-align: right;">
+                                    <label for="last_name">Last name</label>
+                                </div>
+                                <div>
+                                    <input id="last_name" name="last_name" type="text" value="{{ user[ 'last_name' ] }}" />
+                                </div>
+                                
+                                <div style="text-align: right;">
+                                    <label for="email">E-mail</label>
+                                </div>
+                                <div>
+                                    <input id="email" name="email" type="text" value="{{ user[ 'email' ] }}" />
+                                </div>
+                                
+                                <div style="text-align: right;">
+                                    <label for="account_type">Account type</label>
+                                </div>
+                                <div>
+                                    <input id="account_type" name="account_type" type="text" value="{{ user[ 'account_type' ] }}" />
+                                </div>
+                                
+                                <div style="text-align: right;">
+                                    <label for="account_type">Username</label>
+                                </div>
+                                <div>
+                                    <input id="account_name" name="account_name" type="text" value="{{ user[ 'account_type' ] | lower }}_{{ user[ 'username_id' ] }}" />
+                                </div>
+                            </div>
+                            
+                            <div id="icnml_login_error" class="icnml_box_error"></div>
+                            <div id="warning" class="icnml_box_warning"></div>
+                            
+                            <div class="icnml_button">
+                                <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="validate_{{ user[ 'id' ] }}_button" role="button" aria-disabled="false">
+                                    <span class="ui-button-text">Validate</span>
+                                </a>
+                                <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="reject_{{ user[ 'id' ] }}_button" role="button" aria-disabled="false">
+                                    <span class="ui-button-text">Reject</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div>
+                        No new user requests pending...
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </body>
+    <script type="text/javascript">
+        var validate_user = async function( id )
+        {
+            try {
+                var credentialRequestOptionsFromServer = await $.ajax( {
+                    url: "{{ url_for( 'newuser.do_validate_signin' ) }}",
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        id: id
+                    }
+                } );
+            } catch( err ) {
+                return toastr.error( err, "Error when getting request options from server" );
+            }
+            
+            credentialRequestOptionsFromServer = credentialRequestOptionsFromServer.data;
+            credentialRequestOptionsFromServer = transformCredentialRequestOptions( credentialRequestOptionsFromServer );
+            
+            try {
+                var assertion = await navigator.credentials.get( {
+                    publicKey: credentialRequestOptionsFromServer
+                } );
+                
+            } catch ( err ) {
+                return toastr.error( err, "Error when creating credential" );
+            }
+            
+            var assertion = transformAssertionForServer( assertion );
+            
+            try {
+                var response = await $.ajax( {
+                    url: "{{ url_for( 'newuser.do_validate_signin_2' ) }}",
+                    dataType: "json",
+                    method: "POST",
+                    data: assertion
+                } );
+                
+                if( response.error )
+                    throw response.message;
+            
+            } catch ( err ) {
+                return toastr.error( err, "Error when validating assertion on server" );
+            }
+
+            toastr.success( "User accepted" );
+            
+            location.reload();
+        }
+        
+        
+        var reject_user = function( id )
+        {
+            $.ajax( {
+                url: "{{ url_for( 'newuser.do_validation_reject' ) }}",
+                dataType: "json",
+                method: "POST",
+                data: {
+                    id: id
+                },
+                success: function( data )
+                {
+                    if( !data.error )
+                        toastr.success( "User rejected" );
+                    else
+                        toastr.error( "Server error" );
+                },
+                error: function()
+                {
+                    toastr.error( "Network error" );
+                }
+            } );
+        }
+        
+        {% for user in users %}
+            $( "#validate_{{ user[ 'id' ] }}_button" ).on( "click", () => { validate_user( {{ user[ 'id' ] }} ) } );
+            $( "#reject_{{ user[ 'id' ] }}_button" ).on( "click", () => { reject_user( {{ user[ 'id' ] }} ) } );
+        {% endfor %}
+        
+        $( "#icnml_navigation_newuser" )
+            .addClass( "activated" );
+        
+        $( "#navloc" ).append(
+            $( "<span />" )
+                .text( "New users validation" )
+        )
+    </script>
+</html>
+

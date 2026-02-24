@@ -1,0 +1,218 @@
+{% import "jinja_functions.html" as common %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            
+            var password_local = localStorage.getItem( "session_key" );
+            var nickname = decrypt( "{{ nickname }}", password_local );
+            var tp_filename = decrypt( "{{ tp_filename }}", password_local );
+            tp_filename = truncate( tp_filename, 18 );
+            
+            var update_general_pattern_db = function( gp_id, gp_name )
+            {
+                $( ".div_checked" ).css( "visibility", "hidden" )
+                $( "#gp_" + gp_id + "_checked" ).css( "visibility", "visible" );
+                
+                $.ajax( {
+                    url: "{{ url_for( 'submission.submission_segment_set_gp', submission_id = submission_id, pc = pc ) }}",
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        gp: gp_name
+                    },
+                    success: function( data )
+                    {
+                        console.log( data );
+                    },
+                    error: function( data )
+                    {
+                        $( "#gp_" + gp_id + "_checked" ).css( "visibility", "hidden" );
+                        toastr.error( "Error while saving the general pattern" );
+                    }
+                } );
+            }
+        </script>
+        
+        <style type="text/css">
+            #general_pattern {
+                margin-top: 5px;
+                display: grid;
+                grid-template-columns: repeat( 4, 1fr );
+                grid-gap: 10px;
+            }
+            #general_pattern > div {
+                padding-top: 40px;
+                padding-bottom: 40px;
+            }
+            #general_pattern > div > span {
+                margin-top: 35px;
+                margin-bottom: 35px;
+            }
+            .icnml_box_fields {
+                margin-bottom: 20px;
+            }
+            #next_div {
+                margin-top: 30px;
+                width: 100%;
+            }
+            #next_div > a {
+                padding: 10px;
+                width: calc( 100% - 23px );
+            }
+        </style>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <div class="icnml_lp_oneperpage">
+                <form>
+                    <div class="ui-widget-header ui-corner-top icnml_box_top">{{ pc_name }}</div>
+                    <div class="ui-widget-content ui-corner-bottom icnml_box_content_central">
+                        <div class="icnml_lp_cardbox">
+                            <div
+                                class="icnml_100percent_img"
+                                style="background-image: url( {{ url_for( 'image.image_segment_serve', tenprint_id = tenprint_id, pc = pc ) }} )">
+                            </div>
+                            <div>
+                                <div class="icnml_box_fields">
+                                    <div>Position code</div>
+                                    <div>{{ pc_name }}</div>
+                                </div>
+                                
+                                {% if tp_type == "finger" %}
+                                    <div>General pattern</div>
+                                    <div id="general_pattern">
+                                        
+                                        {% macro gp_div( gp_id, gp_name ) %}
+                                            <div class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="general_pattern_{{ gp_id }}">
+                                                <span class="ui-button-text">{{ gp_name|title }}</span>
+                                                {{ common.checked_ok( "gp_" + gp_id + "_checked" ) }}
+                                            </div>
+                                        {% endmacro %}
+                                        
+                                        {{ gp_div( 'll', 'left loop' ) }}
+                                        {{ gp_div( 'rl', 'right loop' ) }}
+                                        {{ gp_div( 'whorl', 'whorl' ) }}
+                                        {{ gp_div( 'arch', 'arch' ) }}
+                                        {{ gp_div( 'cpl', 'central pocket loop' ) }}
+                                        {{ gp_div( 'dl', 'double loop' ) }}
+                                        
+                                        {{ gp_div( 'ma', 'missing/amputated' ) }}
+                                        {{ gp_div( 'sm', 'scarred/mutilated' ) }}
+                                        
+                                        {{ gp_div( 'unknown', 'unknown' ) }}
+                                    </div>
+                                {% endif %}
+                                
+                                {% if next_pc %}
+                                    <div id="next_div">
+                                        <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="next_button" href="{{ url_for( 'submission.submission_segment', submission_id = submission_id, tenprint_id = tenprint_id, pc = next_pc ) }}">
+                                            <span class="ui-button-text" id="segmentation_button_span_text">Next segment</span>
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    <div id="next_div">
+                                        <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="next_button" href="{{ url_for( 'submission.submission_tenprint_list', submission_id = submission_id ) }}">
+                                            <span class="ui-button-text" id="segmentation_button_span_text">List of tenprint cards</span>
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+    <script type="text/javascript">
+        /*
+         *    General pattern buttons
+         */
+        {% macro gp_action( gp_id, gp_name ) %}
+            $( "#general_pattern_{{ gp_id }}" ).on( "click", function()
+            {
+                update_general_pattern_db( "{{ gp_id }}", "{{ gp_name }}" );
+            } );
+        {% endmacro %}
+        
+        {{ gp_action( 'll', 'left loop' ) }}
+        {{ gp_action( 'rl', 'right loop' ) }}
+        {{ gp_action( 'whorl', 'whorl' ) }}
+        {{ gp_action( 'arch', 'arch' ) }}
+        {{ gp_action( 'cpl', 'central pocket loop' ) }}
+        {{ gp_action( 'dl', 'double loop' ) }}
+        
+        {{ gp_action( 'ma', 'missing/amputated' ) }}
+        {{ gp_action( 'sm', 'scarred/mutilated' ) }}
+        
+        {{ gp_action( 'unknown', 'unknown' ) }}
+        
+        //
+            
+        $( "#gp_{{ current_gp }}_checked" ).css( "visibility", "visible" );
+        
+        /*
+         *    Navigation UI update
+         */
+        
+        $( "#icnml_navigation_submissions" )
+            .addClass( "activated" );
+        
+        $( "#navloc" ).append(
+            $( "<a />" )
+                .attr( "href", "{{ url_for( 'submission.submission_list' ) }}" )
+                .text( "Submissions" )
+        )
+        .append(
+            $( "<span />" ).text( ">" )
+        )
+        .append(
+            $( "<a />" )
+                .attr( "href", "{{ url_for( 'submission.submission_upload_tenprintmark', submission_id = submission_id ) }}" )
+                .text( nickname )
+        )
+        .append(
+            $( "<span />" ).text( ">" )
+        )
+        .append(
+            $( "<a />" )
+                .attr( "href", "{{ url_for( 'submission.submission_tenprint_list', submission_id = submission_id ) }}" )
+                .text( "Tenprints" )
+        )
+        .append(
+            $( "<span />" ).text( ">" )
+        )
+        .append(
+            $( "<a />" )
+                .attr( "href", "{{ url_for( 'submission.submission_tenprint', submission_id = submission_id, tenprint_id = tenprint_id ) }}" )
+                .text( tp_filename )
+        )
+        .append(
+            $( "<span />" ).text( ">" )
+        )
+        .append(
+            $( "<a />" )
+                .attr( "href", "{{ url_for( 'submission.submission_tenprint_segments_list', submission_id = submission_id, tenprint_id = tenprint_id ) }}" )
+                .text( "Segments" )
+        )
+        .append(
+            $( "<span />" ).text( ">" )
+        )
+        .append(
+            $( "<span />" ).text( "{{ pc_name }}" )
+        );
+    </script>
+</html>
+        

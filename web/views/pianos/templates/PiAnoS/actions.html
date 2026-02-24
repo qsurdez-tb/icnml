@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            
+            var update_all = function()
+            {
+                $.ajax( {
+                    url: "{{ url_for( 'pianos.pianos_update_all_accounts' ) }}",
+                    dataType: "json",
+                    success: function( data )
+                    {
+                        if( ! data.error )
+                        {
+                            toastr.success( "PiAnoS updated" );
+                        } else {
+                            toastr.error( "Error while updating" );
+                        }
+                    },
+                    error: function()
+                    {
+                        toastr.error( "Network error" );
+                    }
+                } );
+            }
+        </script>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <div id="pianos_update_all_accounts_button_div">
+                <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="pianos_update_all_accounts_button" role="button" aria-disabled="false">
+                    <span class="ui-button-text" id="pianos_update_all_accounts_button_span_text">Copy all accounts to PiAnoS</span>
+                </a>
+            </div>
+            <div id="pianos_open">
+                <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="open_pianos_button" role="button" aria-disabled="false">
+                    <span class="ui-button-text" id="open_pianos_button_span_text">Open PiAnoS</span>
+                </a>
+            </div>
+        </div>
+        
+        <script type="text/javascript">
+            $( "#pianos_update_all_accounts_button" )
+                .on( "click", update_all );
+            
+            $( "#open_pianos_button" ).on( "click", function(){
+                window.location = "/pianos";
+            } );
+            
+            $( "#icnml_navigation_pianos" )
+                .addClass( "activated" );
+            
+            $( "#navloc" ).append(
+                $( "<span />" ).text( "PiAnoS Actions" )
+            );
+        </script>
+    </body>
+</html>
+

@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            
+            {% if admin %}
+                var update_users_in_db = function()
+                {
+                    update_users_in_db_sub( "mark" );
+                    update_users_in_db_sub( "reference" );
+                }
+                
+                var update_users_in_db_sub = function( type )
+                {
+                    var users = [];
+                    
+                    $.each( $( "#users_" + type + " > select > option:checked" ), function() {
+                        users.push( parseInt( $( this ).val() ) );
+                    } );
+                    
+                    $.ajax( {
+                        url: "{{ url_for( 'afis.admin_update_users_in_afis_folder', target_uuid = target_uuid ) }}",
+                        dataType: "json",
+                        method: "POST",
+                        data: {
+                            users: JSON.stringify( users ),
+                            type: type
+                        },
+                        success: function( data )
+                        {
+                            if( data.error )
+                                toastr.error( "Server side error" );
+                        },
+                        error: function( data )
+                        {
+                            toastr.error( "Network error" );
+                        }
+                    } );
+                }
+                
+                var remove_annotation_from_db = function( target )
+                {
+                    $( "<div />" )
+                        .attr( "id", "annotation_image_deletion_confirmation" )
+                        .text( "Are you sure you want to delete this annotation image?" )
+                        .dialog( {
+                            title: "Annotation image deletion",
+                            modal: true,
+                            width: "550px",
+                            buttons: {
+                                "Delete": function()
+                                {
+                                    $.ajax( {
+                                        url: "{{ url_for( 'afis.admin_delete_annotation', folder_uuid = target_uuid ) }}",
+                                        method: "POST",
+                                        dataType: "json",
+                                        data: {
+                                            uuid: target
+                                        },
+                                        success: function( data )
+                                        {
+                                            if( ! data.error )
+                                            {
+                                                $( "#segment_" + target + "_outer" ).remove();
+                                                $( "#annotation_image_deletion_confirmation" ).dialog( "close" );
+                                                
+                                            } else {
+                                                toastr.error( "Error while deleting the " );
+                                            }
+                                        },
+                                        error: function( data )
+                                        {
+                                            toastr.error( "Network error" );
+                                            $( "#annotation_image_deletion_confirmation" ).dialog( "close" );
+                                        }
+                                    } );
+                                },
+                                "Cancel": function()
+                                {
+                                    $( this ).dialog( "close" );
+                                },
+                            },
+                            close: function()
+                            {
+                                $( this ).remove();
+                            }
+                        } );
+                }
+                
+                var delete_cnm_result = function( uuid )
+                {
+                    $( "<div />" )
+                        .attr( "id", "cnm_result_delete_dialog" )
+                        .text( "Are you sure you want to delete this CNM result folder?" )
+                        .dialog( {
+                            title: "Close Non Match result deletion confirmation",
+                            modal: true,
+                            width: "550px",
+                            buttons: {
+                                "Delete": function()
+                                {
+                                    $.ajax( {
+                                        url: "{{ url_for( 'afis.delete_cnm_result', target_uuid = target_uuid ) }}",
+                                        dataType: "json",
+                                        method: "POST",
+                                        data: {
+                                            "cnm_uuid": uuid
+                                        },
+                                        success: function( data )
+                                        {
+                                            if( ! data.error )
+                                            {
+                                                $( "#candidate_" + uuid + "_outer" ).remove();
+                                                $( "#cnm_result_delete_dialog" ).dialog( "close" );
+                                                
+                                            } else {
+                                                toastr.error( "Error while deleting the " );
+                                            }
+                                        },
+                                        error: function( data )
+                                        {
+                                            toastr.error( "Network error" );
+                                            $( "#cnm_result_delete_dialog" ).dialog( "close" );
+                                        }
+                                    } );
+                                },
+                                "Cancel": function()
+                                {
+                                    $( this ).dialog( "close" );
+                                },
+                            },
+                            close: function()
+                            {
+                                $( this ).remove();
+                            },
+                            open: function()
+                            {
+                                var dialog_div = $( this );
+                                $( ".ui-widget-overlay" ).bind( "click", function()
+                                {
+                                    dialog_div.dialog( "close" );
+                                } );
+                            }
+                        } );
+                }
+            {% endif %}
+        </script>
+        
+        <style type="text/css">
+            :root {
+                --imgsize: 200px;
+            }
+            .list_of_assignee {
+                display: grid;
+                grid-template-columns: auto 1fr;
+                grid-gap: 3px 20px;
+                margin-bottom: 30px;
+            }
+            .icnml_download_target_buttons {
+                width: fit-content;
+                width: -moz-fit-content;
+                margin-top: 30px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .icnml_buttons_list {
+                display: grid;
+                grid-template-columns: repeat( 2, 1fr );
+                grid-gap: 10px;
+                margin: 20px;
+            }
+       </style>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            {% if not admin %}
+                <div class="icnml_download_target_buttons">
+                    <div class="icnml_buttons_list">
+                        <div>
+                            <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only icnml_button_square" id="download_folder" role="button" aria-disabled="false">
+                                <span class="ui-button-text">Download</span>
+                            </a>
+                        </div>
+                        <div>
+                            <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only icnml_button_square" id="upload_cnm" role="button" aria-disabled="false">
+                                <span class="ui-button-text">Upload a CNM</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            
+            {% if admin %}
+                <div class="list_of_assignee">
+                    <div>Marks</div>
+                    <div id="users_mark">
+                        <select multiple id="users_select_marks" data-placeholder="Add a user to this folder..." class="chosen-select">
+                            {% for user in all_afis_users %}
+                                <option id="user_{{ user[ 'id' ] }}_mark_chosen" value="{{ user[ 'id' ] }}">{{ user[ 'username' ] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>References</div>
+                    <div id="users_reference">
+                        <select multiple id="users_select_refs" data-placeholder="Add a user to this folder..." class="chosen-select">
+                            {% for user in all_afis_users %}
+                                <option id="user_{{ user[ 'id' ] }}_ref_chosen" value="{{ user[ 'id' ] }}">{{ user[ 'username' ] }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            {% endif %}
+            
+            {% if annotation_list != None %}
+                <div class="icnml_list_of_boxes_outer">
+                    <div class="icnml_list_of_boxes_desc">Target annotations ({{ annotation_list|length }})</div>
+                    <div class="icnml_list_of_boxes">
+                        {% for s in annotation_list %}
+                            <div id="segment_{{ s[ 'uuid' ] }}_outer">
+                                <div class="ui-widget-header ui-corner-top icnml_box_top" id="segment_{{ s[ 'uuid' ] }}_filename">{{ s[ 'uuid' ][ 0:18 ] }}</div>
+                                <div class="ui-widget-content ui-corner-bottom icnml_box_content">
+                                    <div
+                                        id="segment_{{ s[ 'uuid' ] }}"
+                                        class="icnml_pointer"
+                                        style="background-image: url( {{ url_for( 'image.image_annotation_serve', uuid = s[ 'uuid' ] ) }} )">
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        
+                        {% if admin %}
+                            <div>
+                                <div class="ui-widget-header ui-corner-top icnml_box_top">Add illustration</div>
+                                <div class="ui-widget-content ui-corner-bottom icnml_box_content">
+                                    <div>
+                                        <div id="segment_annotation_illustration_dropzone" class="dropzone icnml_pointer"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                <div>No annotations for this finger at the moment</div>
+            {% endif %}
+            
+            {% if admin %}
+                {% if cnm_result != None %}
+                    <div class="icnml_list_of_boxes_outer">
+                        <div class="icnml_list_of_boxes_desc">Close Non Match results ({{ cnm_result|length }})</div>
+                        <div class="icnml_list_of_boxes">
+                            {% for cnm in cnm_result %}
+                                <div id="candidate_{{ cnm[ 'uuid' ] }}_outer">
+                                    <div class="ui-widget-header ui-corner-top icnml_box_top" id="candidate_{{ cnm[ 'uuid' ] }}_filename">{{ cnm[ 'uuid' ][ 0:18 ] }}</div>
+                                    <div class="ui-widget-content ui-corner-bottom icnml_box_content">
+                                        <div
+                                            id="candidate_{{ cnm[ 'uuid' ] }}"
+                                            class="icnml_pointer"
+                                            style="background-image: url( {{ url_for( 'afis.image_auto_detect_format', cnm_uuid = cnm[ 'uuid' ], file_uuid = cnm[ 'file_uuid' ] or 'None', fpc = 0 ) }} )">
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% else %}
+                    <div>No CNM candidate for this target at the moment</div>
+                {% endif %}
+            {% endif %}
+            
+            {% if segments_list != None %}
+                <div class="icnml_list_of_boxes_outer">
+                    <div class="icnml_list_of_boxes_desc">References ({{ segments_list|length }})</div>
+                    <div class="icnml_list_of_boxes">
+                        {% for s in segments_list %}
+                            <div id="segment_{{ s[ 'folder_uuid' ] }}_outer">
+                                <div class="ui-widget-header ui-corner-top icnml_box_top" id="segment_{{ s[ 'uuid' ] }}_filename">{{ s[ 'uuid' ][ 0:18 ] }}</div>
+                                <div class="ui-widget-content ui-corner-bottom icnml_box_content">
+                                    <div
+                                        id="segment_{{ s[ 'uuid' ] }}"
+                                        class="icnml_pointer"
+                                        style="background-image: url( {{ url_for( 'image.image_segment_serve', tenprint_id = s[ 'tenprint' ], pc = s[ 'pc' ] ) }} )">
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% elif admin %}
+                <div>No segment images in this folder at the moment</div>
+            {% endif %}
+            
+            {% if marks_list != None %}
+                <div class="icnml_list_of_boxes_outer">
+                    <div class="icnml_list_of_boxes_desc">Marks ({{ marks_list|length }})</div>
+                    <div class="icnml_list_of_boxes">
+                        {% for mark in marks_list %}
+                            <div id="mark_{{ mark[ 'uuid' ] }}_outer">
+                                <div class="ui-widget-header ui-corner-top icnml_box_top" id="mark_{{ mark[ 'uuid' ] }}_filename">{{ mark[ 'uuid' ][ 0:18 ] }}</div>
+                                <div class="ui-widget-content ui-corner-bottom icnml_box_content">
+                                    <div
+                                        id="mark_{{ mark[ 'uuid' ] }}"
+                                        class="icnml_pointer"
+                                        style="background-image: url( {{ url_for( 'image.image_file_serve', file_id = mark[ 'uuid' ] ) }} )">
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% elif admin %}
+                <div>No mark images in this folder at the moment</div>
+            {% endif %}
+            
+            <div id="zoom_slider"></div>
+        </div>
+        <script type="text/javascript">
+            {% if admin %}
+                // Display the assigned users for this target
+                var users_assigned_refs = [];
+                {% for user in users_assigned_refs %}
+                    users_assigned_refs.push( "{{ user[ 'id' ] }}" );
+                {% endfor %}
+                $( "#users_select_refs" )
+                    .val( users_assigned_refs ).trigger( "chosen:updated" );
+                
+                var users_assigned_marks = [];
+                {% for user in users_assigned_marks %}
+                    users_assigned_marks.push( "{{ user[ 'id' ] }}" );
+                {% endfor %}
+                $( "#users_select_marks" )
+                    .val( users_assigned_marks ).trigger( "chosen:updated" );
+                
+                $( "#users_select_marks" ).on( "change", update_users_in_db )
+                $( "#users_select_refs" ).on( "change", update_users_in_db )
+                
+                // Delete an existing annotation image
+                {% for s in annotation_list %}
+                    $( "#segment_{{ s[ 'uuid' ] }}_outer" ).on( "contextmenu", function( event )
+                    {
+                        event.preventDefault();
+                        var target = $( event.target ).attr( "id" ).replace( "segment_", "" );
+                        
+                        remove_annotation_from_db( target );
+                        
+                        return false;
+                    } );
+                {% endfor %}
+                
+                // Add new annotation image
+                $( "#users_select_marks" )
+                    .chosen( {
+                        search_contains: true,
+                        width: "50%"
+                    } );
+                $( "#users_select_refs" )
+                    .chosen( {
+                        search_contains: true,
+                        width: "50%"
+                    } );
+                
+                Dropzone.autoDiscover = false;
+                $( function()
+                {
+                    new Dropzone(
+                        "#segment_annotation_illustration_dropzone",
+                        {
+                            url: "{{ url_for( 'afis.admin_add_illustration', uuid = target_uuid ) }}",
+                            timeout: 600000,
+                            createImageThumbnails: false,
+                            parallelUploads: 1,
+                            params: {
+                                "type": "annotation",
+                                "folder_id": "{{ folder_id }}",
+                                "fpc": "{{ fpc }}"
+                            }
+                        }
+                    )
+                    .on( "addedfile", function( file )
+                    {
+                        $( "#segment_annotation_illustration_dropzone > .dz-default.dz-message" ).remove();
+                    } )
+                    .on( "queuecomplete", function()
+                    {
+                        window.location.reload();
+                    } )
+                    .on( "success", function( p ) {
+                        var response = JSON.parse( p.xhr.response );
+                        if( response.error )
+                            toastr.error( response.message );
+                    } )
+                    .on( "error", function( p )
+                    {
+                        toastr.error( "Error" );
+                    } );
+                } );
+            
+                {% for mark in marks_list %}
+                    $( "#mark_{{ mark[ 'uuid' ] }}_outer" ).on( "click", function()
+                    {
+                        window.location = "{{ url_for( 'submission.admin_submission_mark', submission_id = submission_id, mark_id = mark[ 'uuid' ] ) }}";
+                    } );
+                {% endfor %}
+                
+                {% for cnm in cnm_result %}
+                    $( "#candidate_{{ cnm[ 'uuid' ] }}_outer" ).on( "click", function()
+                    {
+                        window.location = "{{ url_for( 'afis.admin_cnm_edit', target_uuid = target_uuid, cnm_uuid = cnm[ 'uuid' ] ) }}"
+                    } );
+                    
+                    $( "#candidate_{{ cnm[ 'uuid' ] }}_outer" ).on( "contextmenu", function()
+                    {
+                        delete_cnm_result( "{{ cnm[ 'uuid' ] }}"  );
+                    } );
+                {% endfor %}
+            {% else %}
+                $( "#download_folder" ).on( "click", function()
+                {
+                    toastr.info( "Preparing the ZIP file for download..." );
+                    
+                    window.location.href = "{{ url_for( 'afis.download_target_folder', uuid = target_uuid ) }}";
+                } );
+                
+                $( "#upload_cnm" ).on( "click", function()
+                {
+                    window.location.href = "{{ url_for( 'afis.upload_cnm_list_page', uuid = target_uuid ) }}";
+                } );
+            {% endif %}
+            
+            $( "#icnml_navigation_afis" )
+                .addClass( "activated" );
+            
+            {% if admin %}
+                $( "#navloc" ).append(
+                    $( "<a />" )
+                        .attr( "href", "{{ url_for( 'submission.admin_submission_list' ) }}" )
+                        .text( "Submissions" )
+                )
+                .append(
+                    $( "<span />" ).text( ">" )
+                )
+                .append(
+                    $( "<a />" )
+                        .attr( "href", "{{ url_for( 'submission.admin_submission_home', submission_id = submission_id ) }}" )
+                        .text( "{{ username }}" )
+                )
+                .append(
+                    $( "<span />" ).text( ">" )
+                )
+                .append(
+                    $( "<a />" )
+                        .attr( "href", "{{ url_for( 'afis.admin_show_target_list', submission_uuid = submission_id ) }}" )
+                        .text( "Targets" )
+                )
+                .append(
+                    $( "<span />" ).text( ">" )
+                )
+                .append(
+                    $( "<span />" ).text( "{{ finger_name }}" )
+                )
+            {% else %}
+                $( "#navloc" ).append(
+                    $( "<a />" )
+                        .attr( "href", "{{ url_for( 'afis.list_folders' ) }}" )
+                        .text( "AFIS targets" )
+                )
+                .append(
+                    $( "<span />" ).text( ">" )
+                )
+                .append(
+                    $( "<span />" ).text( "{{ target_uuid[ 0:18 ] }}" )
+                )
+            {% endif %}
+        </script>
+    </body>
+</html>
+        

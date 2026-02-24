@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <style type="text/css">
+            #button_list {
+                margin-top: 50px;
+            }
+            
+            #button_list > div > a {
+                width: 60%;
+                margin-bottom: 10px;
+            }
+        </style>
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            submission_id = "{{ submission_id }}";
+            file_id = "{{ file[ 'uuid' ] }}";
+            
+            {% if not admin %}
+                var password_local = localStorage.getItem( "session_key" );
+                var nickname = decrypt( "{{ nickname }}", password_local );
+                var filename = decrypt( "{{ file[ 'filename' ] }}", password_local );
+                filename = truncate( filename, 18 );
+            {% endif %}
+            
+            var zones_array = new Array();
+            {% for zone in zones %}
+                zones_array.push( {{ zone[ 'fpc' ] }} );
+            {% endfor %}
+            
+            var zonesData = {};
+            {% for zone in zones %}
+                zonesData[ "{{ zone[ 'fpc' ] }}" ] = {
+                    "fpc": {{ zone[ 'fpc' ] }},
+                    "x": {{ zone[ 'x' ] }},
+                    "y": {{ zone[ 'y' ] }},
+                    "width": {{ zone[ 'width' ] }},
+                    "height": {{ zone[ 'height' ] }},
+                    "orientation": {{ zone[ 'orientation' ] }}
+                };
+            {% endfor %}
+            
+            var segments_position_code = {};
+            {% for fpc in segments_position_code %}
+                segments_position_code[ "{{ fpc }}" ] = "{{ segments_position_code[ fpc ] }}".replace( "&#39;", "'" );
+            {% endfor %}
+            
+            var to_annotate = [];
+            {% for ta in to_annotate %}
+                to_annotate.push( {{ ta }} );
+            {% endfor %}
+            
+            var orientationsData = {};
+            {% for zone in zones %}
+                orientationsData[ "{{ zone[ 'fpc' ] }}" ] = {{ zone[ 'orientation' ] }};
+            {% endfor %}
+            
+            var get_pos_relative_svg = function( event )
+            {
+                return {
+                    x: event.clientX - $( "#tenprint_svg" ).offset().left,
+                    y: event.clientY - $( "#tenprint_svg" ).offset().top
+                };
+            }
+            
+            var update_quality_db = function()
+            {
+                var quality = $( "#file_{{ file[ 'uuid' ] }}_quality > select > option:checked" ).val();
+                
+                $.ajax( {
+                    url: "{{ url_for( 'submission.submission_tenprint_set_quality', submission_id = submission_id, tenprint_id = file[ 'uuid' ] ) }}",
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        quality: quality
+                    },
+                    success: function( data )
+                    {
+                        if( data.error )
+                            toastr.error( "Error while saving the quality value" );
+                    },
+                    error: function( data )
+                    {
+                        toastr.error( "Network error" );
+                    }
+                } );
+            }
+            
+            var update_note_db = function()
+            {
+                var note = $( "#file_note" ).val() || null;
+                
+                $.ajax( {
+                    url: "{{ url_for( 'submission.submission_file_set_note', submission_id = submission_id, file_uuid = file[ 'uuid' ] ) }}",
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        note: note
+                    }
+                } );
+            }
+            
+            var update_coordinates_informations = function()
+            {
+                svg_height = $( window ).height() - 100;
+                svg_width = svg_height * {{ svg_hw_factor }};
+            }
+            
+            var start_segmentation = function()
+            {
+                $( "#segmentation_button_span_text" ).text( "Segmenting..." );
+                $( "#segmentation_button" ).append(
+                    $( "<span />" )
+                        .attr( "id", "segmentation_button_span_spinner" )
+                        .attr( "class", "ld ld-ring ld-cycle" )
+                        .css( "position", "absolute" )
+                        .css( "right", "20px" )
+                )
+                
+                $( "#segmentation_button" ).off( "click" );
+                
+                $.ajax( {
+                    url: "{{ url_for( 'image.image_tenprint_segmentation', tenprint_id = file[ 'uuid' ] ) }}",
+                    dataType: "json",
+                    success: function( data )
+                    {
+                        $( "#segmentation_button_span_text" ).text( "Segementation updated" );
+                        $( "#segmentation_button_span_spinner" ).remove();
+                    },
+                    error: function( data )
+                    {
+                        $( "#segmentation_button_span_text" ).text( "Error while segmenting..." );
+                        $( "#segmentation_button_span_spinner" ).remove();
+                    }
+                } );
+            }
+            
+            var updateSVG = function()
+            {
+                $( "#tenprint_svg_div" )
+                    .css( "width", svg_width )
+                    .css( "height", svg_height );
+                
+                $( ".icnml_central" )
+                    .css( "width", svg_width * 2 )
+                    .css( "height", svg_height );
+                
+                $( "#zoomed_image" ).attr( "width", svg_width );
+                $( "#zoomed_image" ).attr( "height", svg_height );
+                
+                $( "#tp_polygones" ).empty();
+                
+                for( var i = 0; i < zones_array.length; i++ )
+                {
+                    var fpc = zones_array[ i ];
+                    var zone = zonesData[ fpc ];
+                    
+                    var x = zone[ "x" ] * svg_width;
+                    var y = zone[ "y" ] * svg_height;
+                    var height = zone[ "height" ] * svg_height;
+                    var width = zone[ "width" ] * svg_width;
+                    var orientation = zone[ "orientation" ];
+                    
+                    $( "#tp_polygones" )
+                        .append( segment_svg( fpc, x, y, height, width, orientation ) );
+                }
+                
+                $( "#tp_polygones > g > rect" ).on( "mousewheel", mouse_wheel );
+            }
+            
+            {% if admin %}
+                var download_tenprint = function()
+                {
+                    window.location = "{{ url_for( 'image.admin_download_file_full_resolution', file_id = file[ 'uuid' ] ) }}";
+                }
+            {% endif %}
+            
+            var delete_tenprint = function()
+            {
+                $( "<div />" )
+                    .attr( "id", "delete_confirmation" )
+                    .text( "Do you really want to delete this tenprint card?" )
+                    .dialog( {
+                        title: "Confirm tenprint deletion",
+                        modal: true,
+                        buttons: {
+                            "OK": function()
+                            {
+                                $.ajax( {
+                                    url: "{{ url_for( 'submission.submission_tenprint_delete', submission_id = submission_id, tenprint_id = file[ 'uuid' ] ) }}",
+                                    dataType: "json",
+                                    success: function( data )
+                                    {
+                                        $( "#delete_confirmation" ).remove();
+                                        {% if admin %}
+                                            window.location = "{{ url_for( 'submission.admin_tenprint_list', submission_id = submission_id ) }}";
+                                        {% else %}
+                                            window.location = "{{ url_for( 'submission.submission_tenprint_list', submission_id = submission_id ) }}";
+                                        {% endif %}
+                                    },
+                                    error: function( data )
+                                    {
+                                        $( "#delete_confirmation" ).remove();
+                                    }
+                                } );
+                            },
+                            "Cancel": function()
+                            {
+                                $( this ).dialog( "close" );
+                            },
+                        },
+                        close: function()
+                        {
+                            $( this ).remove();
+                        }
+                    } );
+            }
+            
+            var update_zone_db = function( fpc, x, y, height, width, orientation )
+            {
+                var img = $( "#tenprint_svg > image" );
+                
+                $.ajax( {
+                    url: "{{ url_for( 'submission.submission_segment_setcoordinates', submission_id = submission_id, tenprint_id = file[ 'uuid' ] ) }}",
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        fpc: fpc,
+                        x: x,
+                        y: y,
+                        w: width,
+                        h: height,
+                        img_height: img.height(),
+                        img_width: img.width(),
+                        orientation: orientation
+                    },
+                    success: function( data )
+                    {
+                    },
+                    error: function( data )
+                    {
+                        toastr.error( "Segment data not saved", "Network error" );
+                    }
+                } );
+            }
+            
+            var delete_zone_db = function()
+            {
+                $.ajax( {
+                    url: "{{ url_for( 'submission.submission_segment_deletecoordinates', submission_id = submission_id, tenprint_id = file[ 'uuid' ] ) }}",
+                    dataType: "json",
+                    success: function( data )
+                    {
+                        $( "#tp_polygones > g" ).remove();
+                        zonesData = {};
+                        
+                        current_fpc = null;
+                        current_fpc_pointer = -1;
+                        next_fpc();
+                    },
+                    error: function( data )
+                    {
+                        toastr.error( "Segment data not deleted", "Network error" );
+                    }
+                } );
+            }
+            
+            var start_click_pos = null;
+            var current_action = null;
+            var tmp_rect = null;
+            var move_text = null;
+            var svg_mouse_on = false;
+            var current_fpc = null;
+            var current_fpc_pointer = -1;
+            
+            var svg_mouseenter = function( event )
+            {
+                move_text = current_fpc;
+                
+                svg_mouse_on = true;
+            }
+            var svg_mouseleave = function( event )
+            {
+                svg_mouse_on = false;
+                $( "#mouse_move_cross > line" ).css( "opacity", "0" );
+                
+                move_text = null;
+                $( "#move_text" )
+                    .attr( "x", 0 )
+                    .attr( "y", 0 )
+                    .text( "" )
+            }
+            
+            var start_action = function( event )
+            {
+                event.preventDefault();
+                
+                var pos = get_pos_relative_svg( event );
+                
+                start_click_pos = {
+                    x: pos.x,
+                    y: pos.y
+                }
+                
+                switch( event.target.nodeName )
+                {
+                    case "image":
+                        if( event.button === 0 )
+                            start_add_segment( event );
+                        else
+                            next_fpc();
+                        
+                        break;
+                    
+                    case "polygon":
+                    case "rect":
+                        if( event.button == 2 )
+                            start_delete_segment( event )
+                        else if( dist_to_br_corner( event ) < 30 )
+                            start_resize_segment( event );
+                        else
+                            start_move_segment( event );
+                        
+                        break;
+                    
+                    default:
+                        console.log( "no start action" );
+                        break;
+                }
+                
+                return false;
+            }
+            var end_action = function( event )
+            {
+                event.preventDefault();
+                
+                start_click_pos = null;
+                
+                switch( current_action )
+                {
+                    case "add_segment":
+                        end_add_segment( event );
+                        break;
+                    
+                    case "delete_segment":
+                        end_delete_segment( event );
+                        break;
+                    
+                    case "move_segment":
+                        end_move_segment( event );
+                        break;
+                    
+                    case "resize_segment":
+                        end_resize_segment( event );
+                        break;
+                    
+                    default:
+                        console.log( "no end action" );
+                        break;
+                }
+                
+                return false;
+            }
+            var move_action = function( event )
+            {
+                switch( current_action )
+                {
+                    case "move_segment":
+                        move_move_segment( event );
+                        break;
+                    
+                    case "add_segment":
+                        move_add_segment( event );
+                        break;
+                    
+                    case "resize_segment":
+                        move_resize_segment( event );
+                        break;
+                    
+                    case null:
+                        switch( event.target.nodeName )
+                        {
+                            case "rect":
+                                move_hover_rect( event );
+                                break;
+                        }
+                        break;
+                    
+                    default:
+                        break;
+                }
+            }
+            
+            var next_fpc = function()
+            {
+                current_fpc = null;
+                current_fpc_pointer += 1;
+                
+                while( current_fpc_pointer < to_annotate.length )
+                {
+                    if( $( "#segment_fpc_" + to_annotate[ current_fpc_pointer ] ).length === 0 )
+                    {
+                        current_fpc = to_annotate[ current_fpc_pointer ];
+                        break;
+                    }
+                    
+                    current_fpc_pointer += 1;
+                }
+                
+                move_text = current_fpc;
+            }
+            
+            var start_delete_segment = function( event )
+            {
+                current_action = "delete_segement";
+                
+                console.log( "deleting event" )
+                
+                var fpc = event.target.id.replace( "segment_fpc_", "" );
+                
+                $.ajax( {
+                    url: "{{ url_for( 'submission.submission_segment_deletecoordinates', submission_id = submission_id, tenprint_id = file[ 'uuid' ] ) }}",
+                    method: "POST",
+                    data: {
+                        pc: fpc
+                    },
+                    success: function( data )
+                    {
+                        if( data.error )
+                            toastr.error( "Error while deleting the segment" );
+                        
+                        $( event.target ).parent().remove();
+                    },
+                    error: function( data )
+                    {
+                        toastr.error( "Network error" );
+                    }
+                } );
+            }
+            var end_delete_segment = function( event )
+            {
+                current_action = null;
+            }
+            
+            var click_and_drag_value = {
+                startx: 0,
+                starty: 0,
+                endx: 0,
+                endy: 0
+            };
+            var start_add_segment = function( event )
+            {
+                current_action = "add_segment";
+                
+                click_and_drag_value = {
+                    startx: 0,
+                    starty: 0,
+                    endx: 0,
+                    endy: 0
+                };
+                
+                var pos = get_pos_relative_svg( event );
+                
+                click_and_drag_value.startx = pos.x;
+                click_and_drag_value.starty = pos.y;
+                
+                $( SVG( "rect" ) )
+                    .attr( "id", "tmp_rect" )
+                    .attr( "x", click_and_drag_value.startx )
+                    .attr( "y", click_and_drag_value.starty )
+                    .attr( "height", 0 )
+                    .attr( "width", 0 )
+                    .attr( "fill", "rgb( 255, 0, 0 )" )
+                    .attr( "fill-opacity", "0.1" )
+                    .attr( "stroke", "red" )
+                    .attr( "stroke-width", "1" )
+                    .appendTo( $( "#tp_polygones" ) );
+            }
+            var move_add_segment = function( evnet )
+            {
+                var pos = get_pos_relative_svg( event );
+                
+                diff_x = pos.x - start_click_pos.x;
+                diff_y = pos.y - start_click_pos.y;
+                
+                var a = Math.min( pos.x, start_click_pos.x );
+                var b = Math.min( pos.y, start_click_pos.y );
+                
+                $( "#tmp_rect" )
+                    .attr( "x", a )
+                    .attr( "y", b )
+                    .attr( "width", Math.abs( diff_x ) )
+                    .attr( "height", Math.abs( diff_y ) )
+            }
+            var end_add_segment = function( event )
+            {
+                var pos = get_pos_relative_svg( event );
+                
+                click_and_drag_value.endx = pos.x;
+                click_and_drag_value.endy = pos.y;
+                
+                var x = Math.min( click_and_drag_value.startx, click_and_drag_value.endx );
+                var y = Math.min( click_and_drag_value.starty, click_and_drag_value.endy );
+                var width = click_and_drag_value.endx - click_and_drag_value.startx;
+                var height = click_and_drag_value.endy - click_and_drag_value.starty;
+                var orientation = 0;
+                
+                height = Math.abs( height );
+                width = Math.abs( width );
+                
+                $( "#tmp_rect" ).remove();
+                
+                if( height > 10 && width > 10 )
+                {
+                    $( "#tp_polygones" )
+                        .append( segment_svg( current_fpc, x, y, height, width, orientation ) );
+                    
+                    $( "#tp_polygones > g > rect" ).on( "mousewheel", mouse_wheel );
+                    
+                    zones_array.push( current_fpc );
+                    zonesData[ current_fpc ] = {
+                        fpc: current_fpc,
+                        x: x / svg_width,
+                        y: y / svg_height,
+                        height: height / svg_height,
+                        width: width / svg_width,
+                        orientation: 0
+                    }
+                    orientationsData[ current_fpc ] = 0;
+                    
+                    update_zone_db( current_fpc, x, y, height, width, 0 );
+                    
+                    next_fpc();
+                }
+                
+                click_and_drag_value = {
+                    startx: 0,
+                    starty: 0,
+                    endx: 0,
+                    endy: 0
+                };
+                
+                current_action = null;
+            }
+            
+            var move_target = null;
+            var move_target_initial_pos = {};
+            var move_target_line_initial_pos = {};
+            var start_move_segment = function( event )
+            {
+                current_action = "move_segment";
+                
+                var pos = get_pos_relative_svg( event );
+                
+                move_target = event.target;
+                move_target_initial_pos = {
+                    x: parseFloat( $( move_target ).attr( "x" ) ),
+                    y: parseFloat( $( move_target ).attr( "y" ) )
+                }
+                
+                move_target_line_initial_pos = {
+                    x1: parseFloat( $( move_target ).parent().children( "line" ).attr( "x1" ) ),
+                    x2: parseFloat( $( move_target ).parent().children( "line" ).attr( "x2" ) ),
+                    y1: parseFloat( $( move_target ).parent().children( "line" ).attr( "y1" ) ),
+                    y2: parseFloat( $( move_target ).parent().children( "line" ).attr( "y2" ) )
+                }
+                
+                click_and_drag_value.startx = pos.x;
+                click_and_drag_value.starty = pos.y;
+            }
+            var move_move_segment = function( event )
+            {
+                var pos = get_pos_relative_svg( event );
+                
+                diff_x = pos.x - start_click_pos.x;
+                diff_y = pos.y - start_click_pos.y;
+                
+                $( move_target ).attr( "x", move_target_initial_pos.x + diff_x );
+                $( move_target ).attr( "y", move_target_initial_pos.y + diff_y );
+                
+                $( move_target ).parent().children( "text" ).attr( "x", move_target_initial_pos.x + diff_x );
+                $( move_target ).parent().children( "text" ).attr( "y", move_target_initial_pos.y + diff_y - 5 );
+                
+                $( move_target ).parent().children( "line" ).attr( "x1", move_target_line_initial_pos.x1 + diff_x );
+                $( move_target ).parent().children( "line" ).attr( "y1", move_target_line_initial_pos.y1 + diff_y );
+                $( move_target ).parent().children( "line" ).attr( "x2", move_target_line_initial_pos.x2 + diff_x );
+                $( move_target ).parent().children( "line" ).attr( "y2", move_target_line_initial_pos.y2 + diff_y );
+            }
+            var end_move_segment = function( event )
+            {
+                var x = $( move_target ).attr( "x" );
+                var y = $( move_target ).attr( "y" );
+                var w = $( move_target ).attr( "width" );
+                var h = $( move_target ).attr( "height" );
+                x = parseFloat( x );
+                y = parseFloat( y );
+                w = parseFloat( w );
+                h = parseFloat( h );
+                
+                var target_id = $( move_target ).attr( "id" );
+                target_id = target_id.replace( "segment_fpc_", "" );
+                
+                var orientation = orientationsData[ target_id ];
+                
+                update_zone_db( target_id, x, y, h, w, orientation );
+                
+                click_and_drag_value = {
+                    startx: 0,
+                    starty: 0,
+                    endx: 0,
+                    endy: 0
+                };
+                move_target = null;
+                move_target_initial_pos = {};
+                move_target_line_initial_pos = {};
+                
+                current_action = null;
+            }
+            
+            var move_hover_rect = function( event )
+            {
+                if( ( dist_to_br_corner( event ) ) <= 30 )
+                {
+                    $( event.target ).css( "cursor", "nwse-resize" );
+                } else {
+                    $( event.target ).css( "cursor", "move" );
+                }
+            }
+            
+            var move_hover_cross = function( event )
+            {
+                var cross_offset = 10;
+                
+                var pos = get_pos_relative_svg( event );
+                
+                $( "#line_move_n" ).attr( "x1", pos.x );
+                $( "#line_move_n" ).attr( "x2", pos.x );
+                $( "#line_move_n" ).attr( "y1", 0 );
+                $( "#line_move_n" ).attr( "y2", pos.y - cross_offset );
+                
+                $( "#line_move_w" ).attr( "x1", 0 );
+                $( "#line_move_w" ).attr( "x2", pos.x - cross_offset );
+                $( "#line_move_w" ).attr( "y1", pos.y );
+                $( "#line_move_w" ).attr( "y2", pos.y );
+                
+                $( "#line_move_e" ).attr( "x1", pos.x + cross_offset );
+                $( "#line_move_e" ).attr( "x2", svg_width );
+                $( "#line_move_e" ).attr( "y1", pos.y );
+                $( "#line_move_e" ).attr( "y2", pos.y );
+                
+                $( "#line_move_s" ).attr( "x1", pos.x );
+                $( "#line_move_s" ).attr( "x2", pos.x );
+                $( "#line_move_s" ).attr( "y1", pos.y + cross_offset );
+                $( "#line_move_s" ).attr( "y2", svg_height );
+                
+                if( event.target.nodeName === "image" )
+                {
+                    $( "#mouse_move_cross > line" ).css( "opacity", "1" );
+                } else {
+                    $( "#mouse_move_cross > line" ).css( "opacity", "0.3" );
+                }
+                
+                update_move_text();
+            }
+            
+            var update_move_text = function()
+            {
+                if( move_text !== null )
+                {
+                    var pos = get_pos_relative_svg( event );
+                    
+                    $( "#move_text" )
+                        .attr( "x", pos.x + 10 )
+                        .attr( "y", pos.y - 10 )
+                        .text( "segment " + move_text + " (" + segments_position_code[ move_text ] + ")" )
+                } else {
+                    $( "#move_text" )
+                        .text( "" )
+                }
+            }
+            
+            var resize_target = null;
+            var resize_target_initial_size = {};
+            var resize_target_line_initial_pos = {};
+            var resize_target_orientation = null;
+            var start_resize_segment = function( event )
+            {
+                current_action = "resize_segment";
+                
+                resize_target = event.target;
+                resize_target_initial_size = {
+                    width: parseFloat( $( resize_target ).attr( "width" ) ),
+                    height: parseFloat( $( resize_target ).attr( "height" ) )
+                }
+                
+                resize_target_line_initial_pos = {
+                    x1: parseFloat( $( resize_target ).parent().children( "line" ).attr( "x1" ) ),
+                    x2: parseFloat( $( resize_target ).parent().children( "line" ).attr( "x2" ) ),
+                    y1: parseFloat( $( resize_target ).parent().children( "line" ).attr( "y1" ) ),
+                    y2: parseFloat( $( resize_target ).parent().children( "line" ).attr( "y2" ) )
+                }
+                
+                var target_id = $( resize_target ).attr( "id" );
+                target_id = target_id.replace( "segment_fpc_", "" );
+                
+                resize_target_orientation = orientationsData[ target_id ];
+            }
+            var move_resize_segment = function( event )
+            {
+                var pos = get_pos_relative_svg( event );
+                
+                diff_x = pos.x - start_click_pos.x;
+                diff_y = pos.y - start_click_pos.y;
+                
+                $( resize_target ).attr( "width", resize_target_initial_size.width + diff_x );
+                $( resize_target ).attr( "height", resize_target_initial_size.height + diff_y );
+                
+                switch( resize_target_orientation )
+                {
+                    case 0:
+                        $( resize_target ).parent().children( "line" ).attr( "x2", resize_target_line_initial_pos.x2 + diff_x );
+                        break;
+                    
+                    case 90:
+                        $( resize_target ).parent().children( "line" ).attr( "y2", resize_target_line_initial_pos.y2 + diff_y );
+                        break;
+                    
+                    case 180:
+                        $( resize_target ).parent().children( "line" ).attr( "y1", resize_target_line_initial_pos.y1 + diff_y );
+                        $( resize_target ).parent().children( "line" ).attr( "y2", resize_target_line_initial_pos.y2 + diff_y );
+                        $( resize_target ).parent().children( "line" ).attr( "x2", resize_target_line_initial_pos.x2 + diff_x );
+                        break;
+                    
+                    case 270:
+                        $( resize_target ).parent().children( "line" ).attr( "x1", resize_target_line_initial_pos.x1 + diff_x );
+                        $( resize_target ).parent().children( "line" ).attr( "x2", resize_target_line_initial_pos.x2 + diff_x );
+                        $( resize_target ).parent().children( "line" ).attr( "y2", resize_target_line_initial_pos.y2 + diff_y );
+                        break;
+                }
+            }
+            var end_resize_segment = function( event )
+            {
+                var x = $( resize_target ).attr( "x" );
+                var y = $( resize_target ).attr( "y" );
+                var w = $( resize_target ).attr( "width" );
+                var h = $( resize_target ).attr( "height" );
+                x = parseFloat( x );
+                y = parseFloat( y );
+                w = parseFloat( w );
+                h = parseFloat( h );
+                
+                var target_id = $( resize_target ).attr( "id" );
+                target_id = target_id.replace( "segment_fpc_", "" );
+                
+                var orientation = orientationsData[ target_id ];
+                
+                update_zone_db( target_id, x, y, h, w, orientation );
+                
+                click_and_drag_value = {
+                    startx: 0,
+                    starty: 0,
+                    endx: 0,
+                    endy: 0
+                };
+                resize_target = null;
+                resize_target_initial_size = null;
+                resize_target_orientation = null;
+                current_action = null;
+            }
+            
+            var dist_to_br_corner = function( event )
+            {
+                var pos = get_pos_relative_svg( event );
+                
+                var targetx = $( event.target ).attr( "x" );
+                var targety = $( event.target ).attr( "y" );
+                var targetwidth = $( event.target ).attr( "width" );
+                var targetheight = $( event.target ).attr( "height" );
+                
+                targetx = parseFloat( targetx );
+                targety = parseFloat( targety );
+                targetwidth = parseFloat( targetwidth );
+                targetheight = parseFloat( targetheight );
+                
+                var dx = ( targetx + targetwidth ) - pos.x;
+                var dy = ( targety + targetheight ) - pos.y;
+                
+                return Math.sqrt( dx * dx + dy * dy );
+            }
+            
+            var segment_svg = function( fpc, x, y, height, width, orientation )
+            {
+                var orientation_distance = 20;
+                var colour = "red";
+                
+                var svggroup = SVG( "g" );
+                
+                $( SVG( "rect" ) )
+                    .attr( "id", "segment_fpc_" + fpc )
+                    .attr( "x", x )
+                    .attr( "y", y )
+                    .attr( "height", height )
+                    .attr( "width", width )
+                    .attr( "fill", colour )
+                    .attr( "fill-opacity", "0.1" )
+                    .attr( "stroke", colour )
+                    .attr( "stroke-width", "1" )
+                    .appendTo( svggroup );
+                
+                if( orientation === 0 )
+                {
+                    $( SVG( "line" ) )
+                        .attr( "id", "segment_fpc_orientationline_" + fpc )
+                        .attr( "x1", x )
+                        .attr( "y1", y + orientation_distance )
+                        .attr( "x2", x + width )
+                        .attr( "y2", y + orientation_distance )
+                        .attr( "stroke", colour )
+                        .attr( "stroke-width", "1" )
+                        .appendTo( svggroup );
+                
+                } else if( orientation === 90 )
+                {
+                    $( SVG( "line" ) )
+                        .attr( "id", "segment_fpc_orientationline_" + fpc )
+                        .attr( "x1", x + orientation_distance )
+                        .attr( "y1", y )
+                        .attr( "x2", x + orientation_distance )
+                        .attr( "y2", y + height )
+                        .attr( "stroke", colour )
+                        .attr( "stroke-width", "1" )
+                        .appendTo( svggroup );
+                
+                } else if( orientation === 180 )
+                {
+                    $( SVG( "line" ) )
+                        .attr( "id", "segment_fpc_orientationline_" + fpc )
+                        .attr( "x1", x )
+                        .attr( "y1", y + height - orientation_distance )
+                        .attr( "x2", x + width )
+                        .attr( "y2", y + height - orientation_distance )
+                        .attr( "stroke", colour )
+                        .attr( "stroke-width", "1" )
+                        .appendTo( svggroup );
+                
+                } else if( orientation === 270 )
+                {
+                    $( SVG( "line" ) )
+                        .attr( "id", "segment_fpc_orientationline_" + fpc )
+                        .attr( "x1", x + width - orientation_distance )
+                        .attr( "y1", y )
+                        .attr( "x2", x + width - orientation_distance )
+                        .attr( "y2", y + height )
+                        .attr( "stroke", colour )
+                        .attr( "stroke-width", "1" )
+                        .appendTo( svggroup );
+                }
+                
+                $( SVG( "text" ) )
+                    .attr( "x", x )
+                    .attr( "y", y - 5 )
+                    .attr( "fill", colour )
+                    .text( "segment " + fpc + " (" + segments_position_code[ fpc ] + ")" )
+                    .appendTo( svggroup );
+                
+                return svggroup;
+            }
+            
+            var mouse_wheel_function_active = true;
+            var mouse_wheel = function( event )
+            {
+                if( mouse_wheel_function_active )
+                {
+                    mouse_wheel_function_active = false;
+                    
+                    var crancks = Math.sign( event.originalEvent.wheelDelta );
+                    
+                    var target = event.target;
+                    var target_id = $( target ).attr( "id" );
+                    target_id = target_id.replace( "segment_fpc_", "" );
+                    
+                    var tmp = ( 360 + orientationsData[ target_id ] + crancks * 90 ) % 360;
+                    orientationsData[ target_id ] = tmp;
+                    zonesData[ target_id ].orientation = tmp;
+                    
+                    updateSVG();
+                    
+                    var x = $( target ).attr( "x" );
+                    var y = $( target ).attr( "y" );
+                    var w = $( target ).attr( "width" );
+                    var h = $( target ).attr( "height" );
+                    x = parseFloat( x );
+                    y = parseFloat( y );
+                    w = parseFloat( w );
+                    h = parseFloat( h );
+                    
+                    update_zone_db( target_id, x, y, h, w, tmp );
+                    
+                    setTimeout( function(){
+                        mouse_wheel_function_active = true;
+                    }, 200 );
+                }
+            }
+        </script>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <div class="icnml_tp_oneperpage">
+                <form id="icnml_file_update_{{ file[ 'uuid' ] }}">
+                    {% if admin %}
+                        <div class="ui-widget-header ui-corner-top icnml_box_top">File '<span id="header_filename">{{ file[ 'uuid' ] }}</span>'</div>
+                    {% else %}
+                        <div class="ui-widget-header ui-corner-top icnml_box_top">File '<span id="header_filename">-</span>'</div>
+                    {% endif %}
+                    
+                    <div class="ui-widget-content ui-corner-bottom icnml_box_content_central">
+                        <div class="icnml_tp_cardbox">
+                            <div id="tenprint_svg_div">
+                                <svg id="tenprint_svg" width="100%" height="100%">
+                                    <image x="0" y="0" width="100%" height="100%" xlink:href="{{ url_for( 'image.image_file_serve', file_id = file[ 'uuid' ] ) }}"></image>
+                                    <g id="tp_polygones"></g>
+                                    <g id="mouse_move_cross">
+                                        <line id="line_move_e" x1="-1" y1="-1" x2="-1" y2="-1" style="stroke:rgb(0,0,255); stroke-width: 2" />
+                                        <line id="line_move_w" x1="-1" y1="-1" x2="-1" y2="-1" style="stroke:rgb(0,0,255); stroke-width: 2" />
+                                        <line id="line_move_n" x1="-1" y1="-1" x2="-1" y2="-1" style="stroke:rgb(0,0,255); stroke-width: 2" />
+                                        <line id="line_move_s" x1="-1" y1="-1" x2="-1" y2="-1" style="stroke:rgb(0,0,255); stroke-width: 2" />
+                                    </g>
+                                    <text id="move_text" style="fill: red"></text>
+                                </svg>
+                            </div>
+                        
+                            <div>
+                                <div class="icnml_box_fields">
+                                    {% if not admin %}
+                                        <div>Name</div>
+                                        <div id="box_filename"></div>
+                                    {% endif %}
+                                    
+                                    <div>Format</div>
+                                    <div>{{ file[ 'format' ] }}</div>
+                                    
+                                    <div>Resolution</div>
+                                    <div>{{ file[ 'resolution' ] }} dpi</div>
+                                    
+                                    <div>Width</div>
+                                    <div>{{ file[ 'width' ] }} px</div>
+                                    
+                                    <div>Height</div>
+                                    <div>{{ file[ 'height' ] }} px</div>
+                                    
+                                    <div>Size</div>
+                                    <div>{{ file[ 'size' ] }} Mo</div>
+                                    
+                                    <div>Upload time</div>
+                                    <div id="file_{{ file[ 'uuid' ] }}_uploadtime">-</div>
+                                    
+                                    <div>Quality</div>
+                                    <div id="file_{{ file[ 'uuid' ] }}_quality">
+                                        <select name="tenprint_quality_select">
+                                            <option value="0" id="tenprint_quality_none_option" selected>None</option>
+                                            {% for quality_type in quality_type %}
+                                                <option value="{{ quality_type[ 'id' ] }}" id="tenprint_quality_{{ quality_type[ 'id' ] }}_option">
+                                                    {{ quality_type[ 'name' ] }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    
+                                    <div>Notes</div>
+                                    <div><textarea rows="6" id="file_note" placeholder="Public notes">{{ file[ 'note' ] }}</textarea></div>
+                                </div>
+                                <div class="icnml_center" id="button_list">
+                                    <div id="delete_segments_information_button_div" class="icnml_button">
+                                        <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="delete_segments_information_button" role="button" aria-disabled="false">
+                                            <span class="ui-button-text" id="delete_segments_information_button_text">Delete segments informations</span>
+                                        </a>
+                                    </div>
+                                    <div id="segmentation_button_div" class="icnml_button">
+                                        <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="segmentation_button" role="button" aria-disabled="false">
+                                            <span class="ui-button-text" id="segmentation_button_span_text">Update segmentation</span>
+                                        </a>
+                                    </div>
+                                    <div id="go_to_segmentation_button_div" class="icnml_button">
+                                        {% if admin %}
+                                            {% set go_to_segmentation_button_url = url_for( 'submission.admin_submission_tenprint_segments_list', submission_id = submission_id, tenprint_id = file[ 'uuid' ] ) %}
+                                        {% else %}
+                                            {% set go_to_segmentation_button_url = url_for( 'submission.submission_tenprint_segments_list', submission_id = submission_id, tenprint_id = file[ 'uuid' ] ) %}
+                                        {% endif %}
+                                        <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="go_to_segmentation_button" href="{{ go_to_segmentation_button_url }}">
+                                            <span class="ui-button-text" id="go_to_segmentation_button_span_text">Go to segments list</span>
+                                        </a>
+                                    </div>
+                                    {% if admin %}
+                                        <div id="download_button_div" class="icnml_button">
+                                            <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="download_button" role="button" aria-disabled="false">
+                                                <span class="ui-button-text" id="download_button_span_text">Download image</span>
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                    <div id="delete_button_div" style="margin-top: 30px;" class="icnml_button">
+                                        <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="delete_button">
+                                            <span class="ui-button-text" id="delete_button_span_text">Delete tenprint card</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+    <script type="text/javascript">
+        window.addEventListener( "resize", function( event )
+        {
+            update_coordinates_informations();
+            updateSVG();
+        } );
+        
+        update_coordinates_informations();
+        updateSVG();
+        next_fpc();
+        
+        {% if not admin %}
+            $( "#header_filename" ).text( filename );
+            $( "#box_filename" ).text( filename );
+        {% endif %}
+            
+        $( "#file_note" ).on( "change", update_note_db );
+        
+        {% if admin %}
+            $( "#download_button" ).on( "click", download_tenprint );
+        {% endif %}
+        
+        $( "#delete_button" ).on( "click", delete_tenprint );
+        $( "#delete_segments_information_button" ).on( "click", delete_zone_db );
+        
+        $( "#file_{{ file[ 'uuid' ] }}_quality > select" ).on( "change", update_quality_db );
+        
+        $( "#tenprint_quality_{{ file[ 'quality' ] }}_option" ).prop( "selected", true );
+        
+        $( "#file_{{ file[ 'uuid' ] }}_uploadtime" )
+            .text( moment.utc( "{{ file[ 'creation_time' ] }}" ).local().format( "MMMM Do YYYY, HH:mm:ss" ) );
+        
+        $( "#segmentation_button" ).on( "click", start_segmentation );
+        
+        $( "#tenprint_svg" ).on( "mousedown", start_action );
+        $( "#tenprint_svg" ).on( "mousemove", move_action );
+        $( "#tenprint_svg" ).on( "mousemove", move_hover_cross );
+        $( "#tenprint_svg" ).on( "mouseup", end_action );
+        $( "#tenprint_svg" ).on( "contextmenu", function( event )
+        {
+            event.preventDefault();
+            return false;
+        } );
+        $( "#tenprint_svg" ).on( "mouseenter", svg_mouseenter );
+        $( "#tenprint_svg" ).on( "mouseleave", svg_mouseleave );
+        $( "#tenprint_svg" ).css( "cursor", "none" );
+        $( "#tp_polygones > g > rect" ).on( "mousewheel", mouse_wheel );
+        
+        $( "#icnml_navigation_submissions" )
+            .addClass( "activated" );
+        
+        {% if admin %}
+            {% set nav_a = url_for( 'submission.admin_submission_list' ) %}
+            {% set nav_b = url_for( 'submission.admin_submission_home', submission_id = submission_id ) %}
+            var donor_display_name = "{{ file[ 'username' ] }}";
+            {% set nav_c = url_for( 'submission.admin_tenprint_list', submission_id = submission_id ) %}
+            var file_display_name = "{{ file[ 'uuid' ] }}";
+        {% else %}
+            {% set nav_a = url_for( 'submission.submission_list' ) %}
+            {% set nav_b = url_for( 'submission.submission_upload_tenprintmark', submission_id = submission_id ) %}
+            var donor_display_name = nickname;
+            {% set nav_c = url_for( 'submission.submission_tenprint_list', submission_id = submission_id ) %}
+            var file_display_name = filename;
+        {% endif %}
+        
+        $( "#navloc" ).append(
+            $( "<a />" )
+                .attr( "href", "{{ nav_a }}" )
+                .text( "Submissions" )
+        )
+        .append(
+            $( "<span />" ).text( ">" )
+        )
+        .append(
+            $( "<a />" )
+                .attr( "href", "{{ nav_b }}" )
+                .text( donor_display_name )
+        )
+        .append(
+            $( "<span />" ).text( ">" )
+        )
+        .append(
+            $( "<a />" )
+                .attr( "href", "{{ nav_c }}" )
+                .text( "Tenprints" )
+        )
+        .append(
+            $( "<span />" ).text( ">" )
+        )
+        .append(
+            $( "<span />" ).text( file_display_name )
+        );
+    </script>
+</html>

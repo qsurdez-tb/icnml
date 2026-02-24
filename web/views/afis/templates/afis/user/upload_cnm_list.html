@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            var password_local = localStorage.getItem( "session_key" );
+            
+            var uuid_list = [];
+            {% for f in folder_list %}
+                uuid_list.push( "{{ f[ 'folder_uuid' ] }}" );
+            {% endfor %}
+        </script>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <div class="icnml_search_bar">
+                <input id="search_bar" placeholder="Search for a file..."/>
+            </div>
+            
+            <div class="icnml_list_of_boxes">
+                
+                {% for cnm in cnm_result_list %}
+                    <div style="margin-bottom: 20px" id="cnm_{{ cnm[ 'uuid' ] }}_outer_div">
+                        <div class="ui-widget-header ui-corner-top icnml_box_top" id="cnm_{{ cnm[ 'uuid' ] }}_nickname">{{ cnm[ 'uuid' ][ 0:18 ] }}</div>
+                        <div class="ui-widget-content ui-corner-bottom icnml_box_content">
+                            <div
+                                id="img_preview_{{ cnm[ 'uuid' ] }}"
+                                class="icnml_pointer"
+                                style="background-image: url( {{ url_for( 'afis.image_auto_detect_format', cnm_uuid = cnm[ 'uuid' ], file_uuid = cnm[ 'file_uuid' ] or 'None', fpc = 0 ) }} )">
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                
+                <div>
+                    <div class="ui-widget-header ui-corner-top icnml_box_top">New</div>
+                    <div class="ui-widget-content ui-corner-bottom icnml_box_content">
+                        <div class="icnml_button icnml_new_button icnml_pointer" id="icnml_new_cnm_button">
+                            <span>+</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="zoom_slider"></div>
+        </div>
+        <script type="text/javascript">
+            {% for cnm in cnm_result_list %}
+                $( "#cnm_{{ cnm[ 'uuid' ] }}_outer_div" ).on( "click", function()
+                {
+                    window.location = "{{ url_for( 'afis.cnm_edit', target_uuid = target_uuid, cnm_uuid = cnm[ 'uuid' ] ) }}"
+                } );
+                
+                var nickname = decrypt( "{{ cnm[ 'nickname' ] }}", password_local );
+                if( nickname !== "" )
+                    $( "#cnm_{{ cnm[ 'uuid' ] }}_nickname" ).text( nickname );
+            {% endfor %}
+            
+            $( "#icnml_new_cnm_button" ).on( "click", function()
+            {
+                window.location = "{{ url_for( 'afis.new_cnm_case', uuid = target_uuid, target_type = 'target' ) }}";
+            } )
+            
+            $( "#icnml_navigation_afis" )
+                .addClass( "activated" );
+            
+            $( "#search_bar" ).focus();
+            
+            $( "#navloc" ).append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'afis.list_folders' ) }}" )
+                    .text( "AFIS targets" )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'afis.show_folder', uuid = target_uuid ) }}" )
+                    .text( "{{ target_uuid[ 0:18 ] }}" )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<span />" ).text( "All CNM" )
+            )
+        </script>
+    </body>
+</html>
+

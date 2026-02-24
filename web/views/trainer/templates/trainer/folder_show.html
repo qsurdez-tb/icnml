@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <style type="text/css">
+            :root {
+                --imgsize: 300px;
+            }
+            .mark_outer {
+                display: grid;
+                grid-template-columns: repeat( auto-fit, var( --imgsize ) );
+                grid-gap: 10px;
+            }
+            .mark_outer > div {
+                position: relative;
+                border: 1px solid #AAAAAA;
+                border-radius: 10px;
+                background-color: #fff;
+                padding: 10px;
+                box-sizing: border-box;
+                box-shadow: 3px 3px 5px 0px rgba( 32, 33, 36, 0.2 );
+                overflow-y: hidden;
+                overflow-x: hidden;
+                width: var( --imgsize );
+                height: var( --imgsize );
+            }
+            .mark_outer > div > div {
+                height: 100%;
+                background-size: contain;
+                background-position: center;
+                background-repeat: no-repeat;
+            }
+        </style>
+
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            
+            var remove_from_list = function( mark, folder_id )
+            {
+                $.ajax( {
+                    url: "{{ url_for( 'trainer.remove_mark_from_list' ) }}",
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        mark: mark,
+                        folder_id: folder_id
+                    },
+                    success: function( data )
+                    {
+                        console.log( data );
+                    }
+                } );
+            }
+        </script>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <div style="margin-bottom: 20px;">Folder '{{ folder_name }}'</div>
+            <div class="mark_outer">
+                {% for mark in mark_list %}
+                    <div>
+                        <div id="mark_{{ mark[ 'uuid' ] }}"></div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div id="zoom_slider"></div>
+        </div>
+        
+        <script type="text/javascript">
+            {% for mark in mark_list %}
+                $( "#mark_{{ mark[ 'uuid' ] }}" )
+                    .css( "background-image", "url( {{ url_for( 'image.image_file_serve', file_id = mark[ 'uuid' ] ) }}  )" )
+            {% endfor %}
+            
+            $( ".mark_outer > div" ).on( "contextmenu", function( event )
+            {
+                event.preventDefault();
+                var target = $( event.target ).attr( "id" ).replace( "mark_", "" );
+                $( "#mark_" + target ).parent().hide();
+
+                remove_from_list( target, "{{ folder }}" );
+            } )
+            
+            $( "#icnml_navigation_exercises" )
+                .addClass( "activated" );
+            
+            $( "#navloc" ).append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'trainer.exercises_list' ) }}" )
+                    .text( "Folder" )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<span />" ).text( "{{ folder_name }}" )
+            );
+        </script>
+    </body>
+</html>

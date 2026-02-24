@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <style type="text/css">
+            :root {
+                --imgsize: 120px;
+            }
+        </style>
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            
+            var uuid_list = [];
+            {% for donor in donor_list %}
+                uuid_list.push( "{{ donor[ 'derived_uuid' ] }}" );
+            {% endfor %}
+            
+            var update_search_result = function()
+            {
+                var searched = $( "#search_bar" ).val();
+                searched = searched.toLowerCase();
+                
+                _.forEach( uuid_list, function( target )
+                {
+                    if( target.toLowerCase().indexOf( searched ) > -1 )
+                    {
+                        $( "#donor_" + target + "_outer" ).show();
+                    } else {
+                        $( "#donor_" + target + "_outer" ).hide();
+                    }
+                } );
+            }
+        </script>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <div class="icnml_search_bar">
+                <input id="search_bar" placeholder="Search for a donor..."/>
+            </div>
+            
+            <div class="icnml_list_of_boxes">
+                {% for donor in donor_list %}
+                    <div id="donor_{{ donor[ 'derived_uuid' ] }}_outer">
+                        <div class="ui-widget-header ui-corner-top icnml_box_top" id="donor_{{ donor[ 'derived_uuid' ] }}">{{ donor[ 'derived_uuid' ][ 0:18 ] }}</div>
+                        <div class="ui-widget-content ui-corner-bottom icnml_box_content">
+                            <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only icnml_button_square" id="edit_{{ donor[ 'derived_uuid' ] }}_button" role="button" aria-disabled="false">
+                                <span>View</span>
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div id="zoom_slider"></div>
+        </div>
+        <script type="text/javascript">
+            {% for donor in donor_list %}
+                $( "#donor_{{ donor[ 'derived_uuid' ] }}" )
+                    .parent()
+                    .on( "click", function()
+                    {
+                        window.location.href = "{{ url_for( 'afis.list_incidentals', uuid = donor[ 'derived_uuid' ] ) }}"
+                    } );
+            {% endfor %}
+            
+            $( "#icnml_navigation_afis_incidental" )
+                .addClass( "activated" );
+            
+            $( "#navloc" ).append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'afis.list_donors_incidental' ) }}" )
+                    .text( "Incidental list" )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<span />" ).text( "All" )
+            )
+            
+            $( "#search_bar" ).on( "keyup", update_search_result );
+            $( "#search_bar" ).focus();
+        </script>
+    </body>
+</html>
+        

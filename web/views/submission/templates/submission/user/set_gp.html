@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            submission_id = "{{ submission_id }}";
+            
+            var password_local = localStorage.getItem( "session_key" );
+            var nickname = decrypt( "{{ user.nickname }}", password_local );
+            
+            var update_nickname = function()
+            {
+                var nickname = encrypt( $( "#upload_nickname" ).val() || null, password_local );
+                
+                $.ajax( {
+                    url: "{{ url_for( 'submission.submission_update_nickname', submission_id = submission_id ) }}",
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        nickname: nickname
+                    }
+                } );
+            }
+            
+            var update_gp = function( finger )
+            {
+                var classes = [];
+                {% for gp in gp_list %}
+                    classes.push( { id: "{{ gp.div_name }}", label: "{{ gp.name }}" } );
+                {% endfor %}
+                
+                var div = $( "<div />" ).attr( "id", "gp_select_dialog" );
+                var div2 = $( "<div />" ).addClass( "gp_grid" );
+                
+                _.each( classes, function( element, key ){
+                    div2.append(
+                        $( "<div />" )
+                            .attr( "id", "general_pattern_" + element.id )
+                            .append( 
+                                $( "<img />" )
+                                    .attr( "src", "{{ url_for( 'files.send_static_files', subpath = '<subpath>' ) }}".replace( "%3Csubpath%3E", element.id + ".png" ) )
+                                    .attr( "height", "200px" )
+                                    .attr( "width", "200px" )
+                            )
+                            .append(
+                                $( "<div />" )
+                                    .css( "text-align", "center" )
+                                    .text( element.label )
+                            )
+                            .on( "click", function(){
+                                $.ajax( {
+                                    url: "{{ url_for( 'submission.submission_segment_set_gp', submission_id = submission_id ) }}",
+                                    dataType: "json",
+                                    method: "POST",
+                                    data: {
+                                        gp: element.id,
+                                        pc: finger
+                                    },
+                                    success: function( data )
+                                    {
+                                        $( "#finger_gp_f" + finger ).empty();
+                                        $( "#finger_gp_f" + finger ).append(
+                                            $( "<img />" )
+                                                .css( "width", "100%" )
+                                                .attr( "src", "{{ url_for( 'files.send_static_files', subpath = '<subpath>' ) }}".replace( "%3Csubpath%3E", element.id + ".png" ) )
+                                        )
+                                        .append(
+                                            $( "<div />" )
+                                                .css( "text-align", "center" )
+                                                .text( element.label )
+                                        );
+                                    },
+                                    error: function( data )
+                                    {
+                                        toastr.error( "Error while saving the general pattern" );
+                                    }
+                                } );
+                                
+                                $( "#gp_select_dialog" ).dialog( "close" );
+                            } )
+                    );
+                } );
+                
+                div.append( div2 );
+                
+                div.dialog( {
+                    title: "Set the general pattern for the finger F" + finger,
+                    modal: true,
+                    width: "auto",
+                    minWidth: "700px",
+                    buttons: {
+                        "Cancel": function()
+                        {
+                            $( this ).dialog( "close" );
+                        },
+                    },
+                    close: function()
+                    {
+                        $( this ).remove();
+                    },
+                    open: function()
+                    {
+                        var dialog_div = $( this );
+                        $( ".ui-widget-overlay" ).bind( "click", function()
+                        {
+                            dialog_div.dialog( "close" );
+                        } );
+                    }
+                } );
+            }
+        </script>
+        
+        <style type="text/css">
+            #icnml_form {
+                width: 90%;
+                max-width: 1200px;
+                margin-top: 30px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+            #set_all_gp {
+                margin-top: 35px;
+                display: grid;
+                grid-template-columns: repeat( 5, 1fr );
+                grid-auto-rows: 1fr;
+                grid-gap: 10px;
+                cursor: pointer;
+            }
+            #set_all_gp::before {
+                content: '';
+                width: 0;
+                padding-bottom: 100%;
+                grid-row: 1 / 1;
+                grid-column: 1 / 1;
+            }
+            #set_all_gp > *:first-child {
+                grid-row: 1 / 1;
+                grid-column: 1 / 1;
+            }
+            .label_float {
+                position: absolute;
+                float: left;
+                z-index: 9;
+                padding-left: 5px;
+                padding-right: 10px;
+                margin-left: 10px;
+                margin-top: -0.75em;
+                background-color: #ffffff;
+            }
+            .zone {
+                border: 1px solid #aaaaaa;
+                border-radius: 10px;
+                
+                padding: 20px;
+                box-sizing: border-box;
+                height: 100%;
+                width: 100%;
+            }
+            
+            .gp_grid {
+                z-index: 99;
+                display: grid;
+                grid-template-columns: repeat( 5, 1fr );
+                grid-auto-rows: 1fr;
+                grid-gap: 10px;
+            }
+            .gp_grid::before {
+                content: '';
+                width: 0;
+                padding-bottom: 100%;
+                grid-row: 1 / 1;
+                grid-column: 1 / 1;
+            }
+            .gp_grid > *:first-child {
+                grid-row: 1 / 1;
+                grid-column: 1 / 1;
+            }
+            .gp_grid > div {
+                display: table;
+                margin: 0px;
+                padding: 0px;
+                height: 100%;
+                width: 100%;
+            }
+            .gp_grid > div > span {
+                padding: 5px;
+                text-align: center;
+                display: table-cell;
+                vertical-align: middle;
+            }
+        </style>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <form id="icnml_form">
+                <div class="ui-widget-header ui-corner-top icnml_box_top">General pattern</div>
+                <div class="ui-widget-content ui-corner-bottom icnml_box_content_central">
+                    <div class="icnml_box_fields">
+                        <div style="text-align: right;">
+                            <label for="upload_nickname">Submission nickname</label>
+                        </div>
+                        <div>
+                            <input id="upload_nickname" name="upload_nickname" type="text" value="" />
+                        </div>
+                        
+                        <div style="text-align: right;">
+                            <label for="email">Donor e-mail</label>
+                        </div>
+                        <div>
+                            <input id="email" name="email" type="text" value="{{ user.email }}" readonly />
+                        </div>
+                    </div>
+                    
+                    <div id="set_all_gp">
+                        {% for n in range( 10 ) %}
+                            <div>
+                                <div class="label_float">{{ finger_names[ n ] }} (F{{ n + 1 }})</div>
+                                <div id="finger_gp_f{{ n + 1 }}" class="zone">
+                                    <span style="color: #cccccc">click to set</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </form>
+        </div>  
+        
+        <script type="text/javascript">
+            {% for n in range( 10 ) %}
+                $( "#finger_gp_f{{ n + 1 }}" ).on( "click", function(){
+                    update_gp( {{ n + 1 }} );
+                } );
+            {% endfor %}
+            
+            $( "#upload_nickname" ).val( nickname );
+            $( "#upload_nickname" ).on( "change", update_nickname );
+            
+            {% for gp in current_gp %}
+                $( "#finger_gp_f{{ gp.fpc }}" ).empty();
+                $( "#finger_gp_f{{ gp.fpc }}" ).append(
+                    $( "<img />" )
+                        .css( "width", "100%" )
+                        .attr( "src", "{{ url_for( 'files.send_static_files', subpath = gp.div_name + '.png' ) }}" )
+                )
+                .append(
+                        $( "<div />" )
+                        .css( "text-align", "center" )
+                        .text( "{{ gp.name }}" )
+                );
+            {% endfor %}
+            
+            $( "#icnml_navigation_submissions" )
+                .addClass( "activated" );
+            
+            $( "#navloc" ).append(
+                $( "<a />" )    
+                    .attr( "href", "{{ url_for( 'submission.submission_list' ) }}" )
+                    .text( "Submissions" )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'submission.submission_upload_tenprintmark', submission_id = submission_id ) }}" )
+                    .text( nickname )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<span />" ).text( "Fingers general pattern" )
+            );
+        </script>
+    </body>
+</html>
+

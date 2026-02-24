@@ -1,0 +1,264 @@
+{% import "jinja_functions.html" as common %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <style type="text/css">
+            .actions {
+                width: fit-content;
+                width: -moz-fit-content;
+                margin-top: 30px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .buttons_list {
+                display: grid;
+                grid-template-columns: repeat( 5, 1fr );
+                grid-gap: 10px;
+                margin: 20px;
+            }
+        </style>
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            submission_id = "{{ submission_id }}";
+        </script>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <div class="actions">
+                <div class="ui-widget-header ui-corner-top icnml_box_top">{{ submission[ 'donor_username' ] }}</div>
+                <div class="ui-widget-content ui-corner-bottom">
+                    <div class="buttons_list">
+                        <div>
+                            <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only icnml_button_square" id="gp_button" role="button" aria-disabled="false">
+                                <span>General pattern</span>
+                                {{ common.checked_exclamation( "gp_checked_error" ) }}
+                            </a>
+                        </div>
+                        <div>
+                            <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only icnml_button_square" id="tp_button" role="button" aria-disabled="false">
+                                <span>Tenprint(s)</span>
+                                {{ common.checked_exclamation( "tenprint_checked_error" ) }}
+                            </a>
+                        </div>
+                        <div>
+                            <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only icnml_button_square" id="target_button" role="button" aria-disabled="false">
+                                <span>Target(s)</span>
+                            </a>
+                        </div>
+                        <div>
+                            <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only icnml_button_square" id="lt_target_button" role="button" aria-disabled="false">
+                                <span>Mark(s) target</span>
+                                {{ common.checked_exclamation( "marks_target_checked_error" ) }}
+                                {{ common.checked_ok( "marks_target_checked_ok" ) }}
+                                {{ common.checked_question( "mark_target_checked_question" ) }}
+                            </a>
+                        </div>
+                        <div>
+                            <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only icnml_button_square" id="lt_incidental_button" role="button" aria-disabled="false">
+                                <span>Mark(s) incidental</span>
+                                {{ common.checked_exclamation( "marks_incidental_checked_error" ) }}
+                                {{ common.checked_ok( "marks_incidental_checked_ok" ) }}
+                                {{ common.checked_question( "mark_incidental_checked_question" ) }}
+                            </a>
+                        </div>
+                    </div>
+                    <input id="submission_uuid" size="52" style="text-align: center; border: none; margin-bottom: 10px" class="icnml_pointer" value="{{ submission[ 'uuid' ] }}"/>
+                    <div id="submitter" style="text-align: center; border: none; margin-bottom: 10px">{{ submission[ 'submitter_username' ] }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="tool_tip_missing_information"></div>
+        
+        <script type="text/javascript">
+            // Display the missing information for marks
+            {% if mark_has_missing_information_target %}
+                $( "#marks_target_checked_error" )
+                    .css( "visibility", "visible" )
+                    .on( "mouseenter", function( event ){
+                        var offset = $( this ).offset();
+                        
+                        $( "#tool_tip_missing_information" )
+                            .html( "Missing informations for some marks" )
+                            .css( "visibility", "visible" )
+                            .css( "top", offset.top - 30 )
+                            .css( "left", offset.left + 20 )
+                    } )
+                    .on( "mouseleave", function( event ){
+                        $( "#tool_tip_missing_information" )
+                            .css( "visibility", "hidden" )
+                    } )
+            {% elif nb_marks_target == 0 %}
+                $( "#mark_target_checked_question" )
+                    .css( "visibility", "visible" )
+                    .on( "mouseenter", function( event ){
+                        var offset = $( this ).offset();
+                        
+                        $( "#tool_tip_missing_information" )
+                            .html( "No target marks uploaded" )
+                            .css( "visibility", "visible" )
+                            .css( "top", offset.top - 30 )
+                            .css( "left", offset.left + 20 )
+                    } )
+                    .on( "mouseleave", function( event ){
+                        $( "#tool_tip_missing_information" )
+                            .css( "visibility", "hidden" )
+                    } )
+            {% else %}
+                $( "#marks_target_checked_ok" )
+                    .css( "visibility", "visible" )
+            {% endif %}
+            
+            {% if mark_has_missing_information_incidental %}
+                $( "#marks_incidental_checked_error" )
+                    .css( "visibility", "visible" )
+                    .on( "mouseenter", function( event ){
+                        var offset = $( this ).offset();
+                        
+                        $( "#tool_tip_missing_information" )
+                            .html( "Missing informations for some marks" )
+                            .css( "visibility", "visible" )
+                            .css( "top", offset.top - 30 )
+                            .css( "left", offset.left + 20 )
+                    } )
+                    .on( "mouseleave", function( event ){
+                        $( "#tool_tip_missing_information" )
+                            .css( "visibility", "hidden" )
+                    } )
+            {% elif nb_marks_incidental == 0 %}
+                $( "#mark_incidental_checked_question" )
+                    .css( "visibility", "visible" )
+                    .on( "mouseenter", function( event ){
+                        var offset = $( this ).offset();
+                        
+                        $( "#tool_tip_missing_information" )
+                            .html( "No incidental marks uploaded" )
+                            .css( "visibility", "visible" )
+                            .css( "top", offset.top - 30 )
+                            .css( "left", offset.left + 20 )
+                    } )
+                    .on( "mouseleave", function( event ){
+                        $( "#tool_tip_missing_information" )
+                            .css( "visibility", "hidden" )
+                    } )
+            {% else %}
+                $( "#marks_incidental_checked_ok" )
+                    .css( "visibility", "visible" )
+            {% endif %}
+            
+            {% if has_missing_segmentations %}
+                $( "#tenprint_checked_error" )
+                    .css( "visibility", "visible" )
+                    .on( "mouseenter", function( event ){
+                        var offset = $( this ).offset();
+                        
+                        $( "#tool_tip_missing_information" )
+                            .html( "Some tenprint cards dont have segmentation information" )
+                            .css( "visibility", "visible" )
+                            .css( "top",  offset.top - 30 )
+                            .css( "left", offset.left + 20 )
+                    } )
+                    .on( "mouseleave", function( event ){
+                        $( "#tool_tip_missing_information" )
+                            .css( "visibility", "hidden" )
+                    } )
+            {% endif %}
+            
+            {% if has_missing_gp %}
+                $( "#gp_checked_error" )
+                    .css( "visibility", "visible" )
+                    .on( "mouseenter", function( event ){
+                        var offset = $( this ).offset();
+                        
+                        $( "#tool_tip_missing_information" )
+                            .html( "The general pattern for some fingers is not set" )
+                            .css( "visibility", "visible" )
+                            .css( "top", offset.top - 30 )
+                            .css( "left", offset.left + 20 )
+                    } )
+                    .on( "mouseleave", function( event ){
+                        $( "#tool_tip_missing_information" )
+                            .css( "visibility", "hidden" )
+                    } )
+            {% endif %}
+            
+            {% if has_no_tp %}
+                $( "#tenprint_checked_error" )
+                    .css( "visibility", "visible" )
+                    .on( "mouseenter", function( event ){
+                        var offset = $( this ).offset();
+                        
+                        $( "#tool_tip_missing_information" )
+                            .html( "No tenprint uploaded" )
+                            .css( "visibility", "visible" )
+                            .css( "top", offset.top - 30 )
+                            .css( "left", offset.left + 20 )
+                    } )
+                    .on( "mouseleave", function( event ){
+                        $( "#tool_tip_missing_information" )
+                            .css( "visibility", "hidden" )
+                    } )
+            {% endif %}
+            
+            //
+            $( "#gp_button" ).on( "click", function()
+            {
+                window.location = "{{ url_for( 'submission.admin_submission_gp', submission_id = submission[ 'uuid' ] ) }}";
+            } );
+            $( "#tp_button" ).on( "click", function()
+            {
+                window.location = "{{ url_for( 'submission.admin_tenprint_list', submission_id = submission[ 'uuid' ] ) }}";
+            } );
+            
+            $( "#lt_target_button" ).on( "click", function()
+            {
+                window.location = "{{ url_for( 'submission.admin_submission_mark_list', submission_id = submission[ 'uuid' ], mark_type = 'target' ) }}";
+            } );
+            $( "#lt_incidental_button" ).on( "click", function()
+            {
+                window.location = "{{ url_for( 'submission.admin_submission_mark_list', submission_id = submission[ 'uuid' ], mark_type = 'incidental' ) }}";
+            } );
+            
+            $( "#target_button" ).on( "click", function()
+            {
+                window.location = "{{ url_for( 'afis.admin_show_target_list', submission_uuid = submission[ 'uuid' ] ) }}";
+            } );
+            
+            $( "#submission_uuid" ).on( "click", function()
+            {
+                $( "#submission_uuid" ).select();
+                document.execCommand( "copy" );
+                $( "#submission_uuid" ).blur();
+                toastr.info( "UUID copied to clipboard" );
+            } );
+            
+            $( "#icnml_navigation_submissions" )
+                .addClass( "activated" );
+            
+            $( "#navloc" ).append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'submission.admin_submission_list' ) }}" )
+                    .text( "Submissions" )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<span />" ).text( "{{ submission[ 'donor_username' ] }}" )
+            );
+        </script>
+    </body>
+</html>
+

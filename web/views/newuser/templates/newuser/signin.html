@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+        </script>
+    </head>
+    <body>
+        <div class="icnml_central">
+            <h1 style="margin-bottom: 0px">ICNML</h1>
+            <h4 style="margin-top: 0px">International Close Non-Matches Library</h4>
+            
+            <div class="ui-widget-header ui-corner-top icnml_box_top">Please enter your personnal information</div>
+            <div id="icnml_homepage_form" class="ui-widget-content ui-corner-bottom icnml_box_content_central">
+                <div id="icnml_box_fields" class="icnml_box_fields">
+                    <div style="text-align: right;">
+                        <label for="first_name">First name</label>
+                    </div>
+                    <div>
+                        <input id="first_name" name="first_name" type="text" />
+                    </div>
+                    
+                    <div style="text-align: right;">
+                        <label for="last_name">Last name</label>
+                    </div>
+                    <div>
+                        <input id="last_name" name="last_name" type="text" />
+                    </div>
+                    
+                    <div style="text-align: right;">
+                        <label for="email">E-mail</label>
+                    </div>
+                    <div>
+                        <input id="email" name="email" type="text" />
+                    </div>
+                    <div style="text-align: right;">
+                        <label for="email_confirmation">E-mail confirmation</label>
+                    </div>
+                    <div>
+                        <input id="email_confirmation" name="email_confirmation" type="text" />
+                    </div>
+                    
+                    <div style="text-align: right;">
+                        <label for="account_type">Account type</label>
+                    </div>
+                    <div>
+                        <select id="account_type">
+                        {% for account_type in list_account_type %}
+                            <option value="{{ account_type[ 'id' ] }}">{{ account_type[ 'name' ] }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="icnml_login_error" class="icnml_box_error"></div>
+                <div id="warning" class="icnml_box_warning"></div>
+                
+                <div class="icnml_button">
+                    <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="request_button" role="button" aria-disabled="false">
+                        <span class="ui-button-text">Request user account</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script type="text/javascript">
+        $( "#first_name" ).focus();
+        
+        var request_user_account = function()
+        {
+            var first_name   = $( "#first_name" ).val();
+            var last_name    = $( "#last_name" ).val();
+            var email        = $( "#email" ).val();
+            var email_conf   = $( "#email_confirmation" ).val();
+            var account_type = $( "#account_type" ).val();
+            
+            email = email.toLowerCase();
+            email_conf = email_conf.toLowerCase();
+            
+            if( email === email_conf )
+            {
+                $.ajax( {
+                    url: "{{ url_for( 'newuser.add_account_request_to_db' ) }}",
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        first_name  : first_name,
+                        last_name   : last_name,
+                        email       : email,
+                        email_conf  : email_conf,
+                        account_type: account_type
+                    },
+                    success: function( data )
+                    {
+                        if( ! data.error )
+                        {
+                            toastr.success( "Request registered" );
+                            setTimeout( function()
+                            {
+                                location.href = "{{ url_for( 'base.home' ) }}";
+                            }, 1000 );
+                        
+                        } else {
+                            toastr.error( "Request not registered. Try later..." );
+                        }
+                    }
+                } );
+            } else {
+                $( "#icnml_login_error" ).text( "The email and email confirmation need to be the same" );
+            }
+        }
+        
+        $( "#request_button" ).on( "click", request_user_account );
+    </script>
+</html>
+

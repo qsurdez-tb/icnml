@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            var password_local = localStorage.getItem( "session_key" );
+            var nickname = decrypt( "{{ nickname }}", password_local );
+        </script>
+        
+        <style type="text/css">
+            :root {
+                --imgsize: 200px;
+            }
+        </style>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            {% if annotations != None %}
+                <div>
+                    <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="download_folder" role="button" aria-disabled="false">
+                        <span class="ui-button-text">Download all target areas</span>
+                    </a>
+                </div>
+                <div class="icnml_list_of_boxes_outer">
+                    <div class="icnml_list_of_boxes_desc">Target annotated images ({{ annotations|length }})</div>
+                    <div class="icnml_list_of_boxes">
+                        {% for a in annotations %}
+                            <div id="annotations_{{ a[ 'uuid' ] }}_outer">
+                                <div class="ui-widget-header ui-corner-top icnml_box_top">{{ segments_position_code[ a[ 'fpc' ] ] }}</div>
+                                <div class="ui-widget-content ui-corner-bottom icnml_box_content">
+                                    <div
+                                        class="icnml_pointer"
+                                        id="annotation_{{ a[ 'uuid' ] }}"
+                                        style="background-image: url( {{ url_for( 'image.image_annotation_serve', uuid = a[ 'uuid' ] ) }} )">
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                <div>No target annotations for this donor</div>
+            {% endif %}
+        </div>
+        
+        <script type="text/javascript">
+            $( "#download_folder" ).on( "click", function()
+            {
+                window.location.href = "{{ url_for( 'submission.download_target_folder', submission_uuid = submission_id  ) }}";
+            } );
+            
+            $( "#icnml_navigation_submissions" )
+                .addClass( "activated" );
+            
+            $( "#navloc" ).append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'submission.submission_list' ) }}" )
+                    .text( "Submissions" )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'submission.submission_upload_tenprintmark', submission_id = submission_id ) }}" )
+                    .text( nickname )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<span />" ).text( "Target" )
+            );
+        </script>
+    </body>
+</html>

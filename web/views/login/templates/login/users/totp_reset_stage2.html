@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            secret = "{{ secret }}";
+        </script>
+    </head>
+    <body>
+        <div class="icnml_central">
+            <h1 style="margin-bottom: 0px">ICNML</h1>
+            <h4 style="margin-top: 0px">International Close Non-Matches Library</h4>
+            
+            <div class="ui-widget-header ui-corner-top icnml_box_top">Time-based One Time Password</div>
+            <div class="ui-widget-content ui-corner-bottom icnml_box_content_central">
+                <div style="min-height: 378px">
+                    <img alt="qrcode" id="icnml_qrcode" width="100%">
+                </div>
+                
+                <div style="text-align: center; margin-bottom: 10px;">
+                    <div style="font-size: 1.17em; font-weight: bold;">Current TOTP:</div>
+                    <h1 id="icnml_current_totp"></h1>
+                    <div>Valid for <span id="icnml_totp_timeremaining"></span> second(s)</div>
+                </div>
+                
+                <div style="text-align: center; margin-bottom: 10px;">
+                    <div>Secret value:</div>
+                    <input class="icnml_monospace" id="totp_secret_value" size="52" class="normal_input" />
+                </div>
+                
+                <div class="icnml_button" style="margin-top: 10px;">
+                    <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="set_secret_button" role="button" aria-disabled="false">
+                        <span class="ui-button-text">Save</span>
+                    </a>
+                </div>
+                <div class="icnml_button" style="margin-top: 10px;">
+                    <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="new_secret_button" role="button" aria-disabled="false">
+                        <span class="ui-button-text">New secret</span>
+                    </a>
+                    
+                    <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="copy_secret_button" role="button" aria-disabled="false">
+                        <span class="ui-button-text">Copy secret</span>
+                    </a>
+                </div>
+                <div class="icnml_button" style="margin-top: 10px;">
+                    <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="help_button" role="button" aria-disabled="false">
+                        <span class="ui-button-text">Get help regarding the TOTP process</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+        var renew_secret = function()
+        {
+            secret = "";
+            
+            $( "#icnml_qrcode" )
+                .css( "display", "None" )
+                .attr( "src", "" );
+            
+            $.ajax( {
+                url: "{{ url_for( 'login.request_renew_secret' ) }}",
+                dataType: "json",
+                method: "GET",
+                success: function( data )
+                {
+                    if( ! data.error )
+                    {
+                        secret = data.secret;
+                        update();
+                    }
+                }
+            } );
+        }
+        var fetch_secret = function()
+        {
+            secret = "";
+            
+            $.ajax( {
+                url: "{{ url_for( 'login.request_secret' ) }}",
+                dataType: "json",
+                method: "GET",
+                success: function( data )
+                {
+                    if( ! data.error )
+                    {
+                        secret = data.secret;
+                    }
+                }
+            } );
+        }
+        var copy_secret = function()
+        {
+            $( "#totp_secret_value" ).select();
+            document.execCommand( "copy" );
+            $( "#totp_secret_value" ).blur();
+            toastr.info( "Secret value copied to the clipboard!" );
+        }
+        
+        var update_data = function()
+        {
+            if( secret != "" )
+            {
+                var tr = otplib.authenticator.timeRemaining();
+                var h = otplib.authenticator.generate( secret );
+                h = h.substr( 0, 3 ) + " " + h.substr( 3, 6 );
+                
+                $( "#icnml_current_totp" ).text( h );
+                $( "#icnml_totp_timeremaining" ).text( tr );
+                $( "#totp_secret_value" ).val( secret );
+            
+            } else {
+                $( "#icnml_current_totp" ).text( "-" );
+                $( "#icnml_totp_timeremaining" ).text( "-" );
+                $( "#totp_secret_value" ).val( "-" );
+            }
+        }
+        
+        var update_qrcode = function()
+        {
+            var uid = Math.floor( Math.random() * 100000000 );
+            var url = "{{ url_for( 'login.user_totp_qrcode' ) }}?" + uid;
+            $( "#icnml_qrcode" )
+                .css( "display", "block" )
+                .attr( "src", url );
+        }
+        
+        var update = function()
+        {
+            update_data();
+            update_qrcode();
+        }
+        
+        var set_secret = function()
+        {
+            $.ajax( {
+                url: "{{ url_for( 'login.set_secret' ) }}",
+                dataType: "json",
+                success: function( data )
+                {
+                    if( ! data.error )
+                    {
+                        location.href = "{{ url_for( 'base.home' ) }}";
+                    } else {
+                        console.log( "error" );
+                        console.log( data );
+                    }
+                }
+            } );
+        }
+        
+        update();
+        setInterval( update_data, 1000 );
+        
+        $( "#set_secret_button" ).on( "click", set_secret );
+        $( "#new_secret_button" ).on( "click", renew_secret );
+        $( "#copy_secret_button" ).on( "click", copy_secret );
+        $( "#help_button" ).on( "click", function(){
+            window.open( "{{ url_for( 'login.totp_help' ) }}", "_blank" );
+        } );
+    </script>
+    </body>
+</html>
+

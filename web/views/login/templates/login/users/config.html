@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            secret = "{{ secret }}";
+        </script>
+        
+        <style type="text/css">
+            #help_button {
+                margin-right: 10px;
+            }
+            .left_button {
+                position: absolute;
+                left: 20px;
+            }
+            #message_totp {
+                visibility: hidden;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="icnml_central">
+            <h1 style="margin-bottom: 0px">ICNML</h1>
+            <h4 style="margin-top: 0px">International Close Non-Matches Library</h4>
+            
+            {% if has_password and has_totp %}
+                <div class="ui-widget-header ui-corner-top icnml_box_top">User configuration</div>
+                <div id="icnml_homepage_form" class="ui-widget-content ui-corner-bottom icnml_box_content_central">
+                    <div style="margin-bottom: 10px">
+                        This user has already a password configured: you can login <a href="{{ url_for( 'login.login' ) }}">Here</a>.
+                    </div>
+                    <div>
+                        If you dont know your password, click <a href="{{ url_for( 'login.password_reset' ) }}">here</a>
+                    </div>
+                </div>
+            {% else %}
+                <div id="icnml_user_configuration_top" class="ui-widget-header ui-corner-top icnml_box_top">Please enter the following information to configure you account:</div>
+                <div id="icnml_homepage_form" class="ui-widget-content ui-corner-bottom icnml_box_content_central">
+                    <div id="icnml_user_configuration">
+                        <div id="icnml_box_fields" class="icnml_box_fields">
+                            <div style="text-align: right;">
+                                <label for="username">Username</label>
+                            </div>
+                            <div>
+                                <input id="username" name="username" type="text" />
+                            </div>
+                            <div style="text-align: right;">
+                                <label for="password">Password</label>
+                            </div>
+                            <div>
+                                <input id="password" name="password" type="password" />
+                            </div>
+                            <div style="text-align: right;">
+                                <label for="password_confirmation">Password confirmation</label>
+                            </div>
+                            <div>
+                                <input id="password_confirmation" name="password_confirmation" type="password" />
+                            </div>
+                        </div>
+                        <div id="icnml_configuration_error" class="icnml_box_error"></div>
+                        <div id="warning" class="icnml_box_warning"></div>
+                        <div class="icnml_button">
+                            <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="set_password_button" role="button" aria-disabled="false">
+                                <span class="ui-button-text">Next</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </body>
+    
+    <script type="text/javascript">
+        var set_password = async function()
+        {
+            var username = $( "#username" ).val();
+            var password = $( "#password" ).val();
+            var password_confirmation = $( "#password_confirmation" ).val();
+            
+            if( ! username )
+            {
+                $( "#icnml_configuration_error" )
+                    .text( "Enter your username as provided in the email" );
+
+                $( "#username" ).focus();
+            }
+            else if( ! password )
+            {
+                $( "#icnml_configuration_error" )
+                    .text( "The password can not be empty" );
+
+                $( "#password" ).focus();
+            }
+            else if( password !== password_confirmation )
+            {
+                $( "#icnml_configuration_error" )
+                    .text( "The passwords fields does not match" );
+
+                $( "#password" ).focus();
+            } else {
+                password = await generateKey( password, "icnml_" + username, 20000 );
+                password = password.substring( 0, 128 );
+                password = "pbkdf2$sha512$icnml_" + username + "$20000$" + password;
+                
+                $.ajax( {
+                    url:  "{{ url_for( 'newuser.do_config_new_user' ) }}",
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        "username": username,
+                        "password": password,
+                        "hash": "{{ hash }}"
+                    },
+                    success: function( data )
+                    {
+                        if( ! data.error )
+                        {
+                            totp_build();
+                        } else {
+                            toastr.error( data.message, "Configuration error" );
+                        }
+                    },
+                    error: function()
+                    {
+                        toastr.error( "Network error" );
+                    }
+                } );
+            }
+        }
+        
+        var totp_build = function()
+        {
+            var display_totp_message = function( class_type, message )
+            {
+                clear_totp_message()
+                
+                if( class_type == "error" )
+                {
+                    $( "#message_totp" )
+                        .css( "visibility", "visible" )
+                        .addClass( "icnml_box_error" )
+                        .text( message );
+                        
+                } else if( class_type == "ok" ) {
+                    $( "#message_totp" )
+                        .css( "visibility", "visible" )
+                        .addClass( "icnml_box_ok" )
+                        .text( message );
+                }
+            }
+            var clear_totp_message = function()
+            {
+                $( "#message_totp" )
+                    .css( "visibility", "hidden" )
+                    .removeClass( "icnml_box_error" )
+                    .removeClass( "icnml_box_ok" )
+                    .text( "" );
+            }
+            
+            var totpdiv = `
+            <div>The configuration of a second factor is mendatory to be able to login in ICNML. <br/> To get help, click <a href="{{ url_for( 'login.totp_help' ) }}" target="_blank">HERE</a></div>
+                <div style="min-height: 378px">
+                    <img alt="qrcode" id="icnml_qrcode" width="100%">
+                </div>
+                
+                <div style="text-align: center; margin-bottom: 10px;">
+                    <div>Secret value:</div>
+                    <input class="icnml_monospace" id="totp_secret_value" size="52" value="{{ secret }}"/>
+                </div>
+                
+                <div class="icnml_button" style="margin-top: 10px;">
+                    <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="help_button" role="button" aria-disabled="false" href="{{ url_for( 'login.totp_help' ) }}" target="_blank">
+                        <span class="ui-button-text">Get help</span>
+                    </a>
+                    
+                    <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="set_secret_button" role="button" aria-disabled="false">
+                        <span class="ui-button-text">Next</span>
+                    </a>
+                </div>`;
+            
+            $( "#icnml_user_configuration_top" ).text( "Second factor configuration" )
+            $( "#icnml_user_configuration" ).html( totpdiv );
+            
+            var update_qrcode = function()
+            {
+                var uid = Math.floor( Math.random() * 100000000 );
+                var url = "{{ url_for( 'login.user_totp_qrcode' ) }}?" + uid;
+                $( "#icnml_qrcode" )
+                    .css( "display", "block" )
+                    .attr( "src", url );
+            }
+            
+            var is_totp_valid = function( token )
+            {
+                otplib.authenticator.options = { window: 10 };
+                return otplib.authenticator.check( token, secret );
+            }
+            
+            var get_user_totp_token = function()
+            {
+                var user_entry = $( "#user_entry_totp" ).val();
+                user_entry = user_entry.replace( /\D/g, '' );
+                return user_entry;
+            }
+            
+            var validate_user_totp_entry = function( event )
+            {
+                var user_entry = get_user_totp_token();
+                
+                if( is_totp_valid( user_entry ) )
+                {
+                    $( "#validate_button" )
+                        .text( "Validating..." )
+                        .off( "click" );
+                    
+                    $.ajax( {
+                        url: "{{ url_for( 'login.set_secret' ) }}",
+                        dataType: "json",
+                        success: function( data )
+                        {
+                            if( ! data.error )
+                            {
+                                location.href = "{{ url_for( 'base.home' ) }}";
+                            } else {
+                                $( "#validate_button" )
+                                    .text( "Error..." )
+                                    .off( "click" );
+                                    
+                                display_totp_message( "error", "Error on the server while validating. Retry later or contact the administrator." );
+                            }
+                        },
+                        error: function( data )
+                        {
+                            $( "#validate_button" )
+                                .text( "Error..." )
+                                .off( "click" );
+                                
+                            display_totp_message( "error", "Error on the server while validating. Retry later or contact the administrator." );
+                        }
+                    } );
+                    
+                } else {
+                    $( "#user_entry_totp" )
+                        .val( '' )
+                        .focus();
+                    
+                    display_totp_message( "error", "TOTP not valid" );
+                }
+            }
+            
+            var live_validate_totp = function( event )
+            {
+                clear_totp_message();
+                    
+                if( event.keyCode == 13 )
+                {
+                    validate_user_totp_entry();
+                    
+                } else {
+                    var user_entry = get_user_totp_token();
+                    if( is_totp_valid( user_entry ) )
+                    {
+                        display_totp_message( "ok", "Valid TOTP token" )
+                        
+                    } else if( user_entry.length == 6 ) {
+                        display_totp_message( "error", "TOTP not valid" );
+                        
+                    } else if( user_entry.length > 6 ) {
+                        display_totp_message( "error", "The TOTP value is only 6 digits long" );
+                    }
+                }
+            }
+            
+            var set_secret = function()
+            {
+                $( "<div />" )
+                    .attr( "id", "totp_confirmation" )
+                    .append(
+                        $( "<div />" )
+                            .css( "margin-bottom", "10px" )
+                            .text( "Enter the current value of the TOTP as displayed on your phone:" )
+                    )
+                    .append(
+                        $( "<input />" )
+                            .css( "margin-bottom", "10px" )
+                            .attr( "id", "user_entry_totp" )
+                            .on( "keyup", live_validate_totp )
+                    )
+                    .append(
+                        $( "<div />" )
+                            .attr( "id", "message_totp" )
+                            .text( "" )
+                    )
+                    .dialog( {
+                        title: "TOTP confirmation",
+                        modal: true,
+                        width: "400px",
+                        buttons: {
+                            help: {
+                                id: "help_button_confirmation",
+                                class: "left_button",
+                                text: "Get help",
+                                click: function(){ window.open( "{{ url_for( 'login.totp_help' ) }}", "_blank" ); }
+                            },
+                            validate: {
+                                id: "validate_button",
+                                text: "Validate",
+                                click: validate_user_totp_entry
+                            },
+                            "Cancel": function()
+                            {
+                                $( this ).dialog( "close" );
+                            },
+                        },
+                        open: function()
+                        {
+                            var dialog_div = $( this );
+                            
+                            $( ".ui-widget-overlay" ).bind( "click", function()
+                            {
+                                dialog_div.dialog( "close" );
+                            } );
+                        },
+                        close: function()
+                        {
+                            $( this ).remove();
+                        }
+                    } );
+            }
+            
+            update_qrcode();
+            
+            $( "#set_secret_button" ).on( "click", set_secret );
+        }
+        
+        {% if has_password and not has_totp %}
+            totp_build();
+        {% endif %}
+            
+        /* Events binding */
+        
+        $( "#set_password_button" ).on( "click", set_password );
+        $( "#username" ).focus();
+        
+        $( "#username" ).on( "keyup", function( event )
+        {
+            if( event.keyCode == 13 )
+            {
+                $( "#password" ).focus();
+            }
+        } );
+        $( "#password" ).on( "keyup", function( event )
+        {
+            if( event.keyCode == 13 )
+            {
+                $( "#password_confirmation" ).focus();
+            }
+        } );
+        $( "#password_confirmation" ).on( "keyup", function( event )
+        {
+            if( event.keyCode == 13 )
+            {
+                set_password();
+            }
+        } );
+        
+        $( document ).ready( function()
+        {
+            if( !window.crypto || !window.crypto.subtle || !window.TextEncoder || !window.TextDecoder )
+            {
+                $( "#warning" )
+                    .text( "Your browser does not support client-side cryptography. Please use compatible browser (Firefox, Chrome, Opera, Safari, ...) to protect your password before sending it to the ICNML server." );
+                
+                $( "#username" ).prop( "disabled", true );
+                $( "#password" ).prop( "disabled", true );
+                $( "#password_confirmation" ).prop( "disabled", true );
+                $( "#set_password_button" ).remove();
+            }
+        } );
+    </script>
+</html>
+

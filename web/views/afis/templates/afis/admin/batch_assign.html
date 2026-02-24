@@ -1,0 +1,267 @@
+{% import "jinja_functions.html" as common %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <style type="text/css">
+            .icnml_afis_assignments_actions {
+                width: fit-content;
+                width: -moz-fit-content;
+                margin-top: 30px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .icnml_buttons_list {
+                display: grid;
+                grid-template-columns: 1fr 10px 1fr 10px 1fr;
+                grid-gap: 10px;
+                margin: 20px;
+            }
+            .icnml_indicator {
+                height: 120px;
+                line-height: 120px;
+                padding-left: 3px;
+                padding-right: 3px;
+            }
+        </style>
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            
+            var data_to_csv = function( data )
+            {
+                var ret = data.headers.join( ";" );
+                ret += "\n";
+                
+                _.forEach( data.data, function( d ){
+                    ret += d.join( ";" );
+                    ret += "\n";
+                } );
+                
+                return ret;
+            }
+            
+            var build_dialog = function( data, title )
+            {
+                return $( "<div />" )
+                    .attr( "id", "afis_dialog" )
+                    .append(
+                        $( "<textarea />" )
+                            .css( "margin-top", "10px" )
+                            .css( "margin-bottom", "10px" )
+                            .css( "font-family", "monospace" )
+                            .attr( "rows", "15" )
+                            .text( data_to_csv( data ) )
+                    )
+                    .dialog( {
+                        title: title,
+                        modal: true,
+                        width: "550px",
+                        buttons: {
+                            "Close": function()
+                            {
+                                $( this ).dialog( "close" );
+                            },
+                        },
+                        close: function()
+                        {
+                            $( this ).remove();
+                        },
+                        open: function()
+                        {
+                            var dialog_div = $( this );
+                            $( ".ui-widget-overlay" ).bind( "click", function()
+                            {
+                                dialog_div.dialog( "close" );
+                            } );
+                        }
+                    } );
+            }
+            
+            var get_data_and_build_dialog = function( target, title )
+            {
+                $.ajax( {
+                    url: target,
+                    dataType: "json",
+                    method: "GET",
+                    success: function( data ){
+                        if( ! data.error )
+                        {
+                            build_dialog( data, title );
+                        } else {
+                            toastr.error( "Server error" );
+                        }
+                    },
+                    error: function( data ){
+                        toastr.error( "Network error" );
+                    }
+                } );
+            }
+            
+            var afis_users_function = function()
+            {
+                get_data_and_build_dialog(
+                    "{{ url_for( 'afis.get_afis_users_list' ) }}",
+                    "List of AFIS users"
+                )
+            }
+            var target_list_function = function()
+            {
+                get_data_and_build_dialog(
+                    "{{ url_for( 'afis.get_target_list' ) }}",
+                    "List of AFIS targets"
+                )
+            }
+            
+            var assignements_function_db = function()
+            {
+                var data = $( "#assignements_list" ).val();
+                
+                $( "#save_button" )
+                    .prop( "disabled", true )
+                    .text( "Please wait..." );
+                
+                $.ajax( {
+                    url: "{{ url_for( 'afis.batch_assign_do' ) }}",
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        data: data
+                    },
+                    success: function( data )
+                    {
+                        if( ! data.error )
+                        {
+                            toastr.success( "Update OK" );
+                            $( "#afis_dialog" ).dialog( "close" );
+                        } else {
+                            toastr.error( "Error while updating the assignments" );
+                        }
+                    },
+                    error: function()
+                    {
+                        toastr.error( "Network error" );
+                    }
+                } );
+                
+            }
+            
+            var assignements_function = function()
+            {
+                $.ajax( {
+                    url: "{{ url_for( 'afis.get_target_assignements' ) }}",
+                    dataType: "json",
+                    method: "GET",
+                    success: function( data ){
+                        if( ! data.error )
+                        {
+                            $( "<div />" )
+                                .attr( "id", "afis_dialog" )
+                                .append(
+                                    $( "<textarea />" )
+                                        .attr( "id", "assignements_list" )
+                                        .css( "margin-top", "10px" )
+                                        .css( "margin-bottom", "10px" )
+                                        .css( "font-family", "monospace" )
+                                        .attr( "rows", "15" )
+                                        .text( data_to_csv( data ) )
+                                )
+                                .dialog( {
+                                    title: "Update the user assignement for AFIS targets",
+                                    modal: true,
+                                    width: "550px",
+                                    buttons: {
+                                        save: {
+                                            id: "save_button",
+                                            text: "Save",
+                                            click: assignements_function_db
+                                        },
+                                        "Close": function()
+                                        {
+                                            $( this ).dialog( "close" );
+                                        },
+                                    },
+                                    close: function()
+                                    {
+                                        $( this ).remove();
+                                    },
+                                    open: function()
+                                    {
+                                        var dialog_div = $( this );
+                                        $( ".ui-widget-overlay" ).bind( "click", function()
+                                        {
+                                            dialog_div.dialog( "close" );
+                                        } );
+                                    }
+                                } );
+                                
+                        } else {
+                            toastr.error( "Server error" );
+                        }
+                    },
+                    error: function( data ){
+                        toastr.error( "Network error" );
+                    }
+                } );
+                
+            }
+        </script>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <div class="icnml_afis_assignments_actions">
+                <div class="ui-widget-header ui-corner-top icnml_box_top">Targets assignements to AFIS users</div>
+                <div class="ui-widget-content ui-corner-bottom">
+                    <div class="icnml_buttons_list">
+                        <div class="icnml_button_square">
+                            <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only icnml_button_square" id="afis_users_button" role="button" aria-disabled="false">
+                                <span>AFIS users</span>
+                            </a>
+                        </div>
+                        
+                        <div class="icnml_indicator">+</div>
+                        
+                        <div class="icnml_button_center">
+                            <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only icnml_button_square" id="target_list_button" role="button" aria-disabled="false">
+                                <span>Targets</span>
+                            </a>
+                        </div>
+                        
+                        <div class="icnml_indicator">=</div>
+                        
+                        <div class="icnml_button_center">
+                            <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only icnml_button_square" id="update_assignements_button" role="button" aria-disabled="false">
+                                <span>Assignments</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script type="text/javascript">
+            $( "#afis_users_button" ).on( "click", afis_users_function );
+            $( "#target_list_button" ).on( "click", target_list_function );
+            $( "#update_assignements_button" ).on( "click", assignements_function );
+            
+            $( "#icnml_navigation_afis_batch_assign" )
+                .addClass( "activated" );
+            
+            $( "#navloc" ).append(
+                $( "<span />" )
+                    .text( "AFIS batch assignment" )
+            );
+        </script>
+    </body>
+</html>
+

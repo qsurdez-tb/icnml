@@ -1,0 +1,436 @@
+:root {
+    --imgsize: 200px;
+    --imgmargin: 10px;
+    --gt: "";
+}
+
+body {
+    background-color: rgb( 238, 238, 238 );
+    font-family: Segoe UI, Arial, sans-serif;
+    font-size: 0.8em;
+    caret-color: #303e4d;
+}
+
+.icnml_list_of_boxes {
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: repeat( auto-fit, minmax( calc( var( --imgsize ) + 2 * var( --imgmargin ) + 2px ), max-content ) );
+    grid-auto-rows: min-content;
+    margin-bottom: 10px;
+}
+
+.icnml_list_of_boxes_outer {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.icnml_list_of_boxes_desc {
+    position: relative;
+    top: -19px;
+    padding-left: 10px;
+    padding-right: 20px;
+    width: fit-content;
+    width: -moz-fit-content;
+    background-color: rgb( 238, 238, 238 );
+}
+
+.icnml_new_button {
+    display: table;
+    text-align: center;
+    cursor: pointer;
+}
+.icnml_new_button > span {
+    font-size: 4.3em;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.icnml_pointer {
+    cursor: pointer;
+}
+a {
+    color: rgb( 238, 238, 238 );
+}
+
+select {
+    width: 100%;
+}
+
+textarea,
+input:not([type=checkbox]) {
+    width: calc( 100% - 12px );
+}
+
+textarea,
+select,
+input:not([type=checkbox]),
+.chosen-choices {
+    border: 1px solid #AAAAAA;
+    border-radius: 10px;
+    background-color: #FDFDFD;
+    padding-left: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-right: 0px;
+}
+.chosen-with-drop > .chosen-choices {
+    border-color: #AAAAAA;
+    border-radius: 10px 10px 0px 0px;
+}
+.chosen-with-drop > .chosen-drop {
+    border-radius: 0px 0px 10px 10px;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    box-shadow: 3px 3px 5px 0px rgba( 32, 33, 36, 0.2 );
+    outline-width: 0;
+    background-color: #FAFAFA;
+}
+
+.normal_input {
+    width: 100%;
+    border: 0px;
+    border-radius: 0px;
+    padding: 0px;
+}
+.normal_input:focus {
+    box-shadow: none;
+}
+
+.icnml_central {
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.icnml_form {
+    width: 80%;
+    max-width: 500px;
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.icnml_box_top {
+     text-align: center;
+     padding: 3px;
+}
+.icnml_box_fields {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-gap: 10px 20px;
+    margin-bottom: 10px;
+}
+.icnml_box_content,
+.icnml_box_content_central {
+    padding: 10px;
+    text-align: justify;
+    text-justify: inter-word;
+}
+.icnml_box_warning {
+    text-align: center;
+    color: orange;
+    margin-bottom: 10px;
+}
+.icnml_box_error {
+    text-align: center;
+    color: red;
+    margin-bottom: 10px;
+}
+.icnml_box_ok {
+    text-align: center;
+    color: green;
+    margin-bottom: 10px;
+}
+
+.icnml_shybox {
+    text-align: right;
+    color: #cccccc;
+}
+.icnml_shybox > a {
+    color: #cccccc;
+    text-decoration: None;
+}
+
+.icnml_auto {
+    display: grid;
+    grid-template-columns: repeat( auto-fit, minmax( 10px, 1fr ) );
+    grid-gap: 10px;
+    margin-bottom: 10px;
+}
+
+.icnml_monospace {
+    text-align: center;
+    font-family: monospace;
+    border: 0;
+}
+
+.icnml_main_layout {
+    margin: 0px;
+    display: grid;
+    grid-template-areas: 
+        "logo navloc info"
+        "nav  content content";
+    
+    grid-template-columns: 175px 5fr;
+    grid-template-rows: auto 1fr;
+    min-height: 100vh;
+}
+
+.icnml_content {
+    grid-area: content;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+}
+
+.icnml_header_bg {
+    background-color: #303e4d;
+}
+
+.icnml_logo {
+    grid-area: logo;
+    color: rgb( 238, 238, 238 );
+    padding-left: 10px;
+    font-size: 2em;
+    font-weight: bold;
+}
+.icnml_logo > a {
+    text-decoration: none;
+}
+
+.icnml_navloc {
+    grid-area: navloc;
+    color: rgb( 238, 238, 238 );
+    text-transform: uppercase;
+    font-variant: small-caps;
+    text-align: left;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+}
+.icnml_navloc > a,
+.icnml_navloc > span {
+    margin-right: 10px;
+}
+
+.icnml_user_info {
+    grid-area: info;
+    color: rgb( 238, 238, 238 );
+    text-align: right;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 10px;
+}
+
+.icnml_user_info > span {
+    margin-left: 10px;
+}
+
+.icnml_lp_cardbox {
+    margin-bottom: 10px;
+}
+.icnml_lp_cardbox_preview {
+    text-align: center;
+}
+.icnml_lp_cardbox > .icnml_lp_cardbox_preview {
+    color: #cccccc;
+}
+.icnml_lp_cardbox > div > img {
+    border: 1px solid #cccccc;
+    padding: 5px;
+    max-width: calc( 100% - 30px );
+}
+
+.icnml_lp_oneperpage,
+.icnml_tp_oneperpage {
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.icnml_lp_cardbox,
+.icnml_tp_cardbox {
+    display: grid;
+    grid-template-columns: 1fr minmax( 400px, 1fr );
+    grid-gap: 30px;
+}
+
+#tenprint_zones_table {
+    display: grid;
+    grid-template-columns: auto repeat( 5, 1fr ) auto;
+    grid-gap: 10px;
+    margin-top: 40px;
+}
+
+.tenprint_zones_table_input {
+    width: calc( 100% - 10px );
+    padding-left: 10px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    border: 1px solid #000000;
+    border-radius: 20px;
+}
+
+.icnml_navigation {
+    grid-area: nav;
+    background-color: #303e4d;
+    color: rgb( 238, 238, 238 );
+    font-size: 1.5em;
+    padding-left: 10px;
+    padding-top: 20px;
+}
+.icnml_navigation > div {
+    margin-bottom: 5px;
+}
+.icnml_navigation > div > a {
+    text-decoration: none;
+}
+
+.icnml_navigation > div:hover::after,
+.icnml_navigation > div.activated::after {
+    position: absolute;
+    width: 0;
+    height: 0;
+    left: 175px;
+    border-bottom: 1em solid transparent;
+    border-right: 1em solid transparent;
+    border-top: 1em solid rgb( 238, 238, 238 );
+    content: '';
+    transform: rotate( -45deg );
+}
+
+.icnml_backtothetop {
+    position: fixed;
+    top: -40px;
+    right: 30px;
+    
+    width: 40px;
+    height: 40px;
+    z-index: 999;
+    
+    transition: top 0.3s;
+}
+
+.ribbon-wrapper {
+    position: fixed;
+    overflow: hidden;
+    width: 85px;
+    height: 85px;
+    bottom: 0px;
+    right: 0px;
+    z-index: 99;
+}
+
+.ribbon {
+    position: relative;
+    left: -5px;
+    top: 40px;
+    width: 120px;
+    
+    font: bold 15px Sans-Serif;
+    color: #6a6340;
+    text-align: center;
+    text-shadow: rgba( 255, 255, 255, 0.5 ) 0px 1px 0px;
+    -webkit-transform: rotate( -45deg );
+    
+    background-color: #BFDC7A;
+    background-image: -webkit-gradient( linear, left top, left bottom, from( #BFDC7A ), to( #8EBF45 ) ); 
+    
+    padding: 7px 0;
+    box-shadow:         0px 0px 3px rgba(0,0,0,0.3);
+    overflow: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 16px;
+}
+
+::-webkit-scrollbar-thumb {
+    border: 5px solid rgba( 0, 0, 0, 0 );
+    border-radius: 10px;
+    background-color: rgba( 0, 0, 0, 0.15 );
+    background-clip: padding-box;
+}
+
+::-webkit-scrollbar-button {
+    width: 0;
+    height: 0;
+}
+
+#zoom_slider {
+    position: fixed;
+    width: 200px;
+    max-width:100%;
+    bottom: 5px;
+    right: 15px;
+}
+
+.div_checked {
+    visibility: hidden;
+    position: absolute;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    right: -5px;
+    top: -5px;
+    z-index: 50;
+}
+
+#tool_tip_missing_information {
+    visibility: hidden;
+    position: absolute;
+    width: auto;
+    height: auto;
+    z-index: 99;
+    border: 1px solid #AAAAAA;
+    border-radius: 3px;
+    background: #FFFFFF;
+    padding: 5px;
+}
+
+.icnml_search_bar {
+    margin-left: 10px;
+    margin-bottom: 20px;
+    width: 500px;
+}
+
+.icnml_button_square {
+    text-align: center;
+    height: 120px;
+    width: 120px;
+    padding: 0px;
+}
+.icnml_button_square > span {
+    height: 120px;
+    width: 120px;
+    line-height: 120px;
+    vertical-align: center;
+    text-align: center;
+}
+
+.icnml_center {
+    text-align: center;
+}
+
+.icnml_variable_img,
+.icnml_box_content > div {
+    height: var( --imgsize );
+    width: var( --imgsize );
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.icnml_100percent_img {
+    height: 100%;
+    width: 100%;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+

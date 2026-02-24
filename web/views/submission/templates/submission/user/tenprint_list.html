@@ -1,0 +1,112 @@
+{% import "jinja_functions.html" as common %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            var password_local = localStorage.getItem( "session_key" );
+            var nickname = decrypt( "{{ nickname }}", password_local );
+        </script>
+        
+        <style type="text/css">
+            :root {
+                --imgsize: 300px;
+            }
+            .icnml_print_list_div {
+                position: relative
+            }
+        </style>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <div class="icnml_list_of_boxes">
+                {% for tenprint in tenprint_cards %}
+                    <div>
+                        <div class="ui-widget-header ui-corner-top icnml_box_top" id="tenprint_{{ tenprint[ 'uuid' ] }}_filename">-</div>
+                        <div class="ui-widget-content ui-corner-bottom icnml_box_content">
+                            <div
+                                id="edit_{{ tenprint[ 'uuid' ] }}"
+                                class="icnml_pointer icnml_print_list_div"
+                                style="background-image: url( {{ url_for( 'image.image_file_serve', file_id = tenprint[ 'uuid' ] ) }} )">
+                                    {{ common.checked_exclamation( "tenprint_" + tenprint[ 'uuid' ] + "_checked_error" ) }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div id="zoom_slider"></div>
+        </div>
+        
+        <div id="tool_tip_missing_information"></div>
+        
+        <script type="text/javascript">
+            // Add the information for missing segments
+            {% for segment in segments %}
+                {% if segment[ 'nb' ] == 0 %}
+                    $( "#tenprint_{{ segment[ 'uuid' ] }}_checked_error" )
+                        .css( "visibility", "visible" )
+                        .on( "mouseenter", function( event ){
+                            var offset = $( this ).offset();
+                            
+                            $( "#tool_tip_missing_information" )
+                                .html( "Segmentation missing" )
+                                .css( "visibility", "visible" )
+                                .css( "top", offset.top - 30 )
+                                .css( "left", offset.left + 20 )
+                        } )
+                        .on( "mouseleave", function( event ){
+                            $( "#tool_tip_missing_information" )
+                                .css( "visibility", "hidden" )
+                        } )
+                {% endif %}
+            {% endfor %}
+            
+            {% for tenprint in tenprint_cards %}
+                var filename =  decrypt( "{{ tenprint[ 'filename' ] }}", password_local );
+                filename = truncate( filename, 18 );
+                
+                $( "#tenprint_{{ tenprint[ 'uuid' ] }}_filename" )
+                    .text( filename );
+                $( "#edit_{{ tenprint[ 'uuid' ] }}" ).on( "click", function()
+                {
+                    window.location.href = "{{ url_for( 'submission.submission_tenprint', submission_id = submission_id, tenprint_id = tenprint[ 'uuid' ] ) }}";
+                } );
+            {% endfor %}
+            
+            $( "#icnml_navigation_submissions" )
+                .addClass( "activated" );
+            
+            $( "#navloc" ).append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'submission.submission_list' ) }}" )
+                    .text( "Submissions" )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'submission.submission_upload_tenprintmark', submission_id = submission_id ) }}" )
+                    .text( nickname )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<span />" ).text( "Tenprints" )
+            );
+        </script>
+    </body>
+</html>
+        

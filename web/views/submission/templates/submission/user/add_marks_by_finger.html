@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            submission_id = "{{ submission_id }}";
+            
+            var password_local = localStorage.getItem( "session_key" );
+            var nickname = decrypt( "{{ user.nickname }}", password_local );
+            
+            var update_nickname = function()
+            {
+                var nickname = encrypt( $( "#upload_nickname" ).val() || null, password_local );
+                
+                $.ajax( {
+                    url: "{{ url_for( 'submission.submission_update_nickname', submission_id = submission_id ) }}",
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        nickname: nickname
+                    }
+                } );
+            }
+        </script>
+        
+        <style type="text/css">
+            #icnml_form {
+                width: 90%;
+                max-width: 1200px;
+                margin-top: 30px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+            #set_all_gp {
+                margin-top: 35px;
+                display: grid;
+                grid-template-columns: repeat( 5, 1fr );
+                grid-auto-rows: 1fr;
+                grid-gap: 10px;
+                cursor: pointer;
+            }
+            #set_all_gp::before {
+                content: '';
+                width: 0;
+                padding-bottom: 100%;
+                grid-row: 1 / 1;
+                grid-column: 1 / 1;
+            }
+            #set_all_gp > *:first-child {
+                grid-row: 1 / 1;
+                grid-column: 1 / 1;
+            }
+            .label_float {
+                position: absolute;
+                float: left;
+                z-index: 9;
+                padding-left: 5px;
+                padding-right: 10px;
+                margin-left: 10px;
+                margin-top: -0.75em;
+                background-color: #ffffff;
+            }
+        </style>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <form id="icnml_form">
+                <div class="ui-widget-header ui-corner-top icnml_box_top">Upload marks per finger</div>
+                <div class="ui-widget-content ui-corner-bottom icnml_box_content_central">
+                    <div class="icnml_box_fields">
+                        <div style="text-align: right;">
+                            <label for="upload_nickname">Submission nickname</label>
+                        </div>
+                        <div>
+                            <input id="upload_nickname" name="upload_nickname" type="text" value="" />
+                        </div>
+                        
+                        <div style="text-align: right;">
+                            <label for="email">Donor e-mail</label>
+                        </div>
+                        <div>
+                            <input id="email" name="email" type="text" value="{{ user.email }}" readonly />
+                        </div>
+                    </div>
+                    
+                    <div id="set_all_gp">
+                        {% for n in range( 10 ) %}
+                            <div>
+                                <div class="label_float">{{ finger_names[ n ] }} (F{{ n + 1 }})</div>
+                                <div id="finger_{{ n }}_dropzone" class="dropzone"></div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div style="text-align: right;">
+                        <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only icnml_next_button" style="margin-top: 20px" id="open_marks_page" role="button" aria-disabled="false">
+                            <span class="ui-button-text">Open the mark(s) page</span>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <script type="text/javascript">
+            $( "#upload_nickname" ).val( nickname );
+            $( "#upload_nickname" ).on( "change", update_nickname );
+            
+            $( "#open_marks_page" ).on( "click", function()
+            {
+                window.location.href = "{{ url_for( 'submission.submission_mark_list', submission_id = submission_id ) }}";
+            } );
+            
+            Dropzone.autoDiscover = false;
+            function sleep( ms ) {
+                return new Promise( resolve => setTimeout( resolve, ms ) );
+            }
+            
+            {% for n in range( 10 ) %}
+                $( function()
+                {
+                    new Dropzone(
+                        "#finger_{{ n }}_dropzone",
+                        {
+                            url: "{{ url_for( 'submission.upload_file' ) }}",
+                            timeout: 600000,
+                            createImageThumbnails: false,
+                            parallelUploads: 3,
+                            params: {
+                                "upload_type": "mark_target",
+                                "submission_id": submission_id,
+                                "finger_name": "F{{ n + 1 }}-distal"
+                            },
+                            renameFile: function( file )
+                            {
+                                var newName = encrypt( file.name, password_local );
+                                return newName;
+                            },
+                            dictDefaultMessage: "Drop marks here to upload"
+                        }
+                    )
+                    .on( "addedfile", function( file )
+                    {
+                        $( "#finger_{{ n }}_dropzone > .dz-default.dz-message" ).remove();
+                    } )
+                    .on( "success", function( p ) {
+                        var response = JSON.parse( p.xhr.response );
+                        if( response.error )
+                            toastr.error( response.message );
+                    } )
+                    .on( "error", function( p )
+                    {
+                        toastr.error( "Error" );
+                    } );
+                } );
+            {% endfor %}
+            
+            $( "#icnml_navigation_submissions" )
+                .addClass( "activated" );
+            
+            $( "#navloc" ).append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'submission.submission_list' ) }}" )
+                    .text( "Submissions" )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'submission.submission_upload_tenprintmark', submission_id = submission_id ) }}" )
+                    .text( nickname )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<span />" ).text( "Upload marks per finger" )
+            );
+        </script>
+    </body>
+</html>
+

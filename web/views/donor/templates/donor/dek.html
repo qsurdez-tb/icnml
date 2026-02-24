@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            
+            var delete_dek = function()
+            {
+                $.ajax( {
+                    url: "{{ url_for( 'donor.dek_delete' ) }}",
+                    method: "GET",
+                    dataType: "json",
+                    success: function( data )
+                    {
+                        if( ! data.error )
+                        {
+                            window.location = "{{ url_for( 'donor.user_myprofile_dek' ) }}";
+                        } else {
+                            toastr.error( "Error while deleting the DEK" );
+                        }
+                    },
+                    error: function( data )
+                    {
+                        toastr.error( "Network error" );
+                    }
+                } );
+            }
+            
+            var full_delete_dek = function()
+            {
+                $( "<div />" )
+                    .attr( "id", "full_dek_create_confirmation" )
+                    .text( "Do you really want to delete the Data Encryption Key and all related encryption informations, making your biometric data irrevocably not part of ICNML?. This action will be seens by the submitter (your data will no longer be visible on his admin page)." )
+                    .dialog( {
+                        title: "Confirm Data Encryption Key full deletion",
+                        modal: true,
+                        width: "550px",
+                        buttons: {
+                            "Irrevocably delete": function()
+                            {
+                                $.ajax( {
+                                    url: "{{ url_for( 'donor.dek_delete_fully' ) }}",
+                                    method: "GET",
+                                    dataType: "json",
+                                    success: function( data )
+                                    {
+                                        if( ! data.error )
+                                        {
+                                            window.location = "{{ url_for( 'donor.user_myprofile_dek' ) }}";
+                                        } else {
+                                            toastr.error( "Error while deleting the DEK" );
+                                        }
+                                    },
+                                    error: function( data )
+                                    {
+                                        toastr.error( "Network error" );
+                                    }
+                                } );
+                            },
+                            "Cancel": function()
+                            {
+                                $( this ).dialog( "close" );
+                            },
+                        },
+                        close: function()
+                        {
+                            $( this ).remove();
+                        }
+                    } );
+            }
+            
+            var recreate_dek_ajax = async function()
+            {
+                var email = $( "#email_input" ).val();
+                email = await generateKey( email, "icnml_user_DEK", 20000 );
+                email = email.substring( 0, 128 );
+                
+                $.ajax( {
+                    url: "{{ url_for( 'donor.dek_regenerate' ) }}",
+                    method: "POST",
+                    data: {
+                        "email_hash": email
+                    },
+                    dataType: "json",
+                    success: function( data )
+                    {
+                        if( ! data.error )
+                        {
+                            $( "#dek_create_confirmation" ).remove();
+                            window.location = "{{ url_for( 'donor.user_myprofile_dek' ) }}";
+                        } else {
+                            toastr.error( "Error while reconstructing the DEK" );
+                        }
+                    },
+                    error: function( data )
+                    {
+                        $( "#dek_create_confirmation" ).remove();
+                        toastr.error( "Network error" );
+                    }
+                } );
+            }
+            
+            var recreate_dek = function()
+            {
+                $( "<div />" )
+                    .attr( "id", "dek_create_confirmation" )
+                    .text( "Do you really want to recreate the Data Encryption Key, making your biometric data available to the users of ICNML?" )
+                    .append(
+                        $( "<div />" )
+                            .attr( "class", "icnml_box_fields" )
+                            .css( "margin-top", "10px" )
+                            .append(
+                                $( "<label />" )
+                                    .attr( "for", "email_input" )
+                                    .text( "Your original e-mail address:" )
+                            )
+                            .append(
+                                $( "<input />" )
+                                    .attr( "id", "email_input" )
+                            )
+                    )
+                    .dialog( {
+                        title: "Confirm Data Encryption Key generation",
+                        modal: true,
+                        width: "550px",
+                        buttons: {
+                            "Re-generate": function(){
+                                recreate_dek_ajax();
+                            },
+                            "Cancel": function()
+                            {
+                                $( this ).dialog( "close" );
+                            },
+                        },
+                        close: function()
+                        {
+                            $( this ).remove();
+                        }
+                    } );
+                
+                $( "#email_input" ).on( "keypress", function( event )
+                {
+                    if( event.keyCode == 13 )
+                    {
+                        recreate_dek_ajax();
+                    }
+                } );
+            }
+        </script>
+        
+        <style type="text/css">
+            .buttons_list {
+                margin-top: 50px;
+            }
+            .buttons_list > div > a {
+                width: 200px;
+                margin-bottom: 10px;
+                padding: 10px;
+            }
+        </style>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <div style="margin: 10px;">
+                {% if has_dek %}
+                    <p>
+                        You are part of the ICNML database.
+                        This imply that your biometric data is available to create cases.
+                        If you want to be deleted from the ICNML database, use the button bellow to delete your Data Encryption Key (DEK)
+                    </p>
+                    <p>
+                        You can also delete completly the possibility of reconstruction of the Data Encryption Key, but this also notify the submitter of your data that you are no longer part of the ICNML database.
+                    </p>
+                {% else %}
+                    <p style="color: #ff0000; font-size: 30px; font-weight: bolder;">
+                        You don't have anymore a Data Encryption Key (DEK) in ICNML.
+                    </p>
+                    
+                    <p>
+                        This imply that your data, in particular all biometric information (tenprint and marks) are not available as part of the ICNML data.
+                    </p>
+                    
+                    {% if has_salt %}
+                        <p>
+                            For privacy purpose, the original submitter of your biometric data can still see the uploaded data.
+                            This is done to prevent the submitter knowing that you have requested a deletion of ICNML.
+                            If new data is uploaded in your folder, it will be encrypted and not available for new cases.
+                        </p>
+                    {% else %}
+                        <p>
+                            You dont have and Data Encryption Key (DEK) and there is no way to restore the data. Your biometric data is hence not usable by anyone.
+                        </p>
+                    {% endif %}
+                {% endif %}
+            </div>
+            
+            <div class="icnml_center buttons_list">
+                {% if not has_dek and has_salt %}
+                    <div class="icnml_button" id="create_dek_button_div">
+                        <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="dek_button_reconstruct" role="button" aria-disabled="false">
+                            <span class="ui-button-text" id="dek_button_reconstruct_span_text">Reconstruct DEK</span>
+                        </a>
+                    </div>
+                {% endif %}
+                {% if has_dek %}
+                    <div id="delete_dek_button_div">
+                        <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="dek_button_delete" role="button" aria-disabled="false">
+                            <span class="ui-button-text" id="dek_button_delete_span_text">Delete DEK silently</span>
+                        </a>
+                    </div>
+                {% endif %}
+                {% if has_salt %}
+                    <div id="full_delete_dek_button_div">
+                        <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="full_dek_button_delete" role="button" aria-disabled="false">
+                            <span class="ui-button-text" id="full_dek_button_delete_span_text">Delete DEK fully</span>
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <script type="text/javascript">
+            $( "#dek_button_reconstruct" ).on( "click", recreate_dek );
+            $( "#dek_button_delete" ).on( "click", delete_dek );
+            $( "#full_dek_button_delete" ).on( "click", full_delete_dek );
+            
+            $( "#icnml_navigation_dek" )
+                .addClass( "activated" );
+            
+            $( "#navloc" ).append(
+                $( "<span />" ).text( "My user profile" )
+            );
+        </script>
+    </body>
+</html>
+        

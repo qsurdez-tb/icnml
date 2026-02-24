@@ -1,0 +1,3 @@
+[submodule "cdn"]
+	path = cdn
+	url = https://esc-md-git.unil.ch/ICNML/cdn.git

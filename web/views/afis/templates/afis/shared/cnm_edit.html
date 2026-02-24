@@ -1,0 +1,1295 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <style type="text/css">
+            .icnml_form {
+                max-width: 600px;
+            }
+            #location_img {
+                position: relative;
+                background-image: url( '{{ url_for( 'files.send_static_files', subpath = 'location/main.png' ) }}' );
+                background-repeat: no-repeat;
+                background-size: 100%;
+            }
+            #location_img > img {
+                width: auto;
+            }
+            #location_img > div {
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 100%;
+                z-index: -1;
+                background-repeat: no-repeat;
+                background-size: 100%;
+            }
+            .left_button {
+                position: absolute;
+                left: 20px;
+            }
+            .all_marks_grid_div {
+                height: 100%;
+                display: grid;
+                grid-gap: 10px;
+                grid-template-columns: 1fr 1fr;
+            }
+            .screenshot_grid_div {
+                height: 100%;
+                display: grid;
+                grid-template-columns: 1fr;
+            }
+            .all_marks_grid_div > div {
+                border: lightgray solid 1px;
+                box-shadow: 3px 3px 5px 0px rgba( 32, 33, 36, 0.2 );
+            }
+        </style>
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            
+            {% if admin %}
+                var nickname = "";
+            {% else %}
+                var password_local = localStorage.getItem( "session_key" );
+                var nickname = decrypt( "{{ cnm_result[ 'nickname' ] }}", password_local );
+            {% endif %}
+            if( nickname !== "" )
+            {
+                var cnm_nickname_navbar = nickname;
+            } else {
+                var cnm_nickname_navbar = "{{ cnm_uuid[ 0:18 ] }}";
+            }
+            
+            var db_size = "{{ cnm_result[ 'db_size' ] }}";
+            if( db_size === "None" )
+                db_size = "";
+            
+            var afis_rank = "{{ cnm_result[ 'afis_rank' ] }}";
+            if( afis_rank === "None" )
+                afis_rank = "";
+            
+            var public_notes = `{{ cnm_result[ 'public_notes' ] }}`;
+            if( public_notes === "None" )
+                public_notes = "";
+            
+            var current_pfsp = "{{ cnm_result[ 'matched_pfsp' ] }}";
+            if( current_pfsp === "None" )
+            {
+                current_pfsp = [];
+            } else {
+                current_pfsp = current_pfsp.split( "," );
+            }
+            
+            var all_donor_marks = [];
+            var all_donor_marks_info = [];
+            {% for m in mark_list %}
+                all_donor_marks.push( "{{ m[ 'uuid' ] }}" )
+                all_donor_marks_info.push( {
+                    res: "{{ m[ 'resolution' ] }}",
+                    width: "{{ m[ 'width' ] }}",
+                    height: "{{ m[ 'height' ] }}",
+                    fac: "{{ m[ 'resolution' ] }}" / "{{ m[ 'width' ] }}"
+                });
+            {% endfor %}
+            
+            var cnm_all_ref_files = [];
+            {% for c in uploaded_cards %}
+                cnm_all_ref_files.push( "{{ c[ 'uuid' ] }}" )
+            {% endfor %}
+            
+            var update_field = function( field, data )
+            {
+                $.ajax( {
+                    url: "{{ url_for( 'afis.cnm_update_metadata', target_uuid = target_uuid, cnm_uuid = cnm_uuid ) }}",
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        field: field,
+                        data: data
+                    }
+                } );
+            }
+            
+            {% if not admin %}
+                var update_nickname = function()
+                {
+                    var nickname = $( "#nickname" ).val() || null;
+                    nickname = encrypt( nickname, password_local );
+                    update_field( "nickname", nickname );
+                }
+            {% endif %}
+            
+            var update_dbsize = function()
+            {
+                var db_size = $( "#db_size" ).val() || null;
+                update_field( "db_size", db_size );
+            }
+            var update_afisrank = function()
+            {
+                var afis_rank = $( "#afis_rank" ).val() || null;
+                update_field( "afis_rank", afis_rank );
+            }
+            
+            var update_public_notes = function()
+            {
+                var public_notes = $( "#public_notes" ).val() || null;
+                update_field( "public_notes", public_notes );
+            }
+            
+            var update_field_db_multi = function( field )
+            {
+                var field_value = [];
+                
+                $.each( $( "#" + field + " > select > option:checked" ), function() {
+                    field_value.push( $( this ).val() );
+                } );
+                
+                update_field( field, field_value.join( "," ) );
+            }
+            var update_field_db_single = function( field )
+            {
+                var field_value = $( "#" + field + " > select > option:checked" ).val();
+                update_field( field, field_value );
+            }
+            
+            var is_personal_cnm_sync_with_rank = function()
+            {
+                var is_personal_cnm = $( "#is_personal_cnm > select > option:checked" ).val();
+                
+                if( is_personal_cnm === "0" )
+                {
+                    var current_rank = $( "#afis_rank" ).val();
+                    
+                    if( current_rank === "" )
+                    {
+                        $( "#afis_rank" ).val( 1 );
+                        update_field( "afis_rank", "1" );
+                    }
+                }
+            }
+            
+            var set_pfsp = function()
+            {
+                var updateMapCoordinates = function( data, fac )
+                {
+                    data.children( "area" ).each( function( i )
+                    {
+                        $( this )[ 0 ].coords = $( this )[ 0 ].coords
+                            .split( "," )
+                            .map( x => x * fac )
+                            .join( "," );
+                    } );
+                }
+                var updateSelection = function( data, faded_out_current_selection )
+                {
+                    var location_base_url = "{{ url_for( 'files.send_static_files', subpath = 'location' ) }}";
+                    
+                    var d = [ "main" ]
+                        .concat( data )
+                        .filter( x => x != "None" )
+                        .filter( x => x != "" )
+                        .map( x => "url( " + location_base_url + "/" + x + ".png )" )
+                        .join( ", " );
+                    
+                    $( "#location_img" )
+                        .css( "background-image", d );
+                    
+                    if( faded_out_current_selection )
+                    {
+                        var d = current_pfsp
+                            .filter( x => x != "None" )
+                            .filter( x => x != "" )
+                            .map( x => "url( " + location_base_url + "/" + x + ".png )" )
+                            .join( ", " );
+                        
+                        $( "#location_img > div" )
+                            .css( "background-image", d )
+                            .css( "opacity", "0.3" );
+                    } else {
+                        $( "#location_img > div" )
+                            .css( "background-image", "" )
+                            .css( "opacity", "" );
+                    }
+                }
+                var update_pfsp_db = function( data )
+                {
+                    if( data !== null )
+                    {
+                        $( "#pfsp" ).val( data.join( ", " ) );
+                        data = data.join( "," )
+                    }
+                    
+                    $.ajax( {
+                        url: "{{ url_for( 'afis.cnm_set_pfsp', target_uuid = target_uuid, cnm_uuid = cnm_uuid ) }}",
+                        dataType: "json",
+                        method: "POST",
+                        data: {
+                            pfsp: data
+                        },
+                        error: function()
+                        {
+                            toastr.error( "Error while saving the location data" );
+                        }
+                    } );
+                }
+                
+                var pfsp_div = $( "<div />" ).html( `
+                    <div id="pfsp">
+                        <div id="location_img">
+                            <img src="{{ url_for( 'files.send_static_files', subpath = 'location/empty.png' ) }}" usemap="#location_map" />
+                            <div></div>
+                        </div>
+                        <map id="Map" name="location_map" class="location_map">
+                            {% for zone in pfsp_zones %}
+                                <area
+                                    shape="polygon"
+                                    id="area_{{ zone[ 'sel' ] | join( '_' ) }}"
+                                    coords="{{ zone[ 'coords' ] }}"
+                                    data-selection="{{ zone[ 'sel' ] | join( ',' ) }}"
+                                    data-desc="{{ zone[ 'desc' ] }}"
+                                    data-zone="{{ zone[ 'zone' ] }}"
+                                    data-lat="{{ zone[ 'lat' ] }}"
+                                />
+                            {% endfor %}
+                        </map>
+                    </div>
+                ` );
+                
+                $( "<div />" )
+                    .attr( "id", "set_pfsp_dialog" )
+                    .text( "Click on the corresponding location for the Close Non Match correspondance" )
+                    .append( pfsp_div )
+                    .dialog( {
+                        title: "CNM PFSP",
+                        modal: true,
+                        width: ( $( window ).height() * 0.7 * 1243 / 656 ) + 33,
+                        height: $( window ).height() * 0.7 + 140,
+                        buttons: {
+                            clean: {
+                                class: "left_button",
+                                text: "Unset all locations",
+                                click: function(){
+                                    current_pfsp = [];
+                                    updateSelection( current_pfsp );
+                                }
+                            },
+                            "Cancel": function()
+                            {
+                                $( this ).dialog( "close" );
+                            },
+                            save: {
+                                id: "save_button",
+                                text: "Save",
+                                click: function(){
+                                    update_pfsp_db( current_pfsp );
+                                    $( this ).dialog( "close" );
+                                }
+                            },
+                        },
+                        open: function()
+                        {
+                            var imgheight = $( "#set_pfsp_dialog" ).height() - 32;
+                            $( "#location_img > img" ).css( "height", imgheight );
+                            
+                            $( "#save_button" ).focus();
+                            
+                            // Action for the PFSP zones
+                            
+                            updateMapCoordinates( $( "#Map" ), $( "#location_img" ).height() / 656 );
+                            
+                            var areas = new Array();
+                            {% for zone in pfsp_zones %}
+                                areas.push( "#area_{{ zone[ 'sel' ] | join( '_' ) }}" );
+                            {% endfor %}
+                            
+                            for( var i = 0; i < areas.length; i++ )
+                            {
+                                $( areas[ i ] )
+                                    .mouseover( function()
+                                    {
+                                        var s = $( this )[ 0 ].dataset.selection.split( "," );
+                                        updateSelection( s, true );
+                                    } )
+                                    .mouseout( function()
+                                    {
+                                        updateSelection( current_pfsp, false );
+                                    } )
+                                    .on( "click", function()
+                                    {
+                                        var s = $( this )[ 0 ].dataset.selection.split( "," );
+                                        
+                                        current_pfsp.push( ...s );
+                                        current_pfsp = current_pfsp.filter( ( v, i, a ) => a.indexOf( v ) === i );
+                                        
+                                        i = current_pfsp.indexOf( "" )
+                                        if( i >= 0 )
+                                            current_pfsp.splice( i, 1 );
+                                        
+                                        updateSelection( current_pfsp );
+                                    } );
+                            }
+                            
+                            updateSelection( current_pfsp );
+                            
+                            var dialog_div = $( this );
+                            $( ".ui-widget-overlay" ).bind( "click", function()
+                            {
+                                dialog_div.dialog( "close" );
+                            } );
+                        },
+                        close: function()
+                        {
+                            $( this ).remove();
+                        }
+                    } );
+            }
+            
+            {% if admin %}
+                var delete_file = function( uuid )
+                {
+                    $( "<div />" )
+                        .attr( "id", "file_delete_dialog" )
+                        .text( "Are you sure you want to delete this file?" )
+                        .dialog( {
+                            title: "File deletion confirmation",
+                            modal: true,
+                            width: "550px",
+                            buttons: {
+                                "Delete": function()
+                                {
+                                    $.ajax( {
+                                        url: "{{ url_for( 'afis.delete_file', target_uuid = target_uuid, cnm_uuid = cnm_uuid ) }}",
+                                        dataType: "json",
+                                        method: "POST",
+                                        data: {
+                                            "file_uuid": uuid
+                                        },
+                                        success: function( data )
+                                        {
+                                            if( ! data.error )
+                                            {
+                                                $( "#file_" + uuid + "_outer" ).remove();
+                                                $( "#file_delete_dialog" ).dialog( "close" );
+                                                
+                                            } else {
+                                                toastr.error( "Error while deleting the " );
+                                            }
+                                        },
+                                        error: function( data )
+                                        {
+                                            toastr.error( "Network error" );
+                                            $( "#file_delete_dialog" ).dialog( "close" );
+                                        }
+                                    } );
+                                },
+                                "Cancel": function()
+                                {
+                                    $( this ).dialog( "close" );
+                                },
+                            },
+                            close: function()
+                            {
+                                $( this ).remove();
+                            },
+                            open: function()
+                            {
+                                var dialog_div = $( this );
+                                $( ".ui-widget-overlay" ).bind( "click", function()
+                                {
+                                    dialog_div.dialog( "close" );
+                                } );
+                            }
+                        } );
+                }
+            {% endif %}
+            
+            var mousedown_event = function( event ){
+                event.preventDefault();
+                event.stopPropagation();
+                
+                is_holding = true;
+                starting_position.x = event.originalEvent.offsetX;
+                starting_position.y = event.originalEvent.offsetY;
+                
+                // Have to assign all the variables independently because of shallow-copy in JS. Thanks...
+                orignal_mark_x = images_transforms.mark.translate.x;
+                orignal_mark_y = images_transforms.mark.translate.y;
+                orignal_ref_x = images_transforms.ref.translate.x;
+                orignal_ref_y = images_transforms.ref.translate.y;
+                
+                $( event.target )
+                    .css( "cursor", "grabbing" );
+            }
+            var mouseup_event = function( event ){
+                event.preventDefault();
+                event.stopPropagation();
+                
+                is_holding = false;
+                starting_position = {};
+                
+                $( event.target )
+                    .css( "cursor", "grab" );
+                
+                update_svg( true );
+            }
+            var mouseleave_event = function( event ){
+                event.preventDefault();
+                event.stopPropagation();
+                
+                mouseup_event( event );
+            }
+            var mousemove_event = function( event ){
+                event.preventDefault();
+                event.stopPropagation();
+                
+                if( is_holding )
+                {
+                    var currentX = event.originalEvent.offsetX;
+                    var currentY = event.originalEvent.offsetY;
+                    var dx = currentX - starting_position.x;
+                    var dy = currentY - starting_position.y;
+                    
+                    var target = "both";
+                    
+                    if( event.originalEvent.ctrlKey )
+                    {
+                        target = $( event.target )
+                            .parent()
+                            .attr( "id" )
+                            .replace( "_id", "" );
+                    }
+                    
+                    if( target === "mark" || target === "both" )
+                    {
+                        images_transforms.mark.translate = {
+                            x: orignal_mark_x + dx,
+                            y: orignal_mark_y + dy
+                        };
+                    }
+                    
+                    if( target === "ref" || target === "both" )
+                    {
+                        images_transforms.ref.translate = {
+                            x: orignal_ref_x + dx,
+                            y: orignal_ref_y + dy
+                        };
+                    }
+                    
+                    update_svg();
+                }
+            }
+            var wheel_event = function( event )
+            {
+                event.preventDefault();
+                event.stopPropagation();
+                
+                var action = "scale";
+                var target = "both";
+                
+                if( event.originalEvent.shiftKey )
+                {
+                    action = "rotate";
+                    target = "both";
+                
+                } else if( event.originalEvent.ctrlKey ) {
+                    action = "rotate";
+                    target = $( event.target ).parent().attr( "id" ).replace( "_id", "" );
+                }
+                    
+                if( action === "rotate" )
+                {
+                    var delta = event.originalEvent.deltaY / 50;
+                    
+                    if( target === "mark" || target === "both" )
+                    {
+                        images_transforms.mark.rotate += delta;
+                        images_transforms.mark.rotate = Math.round( images_transforms.mark.rotate );
+                    }
+                    if( target === "ref" || target === "both" )
+                    {
+                        images_transforms.ref.rotate += delta;
+                        images_transforms.ref.rotate = Math.round( images_transforms.ref.rotate );
+                    }
+                    
+                } else if( action === "scale" ) {
+                    var delta = 1 - ( event.originalEvent.deltaY / 1000 );
+                    images_transforms.shared.scale.factor *= delta;
+                }
+                
+                update_svg( true );
+            }
+            
+            var force_update_mark = function()
+            {
+                $( "#mark_id > image" ).attr( "href", get_url_for_mark( current_mark_index ) );
+                images_transforms.mark.scale_to_size = all_donor_marks_info[ current_mark_index ].fac;
+            }
+            
+            var update_svg = function( force_redraw = false )
+            {
+                if( force_redraw || Date.now() - drawTimestamp > 1000 / 60 )
+                {
+                    var mark_transforms = [];
+                    mark_transforms.push( "translate( " + images_transforms.mark.translate.x + " " + images_transforms.mark.translate.y + " )" );
+                    mark_transforms.push( "scale( " + images_transforms.shared.scale.factor + " )" );
+                    mark_transforms.push( "scale( " + 1 / images_transforms.mark.scale_to_size + " )" );
+                    mark_transforms.push( "rotate( " + images_transforms.mark.rotate + " )" );
+                    
+                    var ref_transforms = [];
+                    ref_transforms.push( "translate( " + images_transforms.ref.translate.x + " " + images_transforms.ref.translate.y + " )" );
+                    ref_transforms.push( "scale( " + images_transforms.shared.scale.factor + " )" );
+                    ref_transforms.push( "scale( " + 1 / images_transforms.ref.scale_to_size + " )" );
+                    ref_transforms.push( "rotate( " + images_transforms.ref.rotate + " )" );
+                    
+                    $( "#mark_id > image" )
+                        .attr( "transform-origin", "center" )
+                        .attr( "transform", mark_transforms );
+                        
+                    $( "#ref_id > image" )
+                        .attr( "transform-origin", "center" )
+                        .attr( "transform", ref_transforms );
+                    
+                    drawTimestamp = Date.now();
+                }
+            }
+            
+            var get_url_for_mark = function( file_index, raw = false )
+            {
+                if( raw )
+                {
+                    var url = "{{ url_for( 'image.image_file_serve_raw', file_id = '<uuid>' ) }}";
+                } else {
+                    var url = "{{ url_for( 'image.image_file_serve', file_id = '<uuid>' ) }}";
+                }
+                url = url.replace( "%3Cuuid%3E", all_donor_marks[ file_index ] );
+                
+                return url;
+            }
+            var get_url_for_ref = function( file_index, target_index, raw = false )
+            {
+                if( raw ) {   
+                    var url = "{{ url_for( 'afis.image_auto_detect_format_raw', cnm_uuid = cnm_uuid, file_uuid = '<uuid>', fpc = '<fpc>' ) }}";
+                } else {
+                    var url = "{{ url_for( 'afis.image_auto_detect_format', cnm_uuid = cnm_uuid, file_uuid = '<uuid>', fpc = '<fpc>' ) }}";
+                }
+                if(is_palm_reference){
+                    url = url.replace( "%3Cuuid%3E", exemplar_uuid );
+                }else{
+                    url = url.replace( "%3Cuuid%3E", cnm_all_ref_files[ file_index ] );
+                }
+                url = url.replace( "%3Cfpc%3E", target_index );
+                
+                return url;
+            }
+            var get_resolution_ref = async function( file_index, target_index )
+            {
+                var url = "{{ url_for( 'afis.nist_get_resolution', cnm_uuid = cnm_uuid, file_uuid = '<uuid>', fpc = '<fpc>' ) }}"
+                url = url.replace( "%3Cuuid%3E", cnm_all_ref_files[ file_index ] );
+                url = url.replace( "%3Cfpc%3E", target_index );
+                
+                $.ajax( {
+                    url: url,
+                    dataType: "json",
+                    method: "GET",
+                    success: function( data ){
+                        ref_info.width = data.width;
+                        ref_info.height = data.height;
+                        images_transforms.ref.scale_to_size = data.res / data.width;
+                        update_svg();
+                    },
+                    error: function(){
+                        toastr.error( "Error while retrieving the resolution of the reference." );
+                    }
+                } );
+            }
+            
+            var set_quality_cnm_marks = function()
+            {
+                get_resolution_ref( current_ref_file_index, current_ref_fpc_index );
+                force_update_mark();
+                
+                var svgdiv = $( "<div />" )
+                    .attr( "id", "all_images_svg_outer" )
+                    .addClass( "all_marks_grid_div" )
+                
+                var img_marks = $( "<div />" )
+                    .attr( "id", "img_viwer_marks" )
+                    .svg( { onLoad:
+                        function( svg ){
+                            var markg = svg.group( { "id": "mark_id" } );
+                            svg.image( markg, 0, 0, "100%", "100%", get_url_for_mark( current_mark_index ) );
+                        }
+                    } );
+                
+                var img_refs = $( "<div />" )
+                    .attr( "id", "img_viwer_refs" )
+                    .svg( { onLoad:
+                        function( svg ){
+                            var refg = svg.group( { "id": "ref_id" } );
+                            svg.image( refg, 0, 0, "100%", "100%", get_url_for_ref( current_ref_file_index, current_ref_fpc_index ) );
+                        }
+                    } );
+                
+                svgdiv
+                    .append( img_marks )
+                    .append( img_refs );
+                
+                $( "<div />" )
+                    .attr( "id", "cnm_marks_quality_set_dialog" )
+                    .append( svgdiv )
+                    .dialog( {
+                        title: "CNM - All marks quality set dialog",
+                        modal: true,
+                        width: $( window ).width() * 0.9,
+                        height: $( window ).height() * 0.9,
+                        buttons: {
+                            "Open mark": function(){
+                                var mark_url = get_url_for_mark( current_mark_index, true );
+                                window.open( mark_url );
+                            },
+                            "Open reference": function(){
+                                var ref_url = get_url_for_ref( current_ref_file_index, current_ref_fpc_index, true );
+                                window.open( ref_url );
+                            },
+                            "Previous mark": function(){
+                                current_mark_index -= 1;
+                                current_mark_index = mod( current_mark_index, all_donor_marks_info.length );
+                                
+                                force_update_mark();
+                                update_svg();
+                            },
+                            "Next mark": function(){
+                                current_mark_index += 1;
+                                current_mark_index = mod( current_mark_index, all_donor_marks_info.length );
+                                
+                                force_update_mark();
+                                update_svg();
+                            },
+                            "Cancel": function()
+                            {
+                                $( this ).dialog( "close" );
+                            },
+                        },
+                        open: function()
+                        {
+                            // Full size for the svg elements
+                            $( "#all_images_svg_outer > div > svg" )
+                                .attr( "width", "100%" )
+                                .attr( "height", "100%" );
+                            
+                            // Set the relative size for the mark and the reference images
+                            $( "#img_viwer_marks > svg > g > image" )
+                                .attr( "transform", "scale( " + images_transforms.mark.scale_to_size + " )" );
+                            $( "#img_viwer_refs > svg > g > image" )
+                                .attr( "transform", "scale( " + images_transforms.ref.scale_to_size + " )" );
+                            
+                            // Action bindings
+                            $( "#all_images_svg_outer > div > svg" )
+                                .on( "mousedown", mousedown_event )
+                                .on( "mousemove", mousemove_event )
+                                .on( "mouseup", mouseup_event )
+                                .on( "mouseleave", mouseleave_event )
+                                .on( "wheel", wheel_event );
+                            
+                            // Dialog close-on-outside-click
+                            var dialog_div = $( this );
+                            
+                            $( ".ui-widget-overlay" ).bind( "click", function()
+                            {
+                                dialog_div.dialog( "close" );
+                            } );
+                        },
+                        close: function()
+                        {
+                            $( this ).remove();
+                        }
+                    } );
+            }
+
+            function download_tenprint(uuid){
+                var url = "{{ url_for( 'afis.image_auto_detect_format_raw', cnm_uuid = cnm_uuid, file_uuid = '<uuid>', fpc = '<fpc>' ) }}";
+                url = url.replace( "%3Cuuid%3E", uuid );
+                url = url.replace( "%3Cfpc%3E", current_ref_fpc_index );
+                window.open( url );
+            }
+
+            var open_screenshot_popup = function( uuid )
+            {
+                var img_screenshot = $( "<div />" )
+                    .attr( "id", "img_screenshot" )
+                    .addClass( "screenshot_grid_div" )
+                    .svg( { onLoad:
+                        function( svg ){
+                            var screenshotg = svg.group( { "id": "screenshot_id" } );
+                            svg.image( screenshotg, 0, 0, "100%", "100%", "{{ url_for( 'afis.screenshot_preview', file_uuid = '<uuid>' ) }}".replace( "%3Cuuid%3E", uuid ) );
+                        }
+                    } );
+                
+                $( "<div />" )
+                    .attr( "id", "screenshot_dialog" )
+                    .append( img_screenshot )
+                    .dialog( {
+                        title: "CNM - Screenshot show",
+                        modal: true,
+                        width: $( window ).width() * 0.9,
+                        height: $( window ).height() * 0.9,
+                        buttons: {
+                            "Cancel": function()
+                            {
+                                $( this ).dialog( "close" );
+                            },
+                        },
+                        open: function()
+                        {
+                            // Full size for the svg elements
+                            $( "#img_screenshot > svg" )
+                                .attr( "width", "100%" )
+                                .attr( "height", "100%" );
+                            
+                            // Dialog close-on-outside-click
+                            var dialog_div = $( this );
+                            
+                            $( ".ui-widget-overlay" ).bind( "click", function()
+                            {
+                                dialog_div.dialog( "close" );
+                            } );
+                        },
+                        close: function()
+                        {
+                            $( this ).remove();
+                        }
+                    } );
+            }
+            
+            var img_scale = 1;
+            var mark_to_ref_scale_factor = 1;
+            
+            var current_mark_index = 0;
+            var current_ref_file_index = 0;
+            var current_ref_fpc_index = "{{ current_pfsp_id }}";
+            var is_palm_reference = false;
+            var pfsp_match = "{{ matched_pfsp }}";
+            if(pfsp_match.includes("hypothenar") || pfsp_match.includes("thenar") || pfsp_match.includes("palm") || pfsp_match.includes("interdigital")){
+                is_palm_reference = true;
+            }
+
+            var is_holding = false;
+            var starting_position = {};
+            var orignal_mark_x = null;
+            var orignal_mark_y = null;
+            var orignal_ref_x = null;
+            var orignal_ref_y = null;
+            var drawTimestamp = 0;
+            
+            var current_reference_resolution = 1000;
+            
+            var images_transforms = {
+                mark: {
+                    translate: {
+                        x: 0,
+                        y: 0
+                    },
+                    rotate: 0,
+                    scale_to_size: 1,
+                },
+                ref: {
+                    translate: {
+                        x: 0,
+                        y: 0
+                    },
+                    rotate: 0,
+                    scale_to_size: 1,
+                },
+                shared: {
+                    scale: {
+                        factor: 1
+                    }
+                },
+            };
+            var ref_info = {
+                width: null,
+                height: null
+            }
+            
+        </script>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <div class="icnml_form" style="margin-bottom: 20px;">
+                <div class="ui-widget-header ui-corner-top icnml_box_top">Close Non Match upload form</div>
+                <div class="ui-widget-content ui-corner-bottom icnml_box_content_central">
+                    <div class="icnml_box_fields">
+                    
+                        <div style="text-align: right;">
+                            <label for="target_uuid">Target identifier</label>
+                        </div>
+                        <div>
+                            <input id="target_uuid" name="target_uuid" type="text" value="{{ target_uuid }}" readonly />
+                        </div>
+                        
+                        <div style="text-align: right;">
+                            <label for="cnm_uuid">CNM identifier</label>
+                        </div>
+                        <div>
+                            <input id="cnm_uuid" name="cnm_uuid" type="text" value="{{ cnm_uuid }}" readonly />
+                        </div>
+                    
+                        {% if not admin %}
+                            <div style="text-align: right;">
+                                <label for="nickname">Personal identifier</label>
+                            </div>
+                            <div>
+                                <input id="nickname" name="nickname" type="text" value="" placeholder="Personal encrypted identifier"/>
+                            </div>
+                        {% else %}
+                            <div style="text-align: right;">
+                                <label for="uploader">Uploader user</label>
+                            </div>
+                            <div>
+                                <input id="uploader" name="uploader" type="text" value="{{ cnm_result[ 'uploader_username' ] }}" readonly />
+                            </div>
+                        {% endif %}
+                        
+                        <div style="text-align: right;">
+                            <label for="is_personal_cnm">Selected CNM?</label>
+                        </div>
+                        <div>
+                            <div id="is_personal_cnm">
+                                <select id="is_personal_cnm_select" class="chosen-select">
+                                    <option value="" disabled selected>Is this the candidate you have selected?</option>
+                                    <option value="1">Yes, this is my personal choice</option>
+                                    <option value="0">No, this is the best candidate from an AFIS point of view</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div style="text-align: right;">
+                            <label for="is_a_good_cnm">Good CNM?</label>
+                        </div>
+                        <div>
+                            <div id="is_a_good_cnm">
+                                <select id="is_a_good_cnm_select" class="chosen-select">
+                                    <option value="" disabled selected>Do you consider this candidate to be a good Close Non Match?</option>
+                                    <option value="1">Yes</option>
+                                    <option value="0">No</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div style="text-align: right;">
+                            <label for="db_size">Database size</label>
+                        </div>
+                        <div>
+                            <input id="db_size" name="db_size" type="text" value="" placeholder="people / unique tenprint cards"/>
+                        </div>
+                        
+                        <div style="text-align: right;">
+                            <label for="afis_rank">AFIS rank</label>
+                        </div>
+                        <div>
+                            <input id="afis_rank" name="afis_rank" type="text" value="" placeholder="AFIS rank (fingers)"/>
+                        </div>
+                        
+                        <div style="text-align: right;">
+                            <label for="pfsp">Location</label>
+                        </div>
+                        <div>
+                            <input id="pfsp" name="pfsp" type="text" value="" placeholder="Click to set the location..." readonly/>
+                        </div>
+                        
+                        <div style="text-align: right;">
+                            Quality
+                        </div>
+                        <div id="quality">
+                            <select id="quality_select" data-placeholder="select..." class="chosen-select">
+                                {% for q in all_qualities %}
+                                    <option value="{{ q[ 'id' ] }}">{{ q[ 'name' ] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div style="text-align: right;">
+                            <label for="quality_marks">Quality of the marks</label>
+                        </div>
+                        <div>
+                            <input id="quality_marks" name="quality_marks" type="text" value="" placeholder="Click to set the quality of the CNM for all marks..." readonly/>
+                        </div>
+                        
+                        <div style="text-align: right;">
+                            <label for="public_notes">Public notes</label>
+                        </div>
+                        <div>
+                            <textarea name="public_notes" id="public_notes" rows="7" placeholder="Publicly readables notes"></textarea>
+                        </div>
+                        
+                        {% if not admin %}
+                            <div style="text-align: right;">
+                                <label for="upload_card">CNM card</label>
+                            </div>
+                            <div id="card_dropzone_outer">
+                                <div id="card_dropzone" class="dropzone icnml_pointer"></div>
+                            </div>
+
+                            <div style="text-align: right;">
+                                <label for="upload_file">Screenshot</label>
+                            </div>
+                            <div id="upload_file_dropzone_outer">
+                                <div id="upload_file_dropzone" class="dropzone icnml_pointer"></div>
+                            </div>
+                        {% endif %}
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <div class="icnml_list_of_boxes_outer">
+                <div class="icnml_list_of_boxes_desc">Uploaded tenprint cards ({{ uploaded_cards|length }})</div>
+                <div class="icnml_list_of_boxes">
+                    {% for f in uploaded_cards %}
+                        <div id="file_{{ f[ 'uuid' ] }}_outer">
+                            <div class="ui-widget-header ui-corner-top icnml_box_top" id="file_{{ f[ 'uuid' ] }}_filename">-</div>
+                            <div class="ui-widget-content ui-corner-bottom icnml_box_content">
+                                <div
+                                    id="file_{{ f[ 'uuid' ] }}"
+                                    class="icnml_pointer"
+                                    style="background-image: url( {{ url_for( 'afis.image_auto_detect_format', cnm_uuid = cnm_uuid, file_uuid = f[ 'uuid' ], fpc = current_pfsp_id ) }} )">
+                                </div>
+                                <button class="ui-button ui-corner-all ui-widget" onclick="download_tenprint('{{ f[ 'uuid' ] }}');">Download</button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="icnml_list_of_boxes_outer">
+                <div class="icnml_list_of_boxes_desc">Uploaded screenshot files ({{ uploaded_screenshots|length }})</div>
+                <div class="icnml_list_of_boxes">
+                    {% for f in uploaded_screenshots %}
+                        <div id="file_{{ f[ 'uuid' ] }}_outer">
+                            <div class="ui-widget-header ui-corner-top icnml_box_top" id="file_{{ f[ 'uuid' ] }}_filename">-</div>
+                            <div class="ui-widget-content ui-corner-bottom icnml_box_content">
+                                <div
+                                    id="file_{{ f[ 'uuid' ] }}"
+                                    class="icnml_pointer"
+                                    style="background-image: url( {{ url_for( 'afis.screenshot_preview', file_uuid = f[ 'uuid' ] ) }} )">
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div id="zoom_slider"></div>
+        </div>
+        <script type="text/javascript">
+            var exemplar_uuid = null;
+            {% if not admin %}
+                $( "#nickname" ).val( nickname );
+                $( "#nickname" ).on( "change", update_nickname );
+            {% endif %}
+            
+            $( "#db_size" ).val( db_size );
+            $( "#db_size" ).on( "change", update_dbsize );
+            
+            $( "#afis_rank" ).val( afis_rank );
+            $( "#afis_rank" ).on( "change", update_afisrank );
+            
+            $( "#public_notes" ).val( public_notes );
+            $( "#public_notes" ).on( "change", update_public_notes );
+            
+            {% for f in [ "quality" ] %}
+                $( "#{{ f }}_select" )
+                    .val( "{{ cnm_result[ f ] }}".split( "," ) )
+                    .trigger( "chosen:updated" );
+            {% endfor %}
+            
+            {% for field_name in [ "is_personal_cnm", "is_a_good_cnm" ] %}
+                {% if cnm_result[ field_name ] != None %}
+                    {% if cnm_result[ field_name ] %}
+                        $( "#{{ field_name }}_select"  )
+                            .val( "1" )
+                            .trigger( "chosen:updated" );
+                    {% else %}
+                        $( "#{{ field_name }}_select"  )
+                            .val( "0" )
+                            .trigger( "chosen:updated" );
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            
+            $( "#pfsp" )
+                .val( current_pfsp.join( ", " ) )
+                .on( "click", set_pfsp );
+            
+            $( "#quality_marks" )
+                .on( "click", set_quality_cnm_marks );
+            
+            {% for f in uploaded_screenshots %}
+                exemplar_uuid = "{{ f[ 'uuid' ] }}";
+                $( "#file_{{ f[ 'uuid' ] }}" )
+                    .on( "click", function()
+                    {
+                        open_screenshot_popup( "{{ f[ 'uuid' ] }}" )
+                    } );
+            {% endfor %}
+            
+            {% for f in uploaded_cards %}
+                {% if f[ 'extension' ]|lower in [ 'nist', 'nst', 'eft' ] %}
+                    {% if admin %}
+                        $( "#file_{{ f[ 'uuid' ] }}_outer" ).on( "click", function(){
+                            window.location = "{{ url_for( 'afis.admin_cnm_view_nist_file', target_uuid = target_uuid, cnm_uuid = cnm_uuid, file_uuid = f[ 'uuid' ] ) }}";
+                        } );
+                    {% else %}
+                        $( "#file_{{ f[ 'uuid' ] }}_outer" ).on( "click", function(){
+                            window.location = "{{ url_for( 'afis.cnm_view_nist_file', target_uuid = target_uuid, cnm_uuid = cnm_uuid, file_uuid = f[ 'uuid' ] ) }}";
+                        } );
+                    {% endif %}
+                {% endif %}
+                
+                {% if admin %}
+                    $( "#file_{{ f[ 'uuid' ] }}_outer" ).on( "contextmenu", function(){
+                        delete_file( "{{ f[ 'uuid' ] }}"  );
+                    } );
+                {% endif %}
+                
+                {% if not admin %}
+                    var filename = decrypt( "{{ f[ 'filename' ] }}", password_local );
+                    filename = truncate( filename, 18 );
+                {% else %}
+                    var filename = "{{ f[ 'uuid' ][ 0:18 ] }}";
+                {% endif %}
+                $( "#file_{{ f[ 'uuid' ] }}_filename" ).text( truncate( filename, 18 ) );
+            {% endfor %}
+            
+            {% for f in uploaded_screenshots %}
+                {% if admin %}
+                    $( "#file_{{ f[ 'uuid' ] }}_outer" ).on( "contextmenu", function(){
+                        delete_file( "{{ f[ 'uuid' ] }}"  );
+                    } );
+                {% endif %}
+                
+                {% if not admin %}
+                    var filename = decrypt( "{{ f[ 'filename' ] }}", password_local );
+                    filename = truncate( filename, 18 );
+                {% else %}
+                    var filename = "{{ f[ 'uuid' ][ 0:18 ] }}";
+                {% endif %}
+                $( "#file_{{ f[ 'uuid' ] }}_filename" ).text( truncate( filename, 18 ) );
+            {% endfor %}
+            
+            //
+            Dropzone.autoDiscover = false;
+            
+            {% if not admin %}
+                $( function()
+                {
+                    new Dropzone(
+                        "#card_dropzone",
+                        {
+                            url: "{{ url_for( 'afis.upload_file', target_uuid = target_uuid, cnm_uuid = cnm_uuid ) }}",
+                            timeout: 600000,
+                            createImageThumbnails: false,
+                            maxFilesize: 1024,
+                            parallelUploads: 1,
+                            params: {
+                                file_type: "card"
+                            },
+                            renameFile: function( file )
+                            {
+                                var newName = encrypt( file.name, password_local );
+                                return newName;
+                            }
+                        }
+                    )
+                    .on( "addedfile", function( file )
+                    {
+                        var ext = file.name.split( "." ).pop();
+                        this.options.params[ "extension" ] = ext;
+                        
+                        $( "#card_dropzone > .dz-default.dz-message" ).remove();
+                    } )
+                    .on( "success", function( p ) {
+                        var response = JSON.parse( p.xhr.response );
+                        if( response.error )
+                            toastr.error( response.message );
+                    } )
+                    .on( "error", function( file, message )
+                    {
+                        toastr.error( message, "Error" );
+                    } );
+                } );
+
+                $( function()
+                {
+                    new Dropzone(
+                        "#upload_file_dropzone",
+                        {
+                            url: "{{ url_for( 'afis.upload_file', target_uuid = target_uuid, cnm_uuid = cnm_uuid ) }}",
+                            timeout: 600000,
+                            createImageThumbnails: false,
+                            maxFilesize: 1024,
+                            parallelUploads: 1,
+                            params: {
+                                file_type: "screenshot"
+                            },
+                            renameFile: function( file )
+                            {
+                                var newName = encrypt( file.name, password_local );
+                                return newName;
+                            }
+                        }
+                    )
+                    .on( "addedfile", function( file )
+                    {
+                        var ext = file.name.split( "." ).pop();
+                        this.options.params[ "extension" ] = ext;
+                        
+                        $( "#upload_file_dropzone > .dz-default.dz-message" ).remove();
+                    } )
+                    .on( "success", function( p ) {
+                        var response = JSON.parse( p.xhr.response );
+                        if( response.error )
+                            toastr.error( response.message );
+                    } )
+                    .on( "error", function( file, message )
+                    {
+                        toastr.error( message, "Error" );
+                    } );
+                } );
+            {% endif %}
+            
+            //
+            _.forEach( [ "quality", "is_personal_cnm", "is_a_good_cnm" ], function( f )
+            {
+                $( "#" + f + "_select" )
+                    .chosen( {
+                        search_contains: true,
+                        width: "100%"
+                    } );
+            } );
+            
+            _.forEach( [ "quality" ], function( f ){
+                $( "#" + f + " > select" ).on( "change", function(){ update_field_db_multi( f ); } )
+            } );
+            _.forEach( [ "is_personal_cnm", "is_a_good_cnm" ], function( f ){
+                $( "#" + f + " > select" ).on( "change", function(){ update_field_db_single( f ); } )
+            } );
+            $( "#is_personal_cnm > select" ).on( "change", is_personal_cnm_sync_with_rank );
+            
+            //
+            {% if target_type == 'target' %}
+                $( "#icnml_navigation_afis" )
+                    .addClass( "activated" );
+            {% else %}
+                $( "#icnml_navigation_afis_incidental" )
+                    .addClass( "activated" );
+            {% endif %}
+            
+            {% if admin %}
+                $( "#navloc" ).append(
+                    $( "<a />" )
+                        .attr( "href", "{{ url_for( 'submission.admin_submission_list' ) }}" )
+                        .text( "Submissions" )
+                )
+                .append(
+                    $( "<span />" ).text( ">" )
+                )
+                .append(
+                    $( "<a />" )
+                        .attr( "href", "{{ url_for( 'submission.admin_submission_home', submission_id = submission_id ) }}" )
+                        .text( "{{ username }}" )
+                )
+                .append(
+                    $( "<span />" ).text( ">" )
+                )
+                
+                {% if target_type == 'target' %}
+                    .append(
+                        $( "<a />" )
+                            .attr( "href", "{{ url_for( 'afis.admin_show_target_list', submission_uuid = submission_id ) }}" )
+                            .text( "Targets" )
+                    )
+                    .append(
+                        $( "<span />" ).text( ">" )
+                    )
+                    .append(
+                        $( "<a />" )
+                            .attr( "href", "{{ url_for( 'afis.admin_show_target', uuid = target_uuid ) }}" )
+                            .text( "{{ finger_name }}" )
+                    )
+                    
+                {% else %}
+                    .append(
+                        $( "<span />" )
+                            .text( "Incidental" )
+                    )
+                    .append(
+                        $( "<span />" ).text( ">" )
+                    )
+                    .append(
+                        $( "<span />" )
+                            .text( "{{ finger_name }}" )
+                    )
+                {% endif %}
+                
+                .append(
+                    $( "<span />" ).text( ">" )
+                )
+                .append(
+                    $( "<span />" ).text( cnm_nickname_navbar )
+                )
+            {% else %}
+                $( "#navloc" ).append(
+                    $( "<a />" )
+                        .attr( "href", "{{ url_for( 'afis.list_folders' ) }}" )
+                        .text( "AFIS targets" )
+                )
+                .append(
+                    $( "<span />" ).text( ">" )
+                )
+                
+                {% if target_type == 'target' %}
+                    .append(
+                        $( "<a />" )
+                            .attr( "href", "{{ url_for( 'afis.show_folder', uuid = target_uuid ) }}" )
+                            .text( "{{ target_uuid[ 0:18 ] }}" )
+                    )
+                    .append(
+                        $( "<span />" ).text( ">" )
+                    )
+                    .append(
+                        $( "<a />" )
+                            .attr( "href", "{{ url_for( 'afis.upload_cnm_list_page', uuid = target_uuid ) }}" )
+                            .text( "All CNM" )
+                    )
+                    .append(
+                        $( "<span />" ).text( ">" )
+                    )
+                {% else %}
+                    .append(
+                        $( "<span />" )
+                            .text( "{{ finger_name }}" )
+                    )
+                    .append(
+                        $( "<span />" ).text( ">" )
+                    )
+                {% endif %}
+                
+                .append(
+                    $( "<span />" ).text( cnm_nickname_navbar )
+                )
+            {% endif %}
+        </script>
+    </body>
+</html>
+

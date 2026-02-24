@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <style type="text/css">
+            .keys_list {
+                margin: 10px;
+                display: grid;
+                grid-gap: 10px;
+                grid-template-columns: repeat( auto-fit, 350px );
+                grid-template-rows: 247px;
+            }
+            .box_content {
+                padding: 10px;
+                text-align: justify;
+                text-justify: inter-word;
+                height: 200px;
+            }
+            #new_webauthn {
+                cursor: pointer;
+            }
+            #new_webauthn > span {
+                line-height: 200px;
+                font-size: 4.5em;
+            }
+            #new_webauthn {
+                margin-top: 0px;
+            }
+        </style>
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            homeurl = "{{ url_for( 'base.home' ) }}";
+            begin_activate_url = "{{ url_for( 'login.webauthn_begin_activate' ) }}";
+            verify_url = "{{ url_for( 'login.webauthn_verify' ) }}";
+            begin_assertion_url = "{{ url_for( 'login.webauthn_begin_assertion' ) }}";
+            verify_assertion_url = "{{ url_for( 'login.webauthn_verify_assertion' ) }}";
+            
+            var delete_key = function( key_id )
+            {
+                $.ajax( {
+                    url: "{{ url_for( 'login.webauthn_delete_key' ) }}",
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        key_id: key_id
+                    },
+                    success: function( data )
+                    {
+                        if( ! data.error )
+                        {
+                            toastr.success( "Key deleted" );
+                            window.location.reload()
+                        } else {
+                            toastr.error( "Key not deleted" );
+                        }
+                    }
+                } );
+            }
+            
+            var disable_key = function( key_id )
+            {
+                $.ajax( {
+                    url: "{{ url_for( 'login.webauthn_disable_key' ) }}",
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        key_id: key_id
+                    },
+                    success: function( data )
+                    {
+                        if( ! data.error )
+                        {
+                            toastr.success( "Key disabled" );
+                            window.location.reload()
+                        } else {
+                            toastr.error( "Key not disabled" );
+                        }
+                    }
+                } );
+            }
+            var enable_key = function( key_id )
+            {
+                $.ajax( {
+                    url: "{{ url_for( 'login.webauthn_enable_key' ) }}",
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        key_id: key_id
+                    },
+                    success: function( data )
+                    {
+                        if( ! data.error )
+                        {
+                            toastr.success( "Key enabled" );
+                            window.location.reload()
+                        } else {
+                            toastr.error( "Key not enabled" );
+                        }
+                    }
+                } );
+            }
+            
+            var update_key_name_db = function( key_id, key_name )
+            {
+                $.ajax( {
+                    url: "{{ url_for( 'login.webauthn_rename_key' ) }}",
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        key_id: key_id,
+                        key_name: key_name
+                    },
+                    success: function( data )
+                    {
+                        if( ! data.error )
+                        {
+                            toastr.success( "Key renamed" );
+                        } else {
+                            toastr.error( "Key not renamed" );
+                        }
+                    }
+                } );
+            }
+        </script>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <div class="keys_list">
+                {% for key in keys %}
+                    <div>
+                        <div class="ui-widget-header ui-corner-top icnml_box_top">{{ key[ 'name' ] }}</div>
+                        <div class="ui-widget-content ui-corner-bottom box_content">
+                            <div class="icnml_box_fields">
+                                <div style="text-align: right;">
+                                    <label for="keyname">Name</label>
+                                </div>
+                                <div>
+                                    <input id="keyname_{{ key[ 'id' ] }}" name="keyname" type="text" class="normal_input" value="{{ key[ 'name' ] }}" />
+                                </div>
+                                
+                                <div style="text-align: right;">
+                                    <span>Creation date</span>
+                                </div>
+                                <div>
+                                    <span id="key_creation_{{ key[ 'id' ] }}" class="normal_input">-</span>
+                                </div>
+                                
+                                <div style="text-align: right;">
+                                    <span>Last use</span>
+                                </div>
+                                <div>
+                                    <span id="key_lastusage_{{ key[ 'id' ] }}" class="normal_input">-</span>
+                                </div>
+                                
+                                <div style="text-align: right;">
+                                    <span>Number of usage</span>
+                                </div>
+                                <div>
+                                    <span id="keynbusage" class="normal_input">{{ key[ 'usage_counter' ] }}</span>
+                                </div>
+                                
+                                <div style="text-align: right;">
+                                    <span>Active</span>
+                                </div>
+                                <div>
+                                    <span id="keyactive" class="normal_input">{{ key[ 'active' ] }}</span>
+                                </div>
+                            </div>
+                            <div class="icnml_center">
+                                <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="delete_key_{{ key[ 'id' ] }}" role="button" aria-disabled="false" onclick="delete_key( '{{ key[ 'id' ] }}' )">
+                                    <span class="ui-button-text">Delete</span>
+                                </a>
+                                <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="disable_key_{{ key[ 'id' ] }}" role="button" aria-disabled="false" onclick="disable_key( '{{ key[ 'id' ] }}' )">
+                                    <span class="ui-button-text">Disable</span>
+                                </a>
+                                <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="enable_key_{{ key[ 'id' ] }}" role="button" aria-disabled="false" onclick="enable_key( '{{ key[ 'id' ] }}' )">
+                                    <span class="ui-button-text">Enable</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                
+                <div style="margin-bottom: 20px">
+                    <div class="ui-widget-header ui-corner-top icnml_box_top" id="webauthn_new">New</div>
+                    <div class="ui-widget-content ui-corner-bottom box_content">
+                        <div class="icnml_center" id="new_webauthn">
+                            <span>+</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script type="text/javascript">
+        /* Events binding */
+        $( "#new_webauthn" ).on( "click", register_key );
+        
+        {% for key in keys %}
+            $( "#keyname_{{ key[ 'id' ] }}" ).on( "change", function()
+            {
+                var name = $( this ).val();
+                update_key_name_db( "{{ key[ 'id' ] }}", name );
+            } );
+        {% endfor %}
+        
+        {% for key in keys %}
+            $( "#key_creation_{{ key[ 'id' ] }}" )
+                .text( moment.utc( "{{ key[ 'created_on' ] }}" ).local().format( "MMMM Do YYYY, HH:mm:ss" ) );
+            
+            {% if key[ "last_usage" ] is not none %}
+                $( "#key_lastusage_{{ key[ 'id' ] }}" )
+                    .text( moment.utc( "{{ key[ 'last_usage' ] }}" ).local().format( "MMMM Do YYYY, HH:mm:ss" ) );
+            {% endif %}
+        {% endfor %}
+    </script>
+</html>

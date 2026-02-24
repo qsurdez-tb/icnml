@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            
+            var reset_totp = async function()
+            {
+                var email = $( "#email" ).val();
+                email = email.toLowerCase();
+                
+                $.ajax( {
+                    url: "{{ url_for( 'login.do_totp_reset' ) }}",
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        email: email
+                    },
+                    success: function( data )
+                    {
+                        if( ! data.error )
+                        {
+                            toastr.success( "Password reset request successully" );
+                            setTimeout( function()
+                            {
+                                location.href = "{{ url_for( 'base.home' ) }}";
+                            }, 1000 );
+                        }
+                    }
+                } );
+            }
+        </script>
+    </head>
+    <body>
+        <div class="icnml_central">
+            <h1 style="margin-bottom: 0px">ICNML</h1>
+            <h4 style="margin-top: 0px">International Close Non-Matches Library</h4>
+            
+            <div class="ui-widget-header ui-corner-top icnml_box_top">Time-based One Time Password reset form</div>
+            <div class="ui-widget-content ui-corner-bottom icnml_box_content_central">
+                <div id="icnml_box_fields" class="icnml_box_fields">
+                    <div style="text-align: right;">
+                        <label for="email">E-Mail address</label>
+                    </div>
+                    <div>
+                        <input id="email" name="email" type="text" />
+                    </div>
+                </div>
+                <div class="icnml_button">
+                    <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="reset_button" role="button" aria-disabled="false">
+                        <span class="ui-button-text">Send reset link</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <script type="text/javascript">
+            /* Events binding */
+            $( "#email" ).on( "keyup", function( event )
+            {
+                if( event.keyCode == 13 )
+                {
+                    event.preventDefault();
+                    reset_totp();
+                }
+            } );
+            
+            $( "#reset_button" ).on( "click", reset_totp );
+            $( "#email" ).focus();
+        </script>
+    </body>
+</html>
+

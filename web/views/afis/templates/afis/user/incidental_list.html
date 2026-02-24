@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            
+            var uuid_list = [];
+            {% for mark in incidental_mark_list %}
+                uuid_list.push( "{{ mark[ 'uuid' ] }}" );
+            {% endfor %}
+            
+            var update_search_result = function()
+            {
+                var searched = $( "#search_bar" ).val();
+                searched = searched.toLowerCase();
+                
+                _.forEach( uuid_list, function( target )
+                {
+                    if( target.toLowerCase().indexOf( searched ) > -1 )
+                    {
+                        $( "#mark_" + target + "_outer" ).show();
+                    } else {
+                        $( "#mark_" + target + "_outer" ).hide();
+                    }
+                } );
+            }
+        </script>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <div class="icnml_search_bar">
+                <input id="search_bar" placeholder="Search for a file..."/>
+            </div>
+            
+            <div class="icnml_list_of_boxes">
+                {% for mark in incidental_mark_list %}
+                    <div id="mark_{{ mark[ 'uuid' ] }}_outer">
+                        <div class="ui-widget-header ui-corner-top icnml_box_top" id="mark_{{ mark[ 'uuid' ] }}_filename">{{ mark[ 'uuid' ][ 0:18 ] }}</div>
+                        <div class="ui-widget-content ui-corner-bottom icnml_box_content">
+                            <div
+                                id="mark_{{ mark[ 'uuid' ] }}"
+                                class="icnml_pointer"
+                                style="background-image: url( {{ url_for( 'image.image_file_serve', file_id = mark[ 'uuid' ] ) }} )">
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div id="zoom_slider"></div>
+        </div>
+        <script type="text/javascript">
+            {% for mark in incidental_mark_list %}
+                $( "#mark_{{ mark[ 'uuid' ] }}" )
+                    .parent()
+                    .on( "click", function()
+                    {
+                        window.location.href = "{{ url_for( 'afis.show_incidental_folder', uuid = mark[ 'uuid' ] ) }}"
+                    } );
+            {% endfor %}
+            
+            $( "#icnml_navigation_afis_incidental" )
+                .addClass( "activated" );
+            
+            $( "#navloc" ).append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'afis.list_donors_incidental' ) }}" )
+                    .text( "Incidental list" )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<span />" ).text( "{{ donor_uuid[ 0:18 ]}}" )
+            )
+            
+            $( "#search_bar" ).on( "keyup", update_search_result );
+            $( "#search_bar" ).focus();
+        </script>
+    </body>
+</html>
+        

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <style type="text/css">
+            .button_list {
+                margin-top: 50px;
+            }
+            .button_list > div > a {
+                width: 60%;
+                margin-bottom: 10px;
+            }
+        </style>
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            submission_id = "{{ submission_id }}";
+            
+            var password_local = localStorage.getItem( "session_key" );
+            var nickname = decrypt( "{{ nickname }}", password_local );
+            
+            var update_nickname = function()
+            {
+                var nickname = encrypt( $( "#upload_nickname" ).val() || null, password_local );
+                
+                $.ajax( {
+                    url: "{{ url_for( 'submission.submission_update_nickname', submission_id = submission_id ) }}",
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        nickname: nickname
+                    }
+                } );
+            }
+            
+            var delete_submission = function()
+            {
+                $( "<div />" )
+                    .attr( "id", "delete_confirmation" )
+                    .text( "Do you really want to delete this submission?" )
+                    .dialog( {
+                        title: "Confirm submission deletion",
+                        modal: true,
+                        buttons: {
+                            "OK": function()
+                            {
+                                $.ajax( {
+                                    url: "{{ url_for( 'submission.submission_delete', submission_id = submission_id ) }}",
+                                    dataType: "json",
+                                    success: function( data )
+                                    {
+                                        if( ! data.error )
+                                        {
+	                                        window.location = "{{ url_for( 'submission.submission_list' ) }}";
+                                        } else {
+                                            toastr.error( data.message );
+                                        }
+                                        $( "#delete_confirmation" ).remove();
+                                    },
+                                    error: function( data )
+                                    {
+                                        $( "#delete_confirmation" ).remove();
+                                    }
+                                } );
+                            },
+                            "Cancel": function()
+                            {
+                                $( this ).dialog( "close" );
+                            },
+                        },
+                        close: function()
+                        {
+                            $( this ).remove();
+                        }
+                    } );
+            }
+        </script>
+        
+        <style type="text/css">
+            .icnml_next_buttons {
+                margin-top: 20px;
+                padding-left: 50px;
+                padding-right: 50px;
+            }
+            .icnml_next_button {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+        </style>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <form class="icnml_form">
+                <div class="ui-widget-header ui-corner-top icnml_box_top">Submission form</div>
+                <div class="ui-widget-content ui-corner-bottom icnml_box_content_central">
+                    <div class="icnml_box_fields">
+                        <div style="text-align: right;">
+                            <label for="upload_nickname">Submission nickname</label>
+                        </div>
+                        <div>
+                            <input id="upload_nickname" name="upload_nickname" type="text" value="" />
+                        </div>
+                        
+                        <div style="text-align: right;">
+                            <label for="email">Donor e-mail</label>
+                        </div>
+                        <div>
+                            <input id="email" name="email" type="text" value="{{ email }}" readonly />
+                        </div>
+                        
+                        <div style="text-align: right;">
+                            <label for="consent_form">Consent form</label>
+                        </div>
+                        <div>
+                            <div id="consent_form_dropzone" class="dropzone icnml_pointer"></div>
+                        </div>
+                    </div>
+                    
+                    <div id="icnml_sub_error" class="icnml_box_error"></div>
+                    
+                    <div class="button_list icnml_center">
+                        <div id="icnml_next_buttons" class="icnml_button">
+                            <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only icnml_next_button" id="next_button" role="button" aria-disabled="false">
+                                <span class="ui-button-text">Next</span>
+                            </a>
+                        </div>
+                    
+                        <div id="delete_button_div" class="icnml_button">
+                            <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" id="delete_button">
+                                <span class="ui-button-text" id="delete_button_span_text">Delete submission</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <script type="text/javascript">
+            Dropzone.autoDiscover = false;
+            function sleep( ms ) {
+                return new Promise( resolve => setTimeout( resolve, ms ) );
+            }
+            
+            $( function()
+            {
+                new Dropzone(
+                    "#consent_form_dropzone",
+                    {
+                        url: "{{ url_for( 'submission.upload_file' ) }}",
+                        timeout: 600000,
+                        createImageThumbnails: false,
+                        acceptedFiles: ".pdf",
+                        params: {
+                            "upload_type": "consent_form",
+                            "submission_id": submission_id
+                        },
+                        renameFile: function( file )
+                        {
+                            return "";
+                        }
+                    }
+                )
+                .on( "addedfile", function( file )
+                {
+                    $( "#consent_form_dropzone > .dz-default.dz-message" ).remove();
+                    $( "#icnml_sub_error" ).text( "" );
+                } )
+                .on( "success", function( p ) {
+                    var response = JSON.parse( p.xhr.response );
+                    console.log( response );
+                    
+                    if( response.error )
+                    {
+                        $( "#icnml_sub_error" ).text( response.message );
+                    }
+                } )
+                .on( "error", function( p )
+                {
+                    if( ! p.accepted )
+                    {
+                        $( "#icnml_sub_error" )
+                            .text( "Only PDF files are accepted" );
+                        
+                        $( "#consent_form_dropzone > div" ).remove();
+                        $( "#consent_form_dropzone" ).append(
+                            $( "<div />" )
+                                .addClass( "dz-default dz-message" )
+                                .append(
+                                    $( "<span />" )
+                                        .text( "Drop files here to upload" )
+                                )
+                        );
+                    }
+                } );
+            } );
+            
+            $( "#upload_nickname" ).val( nickname );
+            $( "#upload_nickname" ).on( "change", update_nickname );
+            
+            $( "#next_button" ).on( "click", function()
+            {
+                window.location = "{{ url_for( 'submission.submission_upload_tenprintmark', submission_id = submission_id ) }}";
+            } );
+            
+            $( "#delete_button" ).on( "click", delete_submission );
+            
+            $( "#icnml_navigation_submissions" )
+                .addClass( "activated" );
+            
+            $( "#navloc" ).append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'submission.submission_list' ) }}" )
+                    .text( "Submissions" )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<span />" ).text( nickname )
+            );
+        </script>
+    </body>
+</html>
+        

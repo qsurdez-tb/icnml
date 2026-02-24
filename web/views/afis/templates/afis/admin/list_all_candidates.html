@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <style type="text/css">
+            .actions {
+                width: fit-content;
+                width: -moz-fit-content;
+                margin-top: 30px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .buttons_list {
+                display: grid;
+                grid-template-columns: repeat( 5, 1fr );
+                grid-gap: 10px;
+                margin: 20px;
+            }
+
+            .incidental_flag {
+                width: 10px;
+                height: 10px;
+                background-color: blue;
+                box-sizing: border-box;
+            }
+            .target_flag {
+                width: 10px;
+                height: 10px;
+                background-color: red;
+                box-sizing: border-box;
+            }
+            .empty_flag {
+                width: 10px;
+                height: 10px;
+                background-color: gray;
+                box-sizing: border-box;
+            }
+            .empty_flag_example {
+                width: 15px;
+                height: 15px;
+                background-color: gray;
+                box-sizing: border-box;
+            }
+            .incidental_flag_example {
+                width: 15px;
+                height: 15px;
+                background-color: blue;
+                box-sizing: border-box;
+            }
+            .target_flag_example {
+                width: 15px;
+                height: 15px;
+                background-color: red;
+                box-sizing: border-box;
+            }
+
+            .container{
+                display: grid;
+                grid-template-columns: 45px 120px;
+            }
+
+            .dropbtn {
+                background-color: #303E4D;
+                color: white;
+                padding: 16px;
+                font-size: 16px;
+                border: none;
+            }
+
+            .dropdown {
+                position: relative;
+                display: inline-block;
+            }
+
+            .dropdown-content {
+                max-height: 300px;
+                min-height: 100px;
+                overflow: auto;
+                display: none;
+                position: absolute;
+                background-color: #f1f1f1;
+                min-width: 160px;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                z-index: 1;
+            }
+
+            .dropdown-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }
+
+            .dropdown-content a:hover {background-color: #ddd;}
+
+            .dropdown:hover .dropdown-content {display: block;}
+
+            .dropdown:hover .dropbtn {background-color: #4f6680;}
+
+            #close_search_button {
+                background-color: #303E4D;
+                color:#f1f1f1;
+            }
+            #close_search_button:hover{
+                background-color: #4f6680;
+            }
+        </style>
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            
+            var candidate_list = [];
+            {% for cnm in candidate_list %}
+                candidate_list.push( {
+                    "id": "{{ cnm[ 'id' ] }}",
+                    "uuid": "{{ cnm[ 'uuid' ] }}",
+                    "file_uuid": "{{ cnm[ 'file_uuid' ] }}",
+                    "matched_pfsp_id": "{{ cnm[ 'matched_pfsp_id' ] }}",
+                    "target_uuid": "{{ cnm[ 'target_uuid' ] }}",
+                    "flag_type": "{{ cnm[ 'flag_type' ] }}"
+                } );
+            {% endfor %}
+            
+            var search_result_list = [];
+            var start_candidate = 0;
+            var nb_to_show = 12;
+            var current_page = 1;
+            var total_pages = Math.round(candidate_list.length/nb_to_show);
+            var search_active = false;
+
+            var update_candidates_on_page = function()
+            {
+                var img_auto_detect_url = "{{ url_for( 'afis.image_auto_detect_format', cnm_uuid = '<uuid>', file_uuid = '<file_uuid>', fpc = '<fpc>' ) }}";
+                var click_url = "{{ url_for( 'afis.admin_cnm_edit', target_uuid = '<target_uuid>', cnm_uuid = '<uuid>' ) }}";
+                
+                $( "#candidate_list_div" ).html( "" );
+                
+                for( var offset = 0; offset < nb_to_show; offset++ )
+                {
+                    var c = candidate_list[ start_candidate + offset ];
+                    var selector = "candidate_" + c[ 'uuid' ];
+                    var flag_type = c["flag_type"];
+                    var tmp_url = img_auto_detect_url;
+                    tmp_url = tmp_url.replace( "%3Cuuid%3E",      c[ 'uuid' ] );
+                    tmp_url = tmp_url.replace( "%3Cfile_uuid%3E", c[ 'file_uuid' ] );
+                    tmp_url = tmp_url.replace( "%3Cfpc%3E",       c[ 'matched_pfsp_id' ] );
+                    
+                    var tmp_click_url = click_url;
+                    tmp_click_url = tmp_click_url.replace( "%3Ctarget_uuid%3E", c[ 'target_uuid' ] );
+                    tmp_click_url = tmp_click_url.replace( "%3Cuuid%3E", c[ 'uuid' ] );
+                    
+                    var tmp = $( "<div />" )
+                        .attr( "id", "candidate_" + c[ 'uuid' ] + "_outer" )
+                        .on( "click", (function( x ){
+                            return function(){
+                                window.location = x;
+                            };
+                        })( tmp_click_url ))
+                        .append(
+                            $( "<div />" )
+                                .attr( "id", "candidate_" + c[ 'uuid' ] + "_filename" )
+                                .attr( "class", "ui-widget-header ui-corner-top icnml_box_top" )
+                                .text( c[ 'uuid' ].substr( 0, 18 ) + " (" + c[ 'id' ] + ")" )
+                        )
+                        .append(
+                            $( "<div />" )
+                                .attr( "class", "ui-widget-content ui-corner-bottom icnml_box_content" )
+                                .append(
+                                    $( "<div />" )
+                                        .attr( "id", "candidate_" + c[ 'uuid' ] )
+                                        .attr( "class", "icnml_pointer" )
+                                        .attr( "style", "background-image: url( " + tmp_url + " )" )
+                                )
+                        )
+                    
+                    $( "#candidate_list_div" ).append( tmp );
+                    
+                    set_flag(flag_type,selector);
+                    
+                }
+            }
+            
+            //future: could refactor this and above function for better reusability
+            var update_search_results_on_page = function()
+            {
+                var img_auto_detect_url = "{{ url_for( 'afis.image_auto_detect_format', cnm_uuid = '<uuid>', file_uuid = '<file_uuid>', fpc = '<fpc>' ) }}"
+                var click_url = "{{ url_for( 'afis.admin_cnm_edit', target_uuid = '<target_uuid>', cnm_uuid = '<uuid>' ) }}";
+
+                $( "#search_result_list" ).html( "" );
+                
+                for( var offset = 0; offset < nb_to_show; offset++ )
+                {
+                    var c = search_result_list[ start_candidate + offset ];
+                    var selector = "candidate_" + c[ 'uuid' ] + "_search";
+                    var flag_type = c["flag_type"];
+                    var tmp_url = img_auto_detect_url;
+                    tmp_url = tmp_url.replace( "%3Cuuid%3E",      c[ 'uuid' ] );
+                    tmp_url = tmp_url.replace( "%3Cfile_uuid%3E", c[ 'file_uuid' ] );
+                    tmp_url = tmp_url.replace( "%3Cfpc%3E",       c[ 'matched_pfsp_id' ] );
+                    
+                    var tmp_click_url = click_url;
+                    tmp_click_url = tmp_click_url.replace( "%3Ctarget_uuid%3E", c[ 'target_uuid' ] );
+                    tmp_click_url = tmp_click_url.replace( "%3Cuuid%3E", c[ 'uuid' ] );
+                    
+                    var tmp = $( "<div />" )
+                        .attr( "id", "candidate_" + c[ 'uuid' ] + "_outer" )
+                        .on( "click", (function( x ){
+                            return function(){
+                                window.location = x;
+                            };
+                        })( tmp_click_url ))
+                        .append(
+                            $( "<div />" )
+                                .attr( "id", "candidate_" + c[ 'uuid' ] + "_filename" )
+                                .attr( "class", "ui-widget-header ui-corner-top icnml_box_top" )
+                                .text( c[ 'uuid' ].substr( 0, 18 ) + " (" + c[ 'id' ] + ")" )
+                        )
+                        .append(
+                            $( "<div />" )
+                                .attr( "class", "ui-widget-content ui-corner-bottom icnml_box_content" )
+                                .append(
+                                    $( "<div />" )
+                                        .attr( "id", "candidate_" + c[ 'uuid' ] + "_search" )
+                                        .attr( "class", "icnml_pointer" )
+                                        .attr( "style", "background-image: url( " + tmp_url + " )" )
+                                )
+                        )
+                    
+                    $( "#search_result_list" ).append( tmp );
+                    set_flag(flag_type,selector);
+                    
+                }
+            }
+
+            
+            var first_page = function()
+            {
+                start_candidate = 0;
+                update_page_selector(1);
+                current_page = 1;
+                if(search_active){
+                    update_search_results_on_page();
+                }else{
+                    update_candidates_on_page();
+                }
+                
+            }
+            
+            var previous_page = function()
+            {
+                start_candidate -= nb_to_show;
+                if(start_candidate < 0)
+                { 
+                    start_candidate = 0;
+                }else{
+                    if(current_page == 1){
+                        update_page_selector(current_page);
+                    }else{
+                        update_page_selector(current_page - 1);
+                    }
+                    current_page -= 1;
+                    update_content();
+                }
+            }
+            
+            var next_page = function()
+            {
+                if(!(current_page + 1 > total_pages)){
+                    start_candidate += nb_to_show;
+                    update_page_selector(current_page + 1);
+                    current_page += 1;
+                    update_content();
+                }
+                
+            }
+            
+            var last_page = function()
+            {
+                if(search_active){
+                    if(total_pages == 1){
+                        start_candidate = 0;
+                    }else{
+                        start_candidate = (total_pages - 1) * nb_to_show;
+                    }
+                }else{
+                    start_candidate = candidate_list.length - nb_to_show;
+                }
+                
+                current_page = total_pages;
+                update_page_selector(total_pages);
+                update_content();
+            }
+
+            function set_total_pages()
+            {
+                if(search_active){
+                    total_pages = Math.round(search_result_list.length/nb_to_show);
+                }else{
+                    total_pages = Math.round(candidate_list.length/nb_to_show);
+                }
+                if(total_pages <= 0){ total_pages = 1;}
+            }
+            function search_candidates_by_id(search_id)
+            {   
+                document.getElementById("close_search_button").style.display = "";
+                document.getElementById("search_result_list").style.display = "";
+                document.getElementById("candidate_list_div").style.display = "none";
+                search_active = true;
+                search_result_list = [];
+                search_id = String(search_id);
+                for(i=0; i < candidate_list.length; i++){
+                    var cand_id = String(candidate_list[i]["id"]);
+                    if(cand_id.includes(search_id) || cand_id == search_id){
+                        search_result_list.push(candidate_list[i]);
+                    }
+                }
+                start_candidate = 0;
+                set_total_pages();
+                current_page = 1;
+                generate_page_selector();
+                update_content();
+            }
+
+
+            function close_search()
+            {
+                document.getElementById("close_search_button").style.display = "none";
+                document.getElementById("candidate_list_div").style.display = "";
+                document.getElementById("search_result_list").style.display = "none";
+                document.getElementById("search_bar").value = "";
+                search_active = false;
+                start_candidate = 0;
+                set_total_pages();
+                current_page = 1;
+                generate_page_selector();
+                update_content();
+            }
+
+            function set_flag(flag_type,selector)
+            {   
+                if(flag_type == "2"){
+                    var flag = document.createElement('div');
+                    flag.classList.add("incidental_flag");
+                    var target = document.querySelector('#'+selector);
+                    target.insertAdjacentElement("beforeend", flag);
+                }else if(flag_type == "1"){
+                    var flag = document.createElement('div');
+                    flag.classList.add("target_flag");
+                    flag.id = "flag_" + selector;
+                    var target = document.querySelector('#'+selector);
+                    target.insertAdjacentElement("beforeend", flag);
+                }else if(flag_type == "None"){
+                    var flag = document.createElement('div');
+                    flag.classList.add("empty_flag");
+                    flag.id = "flag_" + selector;
+                    var target = document.querySelector('#'+selector);
+                    target.insertAdjacentElement("beforeend", flag);
+                }
+            }
+
+            function update_content()
+            {
+                if(search_active){
+                    update_search_results_on_page();
+                }else{
+                    update_candidates_on_page();
+                }
+            }
+            
+            function update_page_selector(pageNumber)
+            {
+                document.getElementById('pageSelectButton').innerHTML = "Page: " + pageNumber + " of " + total_pages;
+            }
+
+            function load_selected_page(pageNumber)
+            {
+                current_page = pageNumber;
+                update_page_selector(pageNumber);
+                start_candidate = nb_to_show * (pageNumber - 1);
+                update_content();
+            }
+            function generate_page_selector()
+            {
+                document.getElementById('pageSelectButton').innerHTML = "Page: " + (current_page) + " of " + total_pages;
+                document.getElementById('pageNumberContent').innerHTML = "";
+                for(i=1; i<total_pages + 1; i++){
+                    document.getElementById('pageNumberContent').innerHTML += "<a onclick='load_selected_page("+i+");'>" + i + "</a>";
+                }
+            }
+        </script>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        <div class="icnml_content">
+            <div class="icnml_search_bar">
+                <input id="search_bar" onkeyup="search_candidates_by_id(document.getElementById('search_bar').value);" placeholder="Search for a CNM Candidate (id)..."/>
+                <button id="close_search_button" style="display: none; padding: 5px; margin: 15px;" onclick="close_search();" >Close Search</button>
+            </div>
+            <div class="container">
+                <div class="incidental_flag_example" style="margin: auto;"></div>
+                <p style="width: fit-content;"> = Incidental Mark</p>
+            </div>
+            <div class="container">
+                <div class="target_flag_example"  style="margin: auto;"></div>
+                <p> = Target Mark</p>
+            </div>
+            <div class="container">
+                <div class="empty_flag_example"  style="margin: auto;"></div>
+                <p> = No Mark Value</p>
+            </div>
+            {% if candidate_list != None %}
+                <div id="candidate_list_div" class="icnml_list_of_boxes"></div>
+            {% else %}
+                <div>No CNM candidate at the moment</div>
+            {% endif %}
+            <div style="display: none;" id="search_result_list" class="icnml_list_of_boxes"></div>
+            <div class="actions">
+                <div class="ui-widget-content ui-corner-bottom">
+                    <div class="ui-button ui-widget ui-state-default ui-corner-all">
+                        <div class="dropdown">
+                            <button class="dropbtn" id="pageSelectButton"></button>
+                            <div id="pageNumberContent" class="dropdown-content">
+        
+                            </div>
+                        </div>
+                    </div>
+                    <div class="buttons_list">
+                        <div>
+                            <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only icnml_button_square" id="first_button" role="button" aria-disabled="false">
+                                <span>First</span>
+                            </a>
+                        </div>
+                        
+                        <div>
+                            <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only icnml_button_square" id="previous_button" role="button" aria-disabled="false">
+                                <span>Previous</span>
+                            </a>
+                        </div>
+                        
+                        <div>
+                        </div>
+                        
+                        <div>
+                            <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only icnml_button_square" id="next_button" role="button" aria-disabled="false">
+                                <span>Next</span>
+                            </a>
+                        </div>
+                        
+                        <div>
+                            <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only icnml_button_square" id="last_button" role="button" aria-disabled="false">
+                                <span>Last</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+            generate_page_selector();
+            $( "#search_bar" ).focus();
+
+            update_candidates_on_page();
+            $( "#first_button" ).on( "click", first_page );
+            $( "#previous_button" ).on( "click", previous_page );
+            $( "#next_button" ).on( "click", next_page );
+            $( "#last_button" ).on( "click", last_page );
+            
+            $( "#icnml_navigation_cnm_list_all" )
+                .addClass( "activated" );
+            
+            $( "#navloc" ).append(
+                $( "<span />" ).text( "CNM Candidate full list" )
+            )
+        </script>
+    </body>
+</html>
+

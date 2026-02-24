@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            
+            var uuid_list = [];
+            {% for f in folder_list %}
+                uuid_list.push( "{{ f[ 'folder_uuid' ] }}" );
+            {% endfor %}
+            
+            update_search_result = function()
+            {
+                var searched = $( "#search_bar" ).val();
+                searched = searched.toLowerCase();
+                
+                _.forEach( uuid_list, function( target )
+                {
+                    if( target.toLowerCase().indexOf( searched ) > -1 )
+                    {
+                        $( "#segment_" + target + "_outer" ).show();
+                    } else {
+                        $( "#segment_" + target + "_outer" ).hide();
+                    }
+                } );
+            }
+        </script>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <div class="icnml_search_bar">
+                <input id="search_bar" placeholder="Search for a file..."/>
+            </div>
+            
+            <div class="icnml_list_of_boxes">
+                {% for f in folder_list %}
+                    <div id="segment_{{ f[ 'folder_uuid' ] }}_outer">
+                        <div class="ui-widget-header ui-corner-top icnml_box_top" id="segment_{{ f[ 'uuid' ] }}_filename">{{ f[ 'folder_uuid' ][ 0:18 ] }}</div>
+                        <div class="ui-widget-content ui-corner-bottom icnml_box_content">
+                            <div
+                                id="segment_{{ f[ 'folder_uuid' ] }}"
+                                class="icnml_pointer"
+                                style="background-image: url( {{ url_for( 'image.image_segment_serve', tenprint_id = f[ 'tenprint' ], pc = f[ 'pc' ] ) }} )">
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div id="zoom_slider"></div>
+        </div>
+        <script type="text/javascript">
+            {% for f in folder_list %}
+                $( "#segment_{{ f[ 'folder_uuid' ] }}" )
+                    .parent()
+                    .on( "click", function()
+                    {
+                        window.location.href = "{{ url_for( 'afis.show_folder', uuid = f[ 'folder_uuid' ] ) }}"
+                    } );
+            {% endfor %}
+            
+            $( "#icnml_navigation_afis" )
+                .addClass( "activated" );
+            
+            $( "#navloc" ).append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'afis.list_folders' ) }}" )
+                    .text( "AFIS targets" )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<span />" ).text( "All" )
+            )
+            
+            $( "#search_bar" ).on( "keyup", update_search_result );
+            $( "#search_bar" ).focus();
+        </script>
+    </body>
+</html>
+        

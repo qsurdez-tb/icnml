@@ -1,0 +1,499 @@
+{% import "jinja_functions.html" as common %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+            submission_id = "{{ submission_id }}";
+            
+            var password_local = localStorage.getItem( "session_key" );
+            var nickname = decrypt( "{{ nickname }}", password_local );
+            
+            var update_nickname = function()
+            {
+                var nickname = encrypt( $( "#upload_nickname" ).val() || null, password_local );
+                
+                $.ajax( {
+                    url: "{{ url_for( 'submission.submission_update_nickname', submission_id = submission_id ) }}",
+                    dataType: "json",
+                    method: "POST",
+                    data: {
+                        nickname: nickname
+                    }
+                } );
+            }
+        </script>
+        
+        <style type="text/css">
+            .next_buttons {
+                margin-top: 20px;
+                padding-left: 50px;
+                padding-right: 50px;
+            }
+            .next_button {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+        </style>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <form class="icnml_form">
+                <div class="ui-widget-header ui-corner-top icnml_box_top">Submission form</div>
+                <div class="ui-widget-content ui-corner-bottom icnml_box_content_central">
+                    <div class="icnml_box_fields">
+                        <div style="text-align: right;">
+                            <label for="upload_nickname">Donor nickname</label>
+                        </div>
+                        <div>
+                            <input id="upload_nickname" name="upload_nickname" type="text" value="" placeholder="Encrypted nickname"/>
+                        </div>
+                        
+                        <div style="text-align: right;">
+                            <label for="email">Donor e-mail</label>
+                        </div>
+                        <div>
+                            <input id="email" name="email" type="text" value="{{ email }}" readonly />
+                        </div>
+                        
+                        <div style="text-align: right;">
+                            <label for="uuid">Donor identifier</label>
+                        </div>
+                        <div>
+                            <input id="donor_uuid" name="donor_uuid" type="text" value="{{ submission_id }}" readonly />
+                        </div>
+                        
+                        <div style="text-align: right;" id="tenprint_card_front_labelfor">
+                            <label for="tenprint_card_front">Tenprint card(s)<br />fingers</label>
+                        </div>
+                        <div id="tenprint_card_front_dropzone_outer">
+                            <div id="tenprint_card_front_dropzone" class="dropzone icnml_pointer"></div>
+                        </div>
+                        
+                        <div style="text-align: right;" id="tenprint_card_back_labelfor">
+                            <label for="tenprint_card_back">Tenprint card(s)<br />palms</label>
+                        </div>
+                        <div id="tenprint_card_back_dropzone_outer">
+                            <div id="tenprint_card_back_dropzone" class="dropzone icnml_pointer"></div>
+                        </div>
+                        
+                        <div style="text-align: right;">
+                            <label for="marks_target">Mark(s)<br />target</label>
+                        </div>
+                        <div>
+                            <div id="marks_target_dropzone" class="dropzone icnml_pointer"></div>
+                        </div>
+                        
+                        <div style="text-align: right;">
+                            <label for="marks_incidental">Mark(s)<br />incidental</label>
+                        </div>
+                        <div>
+                            <div id="marks_incidental_dropzone" class="dropzone icnml_pointer"></div>
+                        </div>
+                    </div>
+                    
+                    <div id="icnml_sub_error" class="icnml_box_error"></div>
+                    
+                    <div class="icnml_button next_buttons">
+                        <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only next_button" id="next_gp_button" role="button" aria-disabled="false">
+                            <div>
+                                <span class="ui-button-text">General pattern</span>
+                                {{ common.checked_exclamation( "gp_checked_error" ) }}
+                            </div>
+                        </a>
+                        <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only next_button" id="next_markbyfinger_button" role="button" aria-disabled="false">
+                            <span class="ui-button-text">Upload multiple marks by finger</span>
+                        </a>
+                        <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only next_button" id="next_front_button" role="button" aria-disabled="false">
+                            <div>
+                                <span class="ui-button-text">Tenprint card(s)</span>
+                                {{ common.checked_exclamation( "tenprint_checked_error" ) }}
+                                {{ common.checked_question( "tenprint_checked_question" ) }}
+                            </div>
+                        </a>
+                        <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only next_button" id="mark_target_button" role="button" aria-disabled="false">
+                            <div>
+                                <span class="ui-button-text">Mark(s) target</span>
+                                {{ common.checked_ok( "marks_target_checked_ok" ) }}
+                                {{ common.checked_exclamation( "marks_target_checked_error" ) }}
+                                {{ common.checked_question( "marks_target_checked_question" ) }}
+                            </div>
+                        </a>
+                        <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only next_button" id="mark_incidental_button" role="button" aria-disabled="false">
+                            <div>
+                                <span class="ui-button-text">Mark(s) incidental</span>
+                                {{ common.checked_ok( "marks_incidental_checked_ok" ) }}
+                                {{ common.checked_exclamation( "marks_incidental_checked_error" ) }}
+                                {{ common.checked_question( "marks_incidental_checked_question" ) }}
+                            </div>
+                        </a>
+                        <a class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only next_button" style="margin-top: 20px" id="donor_marks_annotations" role="button" aria-disabled="false">
+                            <span class="ui-button-text">Target areas</span>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <div id="tool_tip_missing_information"></div>
+
+        <script type="text/javascript">
+            // check for missing information
+            {% if mark_information_details[ 'mark_incidental' ][ 'total' ] == 0 %}
+                $( "#marks_incidental_checked_question" )
+                    .css( "visibility", "visible" )
+                    .on( "mouseenter", function( event ){
+                        var offset = $( this ).offset();
+                        
+                        $( "#tool_tip_missing_information" )
+                            .html( "No indidental mark uploaded." )
+                            .css( "visibility", "visible" )
+                            .css( "top", offset.top - 30 )
+                            .css( "left", offset.left + 20 )
+                    } )
+                    .on( "mouseleave", function( event ){
+                        $( "#tool_tip_missing_information" )
+                            .css( "visibility", "hidden" )
+                    } )
+            {% elif mark_information_details[ 'mark_incidental' ][ 'missing' ] != 0 %}
+                $( "#marks_incidental_checked_error" )
+                    .css( "visibility", "visible" )
+                    .on( "mouseenter", function( event ){
+                        var offset = $( this ).offset();
+                        
+                        $( "#tool_tip_missing_information" )
+                            .html( "Some information is missing for some incidental marks" )
+                            .css( "visibility", "visible" )
+                            .css( "top", offset.top - 30 )
+                            .css( "left", offset.left + 20 )
+                    } )
+                    .on( "mouseleave", function( event ){
+                        $( "#tool_tip_missing_information" )
+                            .css( "visibility", "hidden" )
+                    } )
+            {% else %}
+                $( "#marks_incidental_checked_ok" ).css( "visibility", "visible" );
+            {% endif %}
+            
+            {% if mark_information_details[ 'mark_target' ][ 'total' ] == 0 %}
+                $( "#marks_target_checked_question" )
+                    .css( "visibility", "visible" )
+                    .on( "mouseenter", function( event ){
+                        var offset = $( this ).offset();
+                        
+                        $( "#tool_tip_missing_information" )
+                            .html( "No target mark uploaded." )
+                            .css( "visibility", "visible" )
+                            .css( "top", offset.top - 30 )
+                            .css( "left", offset.left + 20 )
+                    } )
+                    .on( "mouseleave", function( event ){
+                        $( "#tool_tip_missing_information" )
+                            .css( "visibility", "hidden" )
+                    } )
+            {% elif mark_information_details[ 'mark_target' ][ 'missing' ] != 0 %}
+                $( "#marks_target_checked_error" )
+                    .css( "visibility", "visible" )
+                    .on( "mouseenter", function( event ){
+                        var offset = $( this ).offset();
+                        
+                        $( "#tool_tip_missing_information" )
+                            .html( "Some information is missing for some target marks" )
+                            .css( "visibility", "visible" )
+                            .css( "top", offset.top - 30 )
+                            .css( "left", offset.left + 20 )
+                    } )
+                    .on( "mouseleave", function( event ){
+                        $( "#tool_tip_missing_information" )
+                            .css( "visibility", "hidden" )
+                    } )
+            {% else %}
+                $( "#marks_target_checked_ok" ).css( "visibility", "visible" );
+            {% endif %}
+
+            {% if has_missing_segmentations %}
+                $( "#tenprint_checked_error" )
+                    .css( "visibility", "visible" )
+                    .on( "mouseenter", function( event ){
+                        var offset = $( this ).offset();
+                        
+                        $( "#tool_tip_missing_information" )
+                            .html( "Some tenprint cards dont have segmentation information" )
+                            .css( "visibility", "visible" )
+                            .css( "top", offset.top - 30 )
+                            .css( "left", offset.left + 20 )
+                    } )
+                    .on( "mouseleave", function( event ){
+                        $( "#tool_tip_missing_information" )
+                            .css( "visibility", "hidden" )
+                    } )
+            {% endif %}
+            
+            {% if has_missing_gp %}
+                $( "#gp_checked_error" )
+                    .css( "visibility", "visible" )
+                    .on( "mouseenter", function( event ){
+                        var offset = $( this ).offset();
+                        
+                        $( "#tool_tip_missing_information" )
+                            .html( "General pattern not complete" )
+                            .css( "visibility", "visible" )
+                            .css( "top", offset.top - 30 )
+                            .css( "left", offset.left + 20 )
+                    } )
+                    .on( "mouseleave", function( event ){
+                        $( "#tool_tip_missing_information" )
+                            .css( "visibility", "hidden" )
+                    } )
+            {% endif %}
+            
+            {% if tenprint_nb == 0 %}
+                $( "#tenprint_checked_error" )
+                    .css( "visibility", "visible" )
+                    .on( "mouseenter", function( event ){
+                        var offset = $( this ).offset();
+                        
+                        $( "#tool_tip_missing_information" )
+                            .html( "No tenprint uploaded" )
+                            .css( "visibility", "visible" )
+                            .css( "top", offset.top - 30 )
+                            .css( "left", offset.left + 20 )
+                    } )
+                    .on( "mouseleave", function( event ){
+                        $( "#tool_tip_missing_information" )
+                            .css( "visibility", "hidden" )
+                    } )
+            {% endif %}
+            
+            //
+            Dropzone.autoDiscover = false;
+            function sleep( ms ) {
+                return new Promise( resolve => setTimeout( resolve, ms ) );
+            }
+            
+            $( function()
+            {
+                new Dropzone(
+                    "#tenprint_card_front_dropzone",
+                    {
+                        url: "{{ url_for( 'submission.upload_file' ) }}",
+                        timeout: 600000,
+                        createImageThumbnails: false,
+                        parallelUploads: 1,
+                        params: {
+                            "upload_type": "tenprint_card_front",
+                            "submission_id": submission_id
+                        },
+                        renameFile: function( file )
+                        {
+                            var newName = encrypt( file.name, password_local );
+                            return newName;
+                        }
+                    }
+                )
+                .on( "addedfile", function( file )
+                {
+                    var ext = "." + file.name.split( "." ).pop();
+                    this.options.params[ "extension" ] = ext;
+                    
+                    if( {{ nist_file_extensions|safe }}.indexOf( ext ) > -1 )
+                    {
+                        $( "#tenprint_card_front_labelfor > label" ).html( "Tenprint card(s)<br />NIST file" );
+                        $( "#tenprint_card_back_labelfor" ).hide();
+                        $( "#tenprint_card_back_dropzone_outer" ).hide();
+                    }
+                    
+                    $( "#tenprint_card_front_dropzone > .dz-default.dz-message" ).remove();
+                } )
+                .on( "success", function( p ) {
+                    var response = JSON.parse( p.xhr.response );
+                    if( response.error )
+                        toastr.error( response.message );
+                } )
+                .on( "error", function( p )
+                {
+                    toastr.error( "Error" );
+                } );
+            } );
+            
+            $( function()
+            {
+                new Dropzone(
+                    "#tenprint_card_back_dropzone",
+                    {
+                        url: "{{ url_for( 'submission.upload_file' ) }}",
+                        timeout: 600000,
+                        parallelUploads: 1,
+                        createImageThumbnails: false,
+                        params: {
+                            "upload_type": "tenprint_card_back",
+                            "submission_id": submission_id
+                        },
+                        renameFile: function( file )
+                        {
+                            var newName = encrypt( file.name, password_local );
+                            return newName;
+                        }
+                    }
+                )
+                .on( "addedfile", function( file )
+                {
+                    var ext = "." + file.name.split( "." ).pop();
+                    this.options.params[ "extension" ] = ext;
+                    
+                    if( {{ nist_file_extensions|safe }}.indexOf( ext ) > -1 )
+                    {
+                        $( "#tenprint_card_back_labelfor > label" ).html( "Tenprint card(s)<br />NIST file" );
+                        $( "#tenprint_card_front_labelfor" ).hide();
+                        $( "#tenprint_card_front_dropzone_outer" ).hide();
+                    }
+                    
+                    $( "#tenprint_card_back_dropzone > .dz-default.dz-message" ).remove();
+                } )
+                .on( "success", function( p ) {
+                    var response = JSON.parse( p.xhr.response );
+                    if( response.error )
+                        toastr.error( response.message );
+                } )
+                .on( "error", function( p )
+                {
+                    toastr.error( "Error" );
+                } );
+            } );
+            
+            $( function()
+            {
+                new Dropzone(
+                    "#marks_target_dropzone",
+                    {
+                        url: "{{ url_for( 'submission.upload_file' ) }}",
+                        timeout: 600000,
+                        createImageThumbnails: false,
+                        params: {
+                            "upload_type": "mark_target",
+                            "submission_id": submission_id
+                        },
+                        renameFile: function( file )
+                        {
+                            var newName = encrypt( file.name, password_local );
+                            return newName;
+                        }
+                    }
+                )
+                .on( "addedfile", function( file )
+                {
+                    var ext = "." + file.name.split( "." ).pop();
+                    this.options.params[ "extension" ] = ext;
+                    
+                    $( "#marks_target_dropzone > .dz-default.dz-message" ).remove();
+                } )
+                .on( "success", function( p ) {
+                    var response = JSON.parse( p.xhr.response );
+                    if( response.error )
+                        toastr.error( response.message );
+                } )
+                .on( "error", function( p )
+                {
+                    toastr.error( "Error" );
+                } );
+            } );
+            
+            $( function()
+            {
+                new Dropzone(
+                    "#marks_incidental_dropzone",
+                    {
+                        url: "{{ url_for( 'submission.upload_file' ) }}",
+                        timeout: 600000,
+                        createImageThumbnails: false,
+                        params: {
+                            "upload_type": "mark_incidental",
+                            "submission_id": submission_id
+                        },
+                        renameFile: function( file )
+                        {
+                            var newName = encrypt( file.name, password_local );
+                            return newName;
+                        }
+                    }
+                )
+                .on( "addedfile", function( file )
+                {
+                    var ext = "." + file.name.split( "." ).pop();
+                    this.options.params[ "extension" ] = ext;
+                    
+                    $( "#marks_incidental_dropzone > .dz-default.dz-message" ).remove();
+                } )
+                .on( "success", function( p ) {
+                    var response = JSON.parse( p.xhr.response );
+                    if( response.error )
+                        toastr.error( response.message );
+                } )
+                .on( "error", function( p )
+                {
+                    toastr.error( "Error" );
+                } );
+            } );
+            
+            $( "#upload_nickname" ).val( nickname );
+            $( "#upload_nickname" ).on( "change", update_nickname );
+            
+            $( "#next_markbyfinger_button" ).on( "click", function()
+            {
+                window.location = "{{ url_for( 'submission.submission_upload_mark_per_finger', submission_id = submission_id ) }}";
+            } );
+            
+            $( "#next_gp_button" ).on( "click", function()
+            {
+                window.location = "{{ url_for( 'submission.submission_gp', submission_id = submission_id ) }}";
+            } );
+            
+            $( "#next_front_button" ).on( "click", function()
+            {
+                window.location = "{{ url_for( 'submission.submission_tenprint_list', submission_id = submission_id ) }}";
+            } );
+            
+            $( "#mark_target_button" ).on( "click", function()
+            {
+                window.location = "{{ url_for( 'submission.submission_mark_list', submission_id = submission_id, mark_type = 'target' ) }}";
+            } );
+            
+            $( "#mark_incidental_button" ).on( "click", function()
+            {
+                window.location = "{{ url_for( 'submission.submission_mark_list', submission_id = submission_id, mark_type = 'incidental' ) }}";
+            } );
+            
+            $( "#donor_marks_annotations" ).on( "click", function()
+            {
+                window.location = "{{ url_for( 'submission.donor_marks_annotations', submission_id = submission_id ) }}";
+            } );
+            
+            $( "#icnml_navigation_submissions" )
+                .addClass( "activated" );
+            
+            $( "#navloc" ).append(
+                $( "<a />" )
+                    .attr( "href", "{{ url_for( 'submission.submission_list' ) }}" )
+                    .text( "Submissions" )
+            )
+            .append(
+                $( "<span />" ).text( ">" )
+            )
+            .append(
+                $( "<span />" ).text( nickname )
+            );
+        </script>
+    </body>
+</html>
+

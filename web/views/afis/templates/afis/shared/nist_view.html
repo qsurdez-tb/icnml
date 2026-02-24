@@ -1,0 +1,201 @@
+{% import "jinja_functions.html" as common %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>ICNML</title>
+        <meta name="description" content="International Close Non-Matches Library">
+        
+        {% autoescape false %}
+            {{ app_files }}
+        {% endautoescape %}
+        
+        <style type="text/css">
+            .list_of_boxes_fingers_outer,
+            .list_of_boxes_slaps_outer,
+            .list_of_boxes_palms_outer {
+                width: fit-content;
+                width: -moz-fit-content;
+                margin-bottom: 30px;
+            }
+            .list_of_boxes_fingers {
+                display: grid;
+                grid-template-columns: repeat( 5, 1fr );
+                grid-gap: 10px;
+            }
+            .list_of_boxes_palms {
+                display: grid;
+                grid-template-columns: 1fr 2fr 2fr 2fr 2fr 1fr;
+                grid-gap: 10px;
+            }
+        </style>
+        
+        <script type="text/javascript">
+            baseurl = "{{ baseurl }}";
+
+            var password_local = localStorage.getItem( "session_key" );
+            var nickname = decrypt( "{{ cnm_nickname }}", password_local );
+            if( nickname !== "" )
+            {
+                var cnm_nickname_navbar = nickname;
+            } else {
+                var cnm_nickname_navbar = "{{ cnm_uuid[ 0:18 ] }}";
+            }
+            
+            var filename = decrypt( "{{ filename }}", password_local );
+            if( filename !== "" )
+            {
+                var filename_navbar = truncate( filename, 18 );
+            } else {
+                var filename_navbar ="{{ file_uuid[ 0:18 ] }}" ;
+            }
+        </script>
+    </head>
+    <body class="icnml_main_layout">
+        {% include "header.html" %}
+        {% include navigation %}
+        
+        <div class="icnml_content">
+            <div class="icnml_tp_oneperpage">
+                <div class="list_of_boxes_fingers_outer">
+                    <div class="list_of_boxes_fingers">
+                        {% for n in [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ] %}
+                            <div id="segment_outer_div">
+                                <div class="ui-widget-header ui-corner-top icnml_box_top">{{ segments_position_code.get( n ) }} (F{{ n }})</div>
+                                <div class="ui-widget-content ui-corner-bottom icnml_box_content">
+                                    <div id="segment_{{ n }}" style="position: relative"></div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="list_of_boxes_slaps_outer">
+                    <div class="list_of_boxes_palms">
+                        <div></div>
+                        {% for n in [ 14, 12, 11, 13 ] %}
+                            <div id="segment_outer_div">
+                                <div class="ui-widget-header ui-corner-top icnml_box_top">{{ segments_position_code.get( n ) }} (F{{ n }})</div>
+                                <div class="ui-widget-content ui-corner-bottom icnml_box_content">
+                                    <div id="segment_{{ n }}" style="position: relative"></div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <div></div>
+                    </div>
+                </div>
+                <div class="list_of_boxes_palms_outer">
+                    <div class="list_of_boxes_palms">
+                        <div></div>
+                        {% for n in [ 24, 27, 25, 22 ] %}
+                            <div id="segment_outer_div">
+                                <div class="ui-widget-header ui-corner-top icnml_box_top">{{ segments_position_code.get( n ) }} (F{{ n }})</div>
+                                <div class="ui-widget-content ui-corner-bottom icnml_box_content">
+                                    <div id="segment_{{ n }}" style="position: relative"></div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        {% for n in [ 23, 21 ] %}
+                            <div id="segment_outer_div">
+                                <div class="ui-widget-header ui-corner-top icnml_box_top">{{ segments_position_code.get( n ) }} (F{{ n }})</div>
+                                <div class="ui-widget-content ui-corner-bottom icnml_box_content">
+                                    <div id="segment_{{ n }}" style="position: relative"></div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="tool_tip_missing_information"></div>
+        
+        <script type="text/javascript">
+            {% for pc in [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 21, 22, 23, 24, 25, 27 ] %}
+                $( "#segment_{{ pc }}" )
+                    .addClass( "icnml_pointer" )
+                    .css( "background-image", "url( {{ url_for( 'afis.image_auto_detect_format', cnm_uuid = cnm_uuid, file_uuid = file_uuid, fpc = pc ) }}  )" );
+            {% endfor %}
+            
+            $( "#icnml_navigation_afis" )
+                .addClass( "activated" );
+            
+            {% if admin %}
+                $( "#navloc" ).append(
+                    $( "<a />" )
+                        .attr( "href", "{{ url_for( 'submission.admin_submission_list' ) }}" )
+                        .text( "Submissions" )
+                )
+                .append(
+                    $( "<span />" ).text( ">" )
+                )
+                .append(
+                    $( "<a />" )
+                        .attr( "href", "{{ url_for( 'submission.admin_submission_home', submission_id = submission_id ) }}" )
+                        .text( "{{ username }}" )
+                )
+                .append(
+                    $( "<span />" ).text( ">" )
+                )
+                .append(
+                    $( "<a />" )
+                        .attr( "href", "{{ url_for( 'afis.admin_show_target_list', submission_uuid = submission_id ) }}" )
+                        .text( "Targets" )
+                )
+                .append(
+                    $( "<span />" ).text( ">" )
+                )
+                .append(
+                    $( "<a />" )
+                        .attr( "href", "{{ url_for( 'afis.admin_show_target', uuid = target_uuid ) }}" )
+                        .text( "{{ finger_name }}" )
+                )
+                .append(
+                    $( "<span />" ).text( ">" )
+                )
+                .append(
+                    $( "<a />" )
+                        .attr( "href", "{{ url_for( 'afis.admin_cnm_edit', target_uuid = target_uuid, cnm_uuid = cnm_uuid ) }}" )
+                        .text( cnm_nickname_navbar )
+                )
+                .append(
+                    $( "<span />" ).text( ">" )
+                )
+                .append(
+                    $( "<span />" ).text( filename_navbar )
+                )
+            {% else %}
+                $( "#navloc" ).append(
+                    $( "<a />" )
+                        .attr( "href", "{{ url_for( 'afis.list_folders' ) }}" )
+                        .text( "AFIS targets" )
+                )
+                .append(
+                    $( "<span />" ).text( ">" )
+                )
+                .append(
+                    $( "<a />" )
+                        .attr( "href", "{{ url_for( 'afis.show_folder', uuid = target_uuid ) }}" )
+                        .text( "{{ target_uuid[ 0:18 ] }}" )
+                )
+                .append(
+                    $( "<span />" ).text( ">" )
+                )
+                .append(
+                    $( "<a />" )
+                        .attr( "href", "{{ url_for( 'afis.cnm_edit', target_uuid = target_uuid, cnm_uuid = cnm_uuid ) }}" )
+                        .text( cnm_nickname_navbar )
+                )
+                .append(
+                    $( "<span />" ).text( ">" )
+                )
+                .append(
+                    $( "<span />" ).text( filename_navbar )
+                )
+            {% endif %}
+        </script>
+    </body>
+</html>
+
