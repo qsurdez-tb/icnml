@@ -1,0 +1,10 @@
+version: '3.7'
+services:
+    web:
+        build: web
+        image: cr.unil.ch/icnml/docker/web:$CI_COMMIT_SHORT_SHA
+        
+    redis:
+        build: redis
+        image: cr.unil.ch/icnml/docker/redis:$CI_COMMIT_SHORT_SHA
+

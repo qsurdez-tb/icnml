@@ -1,0 +1,76 @@
+image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [ "" ]
+
+variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+
+stages:
+    - build
+    - deploy
+
+before_script:
+    - echo "__branch__ = '${CI_COMMIT_REF_NAME}'"                                       >  ./web/app/version.py
+    - echo "__commit__ = '${CI_COMMIT_SHA}'"                                            >> ./web/app/version.py
+    - echo "__commitshort__ = '${CI_COMMIT_SHORT_SHA}'"                                 >> ./web/app/version.py
+    - echo "__commiturl__ = '${CI_PROJECT_URL}/commit/${CI_COMMIT_SHA}'"                >> ./web/app/version.py
+    - echo "__treeurl__ = '${CI_PROJECT_URL}/tree/${CI_COMMIT_SHA}'"                    >> ./web/app/version.py
+    - echo "__date__ = '${CI_COMMIT_TIMESTAMP}'"                                        >> ./web/app/version.py
+    - echo "__version__ = ' - '.join( [ __commitshort__, __date__ ] )"                  >> ./web/app/version.py
+    - echo "__author_name__ = '${GITLAB_USER_NAME}'"                                    >> ./web/app/version.py
+    - echo "__author_email__ = '${GITLAB_USER_EMAIL}'"                                  >> ./web/app/version.py
+    - echo "__author__ = __author_name__ + ' <' + __author_email__ + '>'"               >> ./web/app/version.py
+    - cp -r ./config/keys ./web
+    - mkdir -p /kaniko/.docker
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"auth\":\"$(echo -n $CI_REGISTRY_USER:$CI_REGISTRY_PASSWORD | base64)\"}}}" > /kaniko/.docker/config.json
+    
+web_dev:
+    stage: build
+    except:
+        - master
+    script:
+        - /kaniko/executor --cache=true --cache-ttl 20h --context $CI_PROJECT_DIR/web --dockerfile $CI_PROJECT_DIR/web/Dockerfile --destination $CI_REGISTRY_IMAGE/web:${CI_COMMIT_SHORT_SHA} --destination $CI_REGISTRY_IMAGE/web:${CI_COMMIT_REF_NAME}
+        
+redis_dev:
+    stage: build
+    except:
+        - master
+    script:
+        - /kaniko/executor --cache=true --cache-ttl 20h --context $CI_PROJECT_DIR/redis --dockerfile $CI_PROJECT_DIR/redis/Dockerfile --destination $CI_REGISTRY_IMAGE/redis:${CI_COMMIT_SHORT_SHA} --destination $CI_REGISTRY_IMAGE/redis:${CI_COMMIT_REF_NAME}
+        
+web_master:
+    stage: build
+    only:
+        - master
+    script:
+        - /kaniko/executor --cache=true --cache-ttl 20h --context $CI_PROJECT_DIR/web --dockerfile $CI_PROJECT_DIR/web/Dockerfile --destination $CI_REGISTRY_IMAGE/web:${CI_COMMIT_SHORT_SHA} --destination $CI_REGISTRY_IMAGE/web:${CI_COMMIT_REF_NAME} --destination $CI_REGISTRY_IMAGE/web:latest
+        
+redis_master:
+    stage: build
+    only:
+        - master
+    script:
+        - /kaniko/executor --cache=true --cache-ttl 20h --context $CI_PROJECT_DIR/redis --dockerfile $CI_PROJECT_DIR/redis/Dockerfile --destination $CI_REGISTRY_IMAGE/redis:${CI_COMMIT_SHORT_SHA} --destination $CI_REGISTRY_IMAGE/redis:${CI_COMMIT_REF_NAME} --destination $CI_REGISTRY_IMAGE/redis:latest
+        
+deploy:
+    stage: deploy
+    only:
+        - master
+    image:
+        name: cr.unil.ch/icnml/base:latest
+    script:
+        - eval $(ssh-agent -s)
+        - echo "$SSH_CONFIGURATION_KEY" | tr -d '\r' | ssh-add - > /dev/null
+        - git config --global user.name "$(git show -s --format=%an $CI_COMMIT_SHA)"
+        - git config --global user.email "$(git show -s --format=%ae $CI_COMMIT_SHA)"
+        - PRODDIR=$(mktemp -d)
+        - mkdir -p ~/.ssh
+        - ssh-keyscan ${PROD_GIT} >> ~/.ssh/known_hosts
+        - git clone ${PROD_REPO} $PRODDIR
+        - cd $PRODDIR
+        - sed -i "s/cr.unil.ch\/icnml\/docker\/web.*$/cr.unil.ch\/icnml\/docker\/web\:${CI_COMMIT_SHORT_SHA}/g" docker-compose.yml.template
+        - git add docker-compose.yml.template
+        - git commit -m "Container update to version ${CI_COMMIT_SHORT_SHA}" -m "Update the docker image of ICNML to the commit ${CI_COMMIT_SHORT_SHA} (${CI_PROJECT_URL}/commit/${CI_COMMIT_SHA})" -m "Regards, the CICD"
+        - git push
+        - ssh-add -D || true
+        - ssh-agent -k || true

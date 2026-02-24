@@ -1,0 +1,24 @@
+[submodule "web/app"]
+    path = web/app
+    url = https://esc-md-git.unil.ch/ICNML/web.git
+    branch = develop
+[submodule "web/library/PiAnoS"]
+    path = web/library/PiAnoS
+    url = https://esc-md-git.unil.ch/PiAnoS/tools.git
+    branch = develop
+[submodule "web/library/NIST"]
+    path = web/library/NIST
+    url = https://esc-md-git.unil.ch/mdedonno/NIST.git
+    branch = feature/XML
+[submodule "web/library/MDmisc"]
+    path = web/library/MDmisc
+    url = https://esc-md-git.unil.ch/mdedonno/MDmisc.git
+    branch = develop
+[submodule "web/library/PMlib"]
+    path = web/library/PMlib
+    url = https://esc-md-git.unil.ch/mdedonno/PMlib.git
+    branch = develop
+[submodule "web/library/WSQ"]
+    path = web/library/WSQ
+    url = https://esc-md-git.unil.ch/mdedonno/WSQ.git
+    branch = develop

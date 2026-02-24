@@ -1,0 +1,36 @@
+version: '3.7'
+services:
+    db:
+        image: postgres:11
+        volumes:
+            - ./db/data:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_PASSWORD=icnml
+        ports:
+            - 127.0.0.1:5432:5432
+    
+    web:
+        build: web
+        ports:
+            - 80:5000
+        env_file:
+            - env
+        volumes:
+            - ./web/app:/app
+            - /etc/localtime:/etc/localtime:ro
+        entrypoint: python2 dev.py
+        depends_on:
+            - redis
+            - db
+
+    redis:
+        build: redis
+        volumes:
+            - redis-data:/data
+            - /etc/localtime:/etc/localtime:ro
+        ports:
+            - 127.0.0.1:6379:6379
+
+volumes:
+    redis-data:
+    
