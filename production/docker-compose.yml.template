@@ -1,0 +1,61 @@
+version: '3.7'
+services:
+    web:
+        image: cr.unil.ch/icnml/docker/web:8e914629
+        ports:
+            - 5000:5000
+        env_file:
+            - ${CONFIGURATION}
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+        healthcheck:
+            test: [ "CMD", "curl", "-k", "--fail", "https://localhost:5000/ping" ]
+            interval: 30s
+            timeout: 10s
+            retries: 3
+        deploy:
+            replicas: 15
+            resources:
+                reservations:
+                    memory: 512M
+            restart_policy:
+                condition: any
+                delay: 5s
+            update_config:
+                parallelism: 5
+                delay: 10s
+                failure_action: rollback
+                order: start-first
+    
+    redis:
+        image: cr.unil.ch/icnml/docker/redis:latest
+        ports:
+            - 6379:6379
+        volumes:
+            - /etc/localtime:/etc/localtime:ro
+            - redis-data:/data
+        deploy:
+            replicas: 1
+            resources:
+                reservations:
+                    memory: 1024M
+            restart_policy:
+                condition: any
+                delay: 5s
+            update_config:
+                parallelism: 1
+                delay: 10s
+                failure_action: rollback
+                order: start-first
+
+networks:
+    default:
+        driver: overlay
+        ipam:
+            driver: default
+            config:
+                - subnet: 10.254.252.0/24
+
+volumes:
+    redis-data:
+

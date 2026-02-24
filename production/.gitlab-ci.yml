@@ -1,0 +1,14 @@
+image:
+  name: cr.unil.ch/icnml/base:latest
+
+stages:
+    - deploy
+
+deploy:
+    stage: deploy
+    script:
+        - apt update
+        - apt install -y docker.io
+        - make
+    only:
+        - master
