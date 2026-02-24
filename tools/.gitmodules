@@ -1,0 +1,15 @@
+[submodule "libraries/PiAnoS"]
+	path = libraries/PiAnoS
+	url = https://esc-md-git.unil.ch/PiAnoS/tools.git
+[submodule "libraries/MDmisc"]
+	path = libraries/MDmisc
+	url = https://esc-md-git.unil.ch/mdedonno/MDmisc.git
+[submodule "libraries/NIST"]
+	path = libraries/NIST
+	url = https://esc-md-git.unil.ch/mdedonno/NIST.git
+[submodule "libraries/PMlib"]
+	path = libraries/PMlib
+	url = https://esc-md-git.unil.ch/mdedonno/PMlib.git
+[submodule "libraries/WSQ"]
+	path = libraries/WSQ
+	url = https://esc-md-git.unil.ch/mdedonno/WSQ.git
