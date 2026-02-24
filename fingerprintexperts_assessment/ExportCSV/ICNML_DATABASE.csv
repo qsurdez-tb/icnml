@@ -1,0 +1,1569 @@
+"","AssignmentID","User","Case","Conclusion","Level3Features","GroundTruth","CaseType","Correction","Group"
+"1","927","User_315","Case_3_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"2","1004","User_100","Case_1_H","Same source","null","Same source",NA,"Correct Identification",1
+"3","1074","User_127","Case_1_B","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"4","1005","User_100","Case_1_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"5","1006","User_100","Case_1_J","Different source (CNM)","null","Same source",NA,"False Exclusion",1
+"6","1076","User_127","Case_1_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"7","1134","User_328","Case_3_E","Same source","Yes","Same source",NA,"Correct Identification",3
+"8","836","User_206","Case_2_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"9","1007","User_100","Case_1_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"10","837","User_206","Case_2_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"11","838","User_206","Case_2_C","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",2
+"12","846","User_309","Case_3_A","null","null","Different source","Target Case",NA,3
+"13","847","User_309","Case_3_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"14","848","User_309","Case_3_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"15","849","User_309","Case_3_D","Same source","Yes","Same source",NA,"Correct Identification",3
+"16","850","User_309","Case_3_E","Same source","No","Same source",NA,"Correct Identification",3
+"17","851","User_309","Case_3_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"18","853","User_309","Case_3_G","Same source","No","Same source",NA,"Correct Identification",3
+"19","840","User_206","Case_2_D","Same source","null","Same source",NA,"Correct Identification",2
+"20","854","User_309","Case_3_H","Same source","No","Same source",NA,"Correct Identification",3
+"21","856","User_309","Case_3_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"22","855","User_206","Case_2_E","Different source (CNM)","null","Same source",NA,"False Exclusion",2
+"23","1471","User_120","Case_1_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"24","857","User_206","Case_2_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"25","1008","User_100","Case_1_L","Different source (CNM)","null","Same source",NA,"False Exclusion",1
+"26","1077","User_127","Case_1_D","Same source","null","Same source",NA,"Correct Identification",1
+"27","1135","User_328","Case_3_F","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"28","1469","User_120","Case_1_G","Same source","No","Same source",NA,"Correct Identification",1
+"29","858","User_206","Case_2_G","Different source (CNM)","null","Same source",NA,"False Exclusion",2
+"30","859","User_309","Case_3_J","Same source","No","Same source",NA,"Correct Identification",3
+"31","861","User_309","Case_3_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"32","862","User_309","Case_3_L","Different source (not a CNM)","No","Same source",NA,"False Exclusion",3
+"33","860","User_206","Case_2_H","Same source","null","Same source",NA,"Correct Identification",2
+"34","863","User_206","Case_2_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"35","864","User_105","Case_1_A","null","null","Different source","Target Case",NA,1
+"36","883","User_307","Case_3_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"37","865","User_105","Case_1_B","Different source (not a CNM)","Yes","Different source","Incidental Case","Correct Exclusion",1
+"38","866","User_105","Case_1_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"39","867","User_105","Case_1_D","Same source","Yes","Same source",NA,"Correct Identification",1
+"40","868","User_105","Case_1_E","Same source","Yes","Same source",NA,"Correct Identification",1
+"41","869","User_301","Case_3_A","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",3
+"42","871","User_105","Case_1_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"43","903","User_307","Case_3_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"44","870","User_301","Case_3_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"45","872","User_105","Case_1_G","Same source","Yes","Same source",NA,"Correct Identification",1
+"46","874","User_301","Case_3_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"47","875","User_105","Case_1_H","Same source","Yes","Same source",NA,"Correct Identification",1
+"48","873","User_206","Case_2_J","Same source","null","Same source",NA,"Correct Identification",2
+"49","876","User_301","Case_3_D","Same source","null","Same source",NA,"Correct Identification",3
+"50","1078","User_127","Case_1_E","Same source","null","Same source",NA,"Correct Identification",1
+"51","878","User_206","Case_2_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"52","879","User_301","Case_3_E","Same source","null","Same source",NA,"Correct Identification",3
+"53","880","User_301","Case_3_F","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"54","843","User_307","Case_3_A","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",3
+"55","882","User_301","Case_3_G","Same source","null","Same source",NA,"Correct Identification",3
+"56","884","User_301","Case_3_H","Same source","null","Same source",NA,"Correct Identification",3
+"57","877","User_105","Case_1_I","Different source (not a CNM)","Yes","Different source","Target Case","Correct Exclusion",1
+"58","885","User_301","Case_3_I","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",3
+"59","887","User_301","Case_3_J","Same source","null","Same source",NA,"Correct Identification",3
+"60","888","User_301","Case_3_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"61","889","User_307","Case_3_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"62","886","User_105","Case_1_J","Same source","No","Same source",NA,"Correct Identification",1
+"63","890","User_307","Case_3_D","Same source","No","Same source",NA,"Correct Identification",3
+"64","892","User_105","Case_1_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"65","893","User_307","Case_3_E","Same source","No","Same source",NA,"Correct Identification",3
+"66","898","User_307","Case_3_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"67","897","User_105","Case_1_L","Same source","No","Same source",NA,"Correct Identification",1
+"68","901","User_307","Case_3_H","Same source","No","Same source",NA,"Correct Identification",3
+"69","902","User_301","Case_3_L","Same source","null","Same source",NA,"Correct Identification",3
+"70","904","User_307","Case_3_J","Same source","Yes","Same source",NA,"Correct Identification",3
+"71","908","User_215","Case_2_A","null","null","Different source","Target Case",NA,2
+"72","906","User_307","Case_3_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"73","911","User_219","Case_2_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"74","913","User_308","Case_3_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"75","914","User_308","Case_3_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"76","915","User_308","Case_3_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"77","925","User_315","Case_3_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"78","1011","User_315","Case_3_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"79","917","User_124","Case_1_A","null","null","Different source","Target Case",NA,1
+"80","918","User_124","Case_1_B","null","null","Different source","Incidental Case",NA,1
+"81","920","User_223","Case_2_E","Same source","null","Same source",NA,"Correct Identification",2
+"82","922","User_123","Case_1_A","null","null","Different source","Target Case",NA,1
+"83","923","User_123","Case_1_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"84","924","User_315","Case_3_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"85","928","User_315","Case_3_D","Same source","No","Same source",NA,"Correct Identification",3
+"86","932","User_130","Case_1_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"87","933","User_130","Case_1_B","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"88","934","User_130","Case_1_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"89","936","User_130","Case_1_D","Same source","null","Same source",NA,"Correct Identification",1
+"90","938","User_130","Case_1_E","Same source","null","Same source",NA,"Correct Identification",1
+"91","940","User_332","Case_3_A","null","null","Different source","Target Case",NA,3
+"92","1079","User_127","Case_1_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"93","943","User_130","Case_1_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"94","937","User_229","Case_2_B","Same source","Yes","Different source","Incidental Case","False Identification",2
+"95","944","User_107","Case_1_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"96","942","User_109","Case_1_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"97","1136","User_328","Case_3_G","Same source","Yes","Same source",NA,"Correct Identification",3
+"98","947","User_109","Case_1_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"99","950","User_109","Case_1_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"100","949","User_333","Case_3_A","null","null","Different source","Target Case",NA,3
+"101","951","User_109","Case_1_D","Same source","null","Same source",NA,"Correct Identification",1
+"102","952","User_333","Case_3_B","null","null","Different source","Incidental Case",NA,3
+"103","953","User_333","Case_3_C","null","null","Different source","Target Case",NA,3
+"104","1080","User_127","Case_1_G","Same source","null","Same source",NA,"Correct Identification",1
+"105","2163","User_201","Case_2_G","Same source","Yes","Same source",NA,"Correct Identification",2
+"106","956","User_101","Case_1_B","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"107","958","User_333","Case_3_D","Same source","Yes","Same source",NA,"Correct Identification",3
+"108","1000","User_100","Case_1_D","Same source","null","Same source",NA,"Correct Identification",1
+"109","1013","User_247","Case_2_A","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",2
+"110","1081","User_127","Case_1_H","Same source","null","Same source",NA,"Correct Identification",1
+"111","959","User_326","Case_3_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"112","945","User_107","Case_1_B","Different source (not a CNM)","Yes","Different source","Incidental Case","Correct Exclusion",1
+"113","962","User_326","Case_3_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"114","1001","User_100","Case_1_E","Same source","null","Same source",NA,"Correct Identification",1
+"115","964","User_326","Case_3_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"116","967","User_326","Case_3_D","Same source","No","Same source",NA,"Correct Identification",3
+"117","961","User_333","Case_3_E","Same source","No","Same source",NA,"Correct Identification",3
+"118","965","User_107","Case_1_D","Same source","Yes","Same source",NA,"Correct Identification",1
+"119","969","User_333","Case_3_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"120","970","User_107","Case_1_E","Same source","Yes","Same source",NA,"Correct Identification",1
+"121","974","User_333","Case_3_G","Same source","Yes","Same source",NA,"Correct Identification",3
+"122","976","User_333","Case_3_H","Same source","No","Same source",NA,"Correct Identification",3
+"123","1002","User_100","Case_1_F","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"124","1082","User_127","Case_1_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"125","1137","User_328","Case_3_H","Same source","No","Same source",NA,"Correct Identification",3
+"126","971","User_101","Case_1_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"127","982","User_236","Case_2_H","Same source","null","Same source",NA,"Correct Identification",2
+"128","968","User_326","Case_3_E","Same source","null","Same source",NA,"Correct Identification",3
+"129","986","User_326","Case_3_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"130","988","User_326","Case_3_G","Same source","null","Same source",NA,"Correct Identification",3
+"131","980","User_101","Case_1_G","Same source","No","Same source",NA,"Correct Identification",1
+"132","1003","User_100","Case_1_G","Same source","null","Same source",NA,"Correct Identification",1
+"133","1083","User_127","Case_1_J","Same source","null","Same source",NA,"Correct Identification",1
+"134","1138","User_328","Case_3_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"135","2164","User_201","Case_2_H","Same source","No","Same source",NA,"Correct Identification",2
+"136","989","User_326","Case_3_H","Same source","null","Same source",NA,"Correct Identification",3
+"137","992","User_326","Case_3_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"138","990","User_101","Case_1_H","Same source","Yes","Same source",NA,"Correct Identification",1
+"139","993","User_326","Case_3_J","Same source","null","Same source",NA,"Correct Identification",3
+"140","994","User_101","Case_1_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"141","995","User_326","Case_3_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"142","996","User_101","Case_1_J","Same source","No","Same source",NA,"Correct Identification",1
+"143","997","User_326","Case_3_L","Same source","null","Same source",NA,"Correct Identification",3
+"144","998","User_101","Case_1_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"145","955","User_101","Case_1_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"146","960","User_101","Case_1_D","Same source","Yes","Same source",NA,"Correct Identification",1
+"147","966","User_101","Case_1_E","Same source","No","Same source",NA,"Correct Identification",1
+"148","833","User_100","Case_1_A","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",1
+"149","834","User_100","Case_1_B","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"150","835","User_100","Case_1_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"151","1010","User_315","Case_3_E","Same source","No","Same source",NA,"Correct Identification",3
+"152","1016","User_229","Case_2_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"153","1084","User_127","Case_1_K","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"154","1018","User_135","Case_1_B","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"155","931","User_135","Case_1_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"156","1139","User_328","Case_3_J","Same source","No","Same source",NA,"Correct Identification",3
+"157","1017","User_229","Case_2_J","Same source","Yes","Same source",NA,"Correct Identification",2
+"158","1020","User_135","Case_1_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"159","1019","User_226","Case_2_B","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"160","1015","User_247","Case_2_B","Same source","No","Different source","Incidental Case","False Identification",2
+"161","1022","User_135","Case_1_D","Same source","Yes","Same source",NA,"Correct Identification",1
+"162","1025","User_135","Case_1_E","Same source","Yes","Same source",NA,"Correct Identification",1
+"163","1026","User_135","Case_1_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"164","1024","User_247","Case_2_C","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",2
+"165","1027","User_135","Case_1_G","Same source","No","Same source",NA,"Correct Identification",1
+"166","1029","User_135","Case_1_H","Same source","Yes","Same source",NA,"Correct Identification",1
+"167","1030","User_135","Case_1_I","Different source (not a CNM)","Yes","Different source","Target Case","Correct Exclusion",1
+"168","1028","User_247","Case_2_D","Same source","No","Same source",NA,"Correct Identification",2
+"169","1032","User_247","Case_2_E","Same source","No","Same source",NA,"Correct Identification",2
+"170","1031","User_135","Case_1_J","Same source","No","Same source",NA,"Correct Identification",1
+"171","1033","User_130","Case_1_G","Same source","null","Same source",NA,"Correct Identification",1
+"172","1034","User_247","Case_2_F","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"173","1037","User_247","Case_2_G","Same source","No","Same source",NA,"Correct Identification",2
+"174","1038","User_247","Case_2_H","Same source","No","Same source",NA,"Correct Identification",2
+"175","1085","User_127","Case_1_L","Same source","null","Same source",NA,"Correct Identification",1
+"176","1039","User_247","Case_2_I","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",2
+"177","1036","User_130","Case_1_H","Same source","null","Same source",NA,"Correct Identification",1
+"178","978","User_236","Case_2_E","Same source","null","Same source",NA,"Correct Identification",2
+"179","1041","User_130","Case_1_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"180","1040","User_247","Case_2_J","Same source","No","Same source",NA,"Correct Identification",2
+"181","1140","User_328","Case_3_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"182","2165","User_201","Case_2_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"183","1042","User_109","Case_1_E","Same source","null","Same source",NA,"Correct Identification",1
+"184","977","User_236","Case_2_D","null","null","Same source",NA,NA,2
+"185","1035","User_135","Case_1_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"186","1045","User_135","Case_1_L","Same source","No","Same source",NA,"Correct Identification",1
+"187","1044","User_247","Case_2_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"188","1043","User_130","Case_1_J","Same source","null","Same source",NA,"Correct Identification",1
+"189","1047","User_247","Case_2_L","Same source","No","Same source",NA,"Correct Identification",2
+"190","1049","User_147","Case_1_A","null","null","Different source","Target Case",NA,1
+"191","1051","User_147","Case_1_B","null","null","Different source","Incidental Case",NA,1
+"192","1052","User_147","Case_1_C","null","null","Different source","Target Case",NA,1
+"193","1053","User_147","Case_1_D","null","null","Same source",NA,NA,1
+"194","1054","User_147","Case_1_E","null","null","Same source",NA,NA,1
+"195","1055","User_147","Case_1_F","null","null","Different source","Incidental Case",NA,1
+"196","1048","User_130","Case_1_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"197","1056","User_147","Case_1_G","Same source","No","Same source",NA,"Correct Identification",1
+"198","1057","User_333","Case_3_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"199","1058","User_147","Case_1_H","Same source","No","Same source",NA,"Correct Identification",1
+"200","1023","User_226","Case_2_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"201","1060","User_333","Case_3_J","Same source","No","Same source",NA,"Correct Identification",3
+"202","1062","User_226","Case_2_D","Same source","null","Same source",NA,"Correct Identification",2
+"203","1061","User_147","Case_1_I","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",1
+"204","1063","User_333","Case_3_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"205","1059","User_130","Case_1_L","Same source","null","Same source",NA,"Correct Identification",1
+"206","1065","User_147","Case_1_J","Same source","No","Same source",NA,"Correct Identification",1
+"207","1067","User_147","Case_1_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"208","1068","User_147","Case_1_L","Same source","No","Same source",NA,"Correct Identification",1
+"209","1141","User_328","Case_3_L","Different source (CNM)","Yes","Same source",NA,"False Exclusion",3
+"210","1070","User_107","Case_1_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"211","1072","User_107","Case_1_G","Same source","Yes","Same source",NA,"Correct Identification",1
+"212","1073","User_107","Case_1_H","Same source","Yes","Same source",NA,"Correct Identification",1
+"213","1050","User_127","Case_1_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"214","1075","User_107","Case_1_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"215","1087","User_206","Case_2_L","Different source (not a CNM)","No","Same source",NA,"False Exclusion",2
+"216","2166","User_201","Case_2_J","Same source","Yes","Same source",NA,"Correct Identification",2
+"217","1090","User_302","Case_3_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"218","1089","User_251","Case_2_A","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",2
+"219","1091","User_302","Case_3_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"220","1093","User_302","Case_3_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"221","1094","User_302","Case_3_D","Same source","null","Same source",NA,"Correct Identification",3
+"222","1095","User_302","Case_3_E","Same source","null","Same source",NA,"Correct Identification",3
+"223","1096","User_302","Case_3_F","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"224","1098","User_302","Case_3_G","Same source","null","Same source",NA,"Correct Identification",3
+"225","1099","User_302","Case_3_H","Same source","null","Same source",NA,"Correct Identification",3
+"226","1100","User_302","Case_3_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"227","1102","User_302","Case_3_J","Same source","null","Same source",NA,"Correct Identification",3
+"228","1103","User_302","Case_3_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"229","1101","User_351","Case_3_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"230","1104","User_302","Case_3_L","Different source (CNM)","null","Same source",NA,"False Exclusion",3
+"231","987","User_236","Case_2_L","Same source","null","Same source",NA,"Correct Identification",2
+"232","2167","User_201","Case_2_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"233","1012","User_315","Case_3_G","Same source","No","Same source",NA,"Correct Identification",3
+"234","1106","User_315","Case_3_H","Same source","No","Same source",NA,"Correct Identification",3
+"235","1107","User_315","Case_3_I","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",3
+"236","1108","User_315","Case_3_J","Same source","No","Same source",NA,"Correct Identification",3
+"237","1109","User_315","Case_3_K","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"238","1111","User_207","Case_2_A","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",2
+"239","1113","User_346","Case_3_A","null","null","Different source","Target Case",NA,3
+"240","1114","User_346","Case_3_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"241","1115","User_346","Case_3_C","Different source (not a CNM)","Yes","Different source","Target Case","Correct Exclusion",3
+"242","1116","User_346","Case_3_D","Same source","Yes","Same source",NA,"Correct Identification",3
+"243","1117","User_346","Case_3_E","Same source","Yes","Same source",NA,"Correct Identification",3
+"244","1118","User_346","Case_3_F","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"245","1132","User_328","Case_3_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"246","1119","User_346","Case_3_G","Same source","Yes","Same source",NA,"Correct Identification",3
+"247","1120","User_346","Case_3_H","Same source","No","Same source",NA,"Correct Identification",3
+"248","1121","User_346","Case_3_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"249","1122","User_346","Case_3_J","Same source","Yes","Same source",NA,"Correct Identification",3
+"250","1133","User_328","Case_3_D","Same source","Yes","Same source",NA,"Correct Identification",3
+"251","1123","User_346","Case_3_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"252","1124","User_346","Case_3_L","Different source (not a CNM)","Yes","Same source",NA,"False Exclusion",3
+"253","1130","User_328","Case_3_A","null","null","Different source","Target Case",NA,3
+"254","1131","User_328","Case_3_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"255","1802","User_314","Case_3_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"256","1142","User_204","Case_2_D","null","null","Same source",NA,NA,2
+"257","1811","User_102","Case_1_L","Same source","No","Same source",NA,"Correct Identification",1
+"258","1154","User_129","Case_1_D","Same source","Yes","Same source",NA,"Correct Identification",1
+"259","1151","User_129","Case_1_A","null","null","Different source","Target Case",NA,1
+"260","1152","User_129","Case_1_B","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"261","1153","User_129","Case_1_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"262","1155","User_129","Case_1_E","Same source","Yes","Same source",NA,"Correct Identification",1
+"263","2168","User_201","Case_2_L","Same source","No","Same source",NA,"Correct Identification",2
+"264","1156","User_129","Case_1_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"265","1157","User_129","Case_1_G","Same source","Yes","Same source",NA,"Correct Identification",1
+"266","1158","User_129","Case_1_H","Same source","Yes","Same source",NA,"Correct Identification",1
+"267","1159","User_129","Case_1_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"268","1166","User_239","Case_2_A","null","null","Different source","Target Case",NA,2
+"269","1160","User_129","Case_1_J","Different source (CNM)","No","Same source",NA,"False Exclusion",1
+"270","1161","User_129","Case_1_K","Different source (not a CNM)","Yes","Different source","Incidental Case","Correct Exclusion",1
+"271","1162","User_129","Case_1_L","Same source","No","Same source",NA,"Correct Identification",1
+"272","1170","User_331","Case_3_A","Different source (CNM)","Yes","Different source","Target Case","Correct Exclusion",3
+"273","1178","User_331","Case_3_B","Different source (not a CNM)","Yes","Different source","Incidental Case","Correct Exclusion",3
+"274","1180","User_228","Case_2_F","null","null","Different source","Incidental Case",NA,2
+"275","1182","User_228","Case_2_H","Same source","Yes","Same source",NA,"Correct Identification",2
+"276","1183","User_228","Case_2_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"277","1184","User_228","Case_2_L","Different source (CNM)","Yes","Same source",NA,"False Exclusion",2
+"278","1185","User_228","Case_2_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"279","1187","User_228","Case_2_B","Different source (CNM)","Yes","Different source","Incidental Case","Correct Exclusion",2
+"280","1188","User_228","Case_2_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"281","1189","User_228","Case_2_D","Same source","Yes","Same source",NA,"Correct Identification",2
+"282","1190","User_228","Case_2_E","Same source","Yes","Same source",NA,"Correct Identification",2
+"283","1192","User_228","Case_2_G","Different source (CNM)","Yes","Same source",NA,"False Exclusion",2
+"284","1193","User_228","Case_2_J","Same source","Yes","Same source",NA,"Correct Identification",2
+"285","1186","User_228","Case_2_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"286","981","User_236","Case_2_G","Same source","null","Same source",NA,"Correct Identification",2
+"287","1491","User_111","Case_1_A","null","null","Different source","Target Case",NA,1
+"288","1195","User_317","Case_3_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"289","1196","User_317","Case_3_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"290","983","User_236","Case_2_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"291","984","User_236","Case_2_J","Same source","null","Same source",NA,"Correct Identification",2
+"292","1198","User_330","Case_3_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"293","1200","User_207","Case_2_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"294","1199","User_330","Case_3_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"295","2385","User_327","Case_3_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"296","1201","User_207","Case_2_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"297","1202","User_207","Case_2_D","Same source","Yes","Same source",NA,"Correct Identification",2
+"298","1204","User_112","Case_1_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"299","1203","User_207","Case_2_E","Same source","No","Same source",NA,"Correct Identification",2
+"300","1205","User_112","Case_1_B","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"301","1206","User_317","Case_3_D","Same source","Yes","Same source",NA,"Correct Identification",3
+"302","957","User_101","Case_1_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"303","844","User_101","Case_1_L","Same source","No","Same source",NA,"Correct Identification",1
+"304","1212","User_313","Case_3_C","null","null","Different source","Target Case",NA,3
+"305","1197","User_317","Case_3_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"306","2393","User_320","Case_3_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"307","2296","User_133","Case_1_B","null","null","Different source","Incidental Case",NA,1
+"308","1229","User_117","Case_1_A","null","null","Different source","Target Case",NA,1
+"309","1230","User_117","Case_1_B","null","null","Different source","Incidental Case",NA,1
+"310","1228","User_134","Case_1_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"311","1231","User_134","Case_1_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"312","1233","User_117","Case_1_C","null","null","Different source","Target Case",NA,1
+"313","1234","User_219","Case_2_D","Same source","null","Same source",NA,"Correct Identification",2
+"314","1236","User_117","Case_1_D","null","null","Same source",NA,NA,1
+"315","1237","User_219","Case_2_E","Same source","null","Same source",NA,"Correct Identification",2
+"316","1238","User_117","Case_1_E","null","null","Same source",NA,NA,1
+"317","1241","User_117","Case_1_F","null","null","Different source","Incidental Case",NA,1
+"318","1242","User_117","Case_1_G","null","null","Same source",NA,NA,1
+"319","2398","User_327","Case_3_G","Same source","null","Same source",NA,"Correct Identification",3
+"320","1243","User_117","Case_1_H","null","null","Same source",NA,NA,1
+"321","1245","User_117","Case_1_I","null","null","Different source","Target Case",NA,1
+"322","1244","User_219","Case_2_G","Same source","null","Same source",NA,"Correct Identification",2
+"323","1239","User_254","Case_2_D","Same source","No","Same source",NA,"Correct Identification",2
+"324","1246","User_117","Case_1_J","null","null","Same source",NA,NA,1
+"325","1247","User_219","Case_2_H","Same source","null","Same source",NA,"Correct Identification",2
+"326","1249","User_117","Case_1_K","null","null","Different source","Incidental Case",NA,1
+"327","1252","User_117","Case_1_L","null","null","Same source",NA,NA,1
+"328","1250","User_134","Case_1_H","Different source (CNM)","null","Same source",NA,"False Exclusion",1
+"329","2399","User_327","Case_3_H","Same source","null","Same source",NA,"Correct Identification",3
+"330","1251","User_331","Case_3_C","Different source (not a CNM)","Yes","Different source","Target Case","Correct Exclusion",3
+"331","921","User_223","Case_2_H","Same source","No","Same source",NA,"Correct Identification",2
+"332","1254","User_331","Case_3_D","Same source","Yes","Same source",NA,"Correct Identification",3
+"333","1207","User_330","Case_3_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"334","1255","User_223","Case_2_L","Same source","No","Same source",NA,"Correct Identification",2
+"335","1256","User_331","Case_3_E","Same source","Yes","Same source",NA,"Correct Identification",3
+"336","1257","User_330","Case_3_D","Same source","Yes","Same source",NA,"Correct Identification",3
+"337","1259","User_331","Case_3_F","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"338","1014","User_229","Case_2_L","Same source","Yes","Same source",NA,"Correct Identification",2
+"339","1260","User_229","Case_2_H","Same source","Yes","Same source",NA,"Correct Identification",2
+"340","1261","User_229","Case_2_G","Same source","Yes","Same source",NA,"Correct Identification",2
+"341","1262","User_229","Case_2_E","Same source","No","Same source",NA,"Correct Identification",2
+"342","2400","User_327","Case_3_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"343","1263","User_229","Case_2_D","Same source","Yes","Same source",NA,"Correct Identification",2
+"344","1264","User_116","Case_1_A","null","null","Different source","Target Case",NA,1
+"345","2401","User_327","Case_3_J","Same source","null","Same source",NA,"Correct Identification",3
+"346","1266","User_116","Case_1_B","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"347","1267","User_116","Case_1_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"348","2402","User_327","Case_3_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"349","1110","User_315","Case_3_L","Different source (CNM)","No","Same source",NA,"False Exclusion",3
+"350","1268","User_116","Case_1_D","Same source","null","Same source",NA,"Correct Identification",1
+"351","1269","User_116","Case_1_E","Same source","null","Same source",NA,"Correct Identification",1
+"352","1270","User_116","Case_1_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"353","1271","User_116","Case_1_G","Same source","null","Same source",NA,"Correct Identification",1
+"354","2403","User_327","Case_3_L","Same source","null","Same source",NA,"Correct Identification",3
+"355","1272","User_116","Case_1_H","Same source","null","Same source",NA,"Correct Identification",1
+"356","1273","User_116","Case_1_I","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",1
+"357","1274","User_116","Case_1_J","Same source","null","Same source",NA,"Correct Identification",1
+"358","1275","User_116","Case_1_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"359","1278","User_116","Case_1_L","Same source","null","Same source",NA,"Correct Identification",1
+"360","1279","User_217","Case_2_A","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",2
+"361","1280","User_217","Case_2_B","Same source","No","Different source","Incidental Case","False Identification",2
+"362","1281","User_217","Case_2_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"363","1282","User_217","Case_2_D","Same source","No","Same source",NA,"Correct Identification",2
+"364","1283","User_217","Case_2_E","Same source","Yes","Same source",NA,"Correct Identification",2
+"365","1284","User_217","Case_2_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"366","1285","User_217","Case_2_G","Same source","Yes","Same source",NA,"Correct Identification",2
+"367","1287","User_217","Case_2_H","Same source","Yes","Same source",NA,"Correct Identification",2
+"368","1288","User_217","Case_2_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"369","1290","User_217","Case_2_J","Same source","Yes","Same source",NA,"Correct Identification",2
+"370","2412","User_354","Case_3_D","Same source","Yes","Same source",NA,"Correct Identification",3
+"371","1291","User_217","Case_2_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"372","1292","User_217","Case_2_L","Same source","No","Same source",NA,"Correct Identification",2
+"373","1286","User_249","Case_2_A","null","null","Different source","Target Case",NA,2
+"374","1295","User_102","Case_1_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"375","2413","User_354","Case_3_E","Same source","No","Same source",NA,"Correct Identification",3
+"376","1296","User_319","Case_3_A","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",3
+"377","1297","User_102","Case_1_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"378","1299","User_136","Case_1_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"379","1298","User_319","Case_3_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"380","1300","User_136","Case_1_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"381","1294","User_230","Case_2_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"382","1303","User_136","Case_1_C","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",1
+"383","1313","User_114","Case_1_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"384","1308","User_136","Case_1_D","Same source","No","Same source",NA,"Correct Identification",1
+"385","2414","User_354","Case_3_F","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"386","1310","User_136","Case_1_E","Same source","No","Same source",NA,"Correct Identification",1
+"387","1309","User_213","Case_2_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"388","2415","User_354","Case_3_G","Same source","Yes","Same source",NA,"Correct Identification",3
+"389","1302","User_319","Case_3_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"390","1311","User_136","Case_1_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"391","1304","User_248","Case_2_F","Different source (CNM)","Yes","Different source","Incidental Case","Correct Exclusion",2
+"392","1315","User_136","Case_1_G","Same source","No","Same source",NA,"Correct Identification",1
+"393","1314","User_319","Case_3_D","Same source","Yes","Same source",NA,"Correct Identification",3
+"394","1312","User_213","Case_2_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"395","1316","User_136","Case_1_H","Same source","No","Same source",NA,"Correct Identification",1
+"396","1318","User_213","Case_2_D","Same source","Yes","Same source",NA,"Correct Identification",2
+"397","1319","User_136","Case_1_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"398","1324","User_114","Case_1_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"399","1248","User_254","Case_2_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"400","1331","User_114","Case_1_E","Same source","No","Same source",NA,"Correct Identification",1
+"401","1330","User_136","Case_1_J","Same source","No","Same source",NA,"Correct Identification",1
+"402","2416","User_354","Case_3_H","Same source","Yes","Same source",NA,"Correct Identification",3
+"403","1306","User_114","Case_1_J","Same source","No","Same source",NA,"Correct Identification",1
+"404","1333","User_114","Case_1_H","Same source","Yes","Same source",NA,"Correct Identification",1
+"405","1361","User_239","Case_2_J","Same source","Yes","Same source",NA,"Correct Identification",2
+"406","1334","User_334","Case_3_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"407","1336","User_334","Case_3_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"408","1335","User_114","Case_1_D","Same source","Yes","Same source",NA,"Correct Identification",1
+"409","1337","User_334","Case_3_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"410","1332","User_254","Case_2_B","Different source (not a CNM)","Yes","Different source","Incidental Case","Correct Exclusion",2
+"411","1338","User_334","Case_3_D","Same source","null","Same source",NA,"Correct Identification",3
+"412","1339","User_254","Case_2_C","Different source (not a CNM)","Yes","Different source","Target Case","Correct Exclusion",2
+"413","1340","User_334","Case_3_E","Same source","null","Same source",NA,"Correct Identification",3
+"414","1341","User_334","Case_3_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"415","1342","User_334","Case_3_G","Same source","null","Same source",NA,"Correct Identification",3
+"416","1343","User_334","Case_3_H","Same source","null","Same source",NA,"Correct Identification",3
+"417","1344","User_334","Case_3_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"418","1345","User_334","Case_3_J","Same source","null","Same source",NA,"Correct Identification",3
+"419","1346","User_334","Case_3_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"420","1414","User_102","Case_1_D","Same source","No","Same source",NA,"Correct Identification",1
+"421","1348","User_136","Case_1_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"422","1349","User_136","Case_1_L","Same source","No","Same source",NA,"Correct Identification",1
+"423","1351","User_249","Case_2_B","Same source","No","Different source","Incidental Case","False Identification",2
+"424","1352","User_239","Case_2_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"425","1354","User_239","Case_2_C","Different source (CNM)","Yes","Different source","Target Case","Correct Exclusion",2
+"426","1355","User_239","Case_2_D","Same source","Yes","Same source",NA,"Correct Identification",2
+"427","1356","User_239","Case_2_E","Same source","Yes","Same source",NA,"Correct Identification",2
+"428","1357","User_239","Case_2_F","Different source (not a CNM)","Yes","Different source","Incidental Case","Correct Exclusion",2
+"429","1358","User_239","Case_2_G","Same source","Yes","Same source",NA,"Correct Identification",2
+"430","1359","User_239","Case_2_H","Same source","No","Same source",NA,"Correct Identification",2
+"431","1360","User_239","Case_2_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"432","1363","User_239","Case_2_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"433","1364","User_219","Case_2_J","Same source","null","Same source",NA,"Correct Identification",2
+"434","1365","User_239","Case_2_L","Same source","Yes","Same source",NA,"Correct Identification",2
+"435","1367","User_219","Case_2_L","Same source","null","Same source",NA,"Correct Identification",2
+"436","1373","User_330","Case_3_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"437","1369","User_331","Case_3_G","Same source","Yes","Same source",NA,"Correct Identification",3
+"438","1374","User_150","Case_1_B","Different source (not a CNM)","Yes","Different source","Incidental Case","Correct Exclusion",1
+"439","1377","User_316","Case_3_A","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",3
+"440","1379","User_316","Case_3_B","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"441","1376","User_331","Case_3_H","Same source","Yes","Same source",NA,"Correct Identification",3
+"442","1383","User_115","Case_1_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"443","1386","User_115","Case_1_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"444","1387","User_115","Case_1_E","Same source","Yes","Same source",NA,"Correct Identification",1
+"445","1389","User_115","Case_1_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"446","1390","User_351","Case_3_B","Different source (not a CNM)","Yes","Different source","Incidental Case","Correct Exclusion",3
+"447","1391","User_115","Case_1_H","Same source","Yes","Same source",NA,"Correct Identification",1
+"448","1437","User_114","Case_1_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"449","1392","User_351","Case_3_C","Different source (not a CNM)","Yes","Different source","Target Case","Correct Exclusion",3
+"450","1393","User_115","Case_1_G","Same source","No","Same source",NA,"Correct Identification",1
+"451","1395","User_115","Case_1_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"452","1396","User_115","Case_1_D","Same source","Yes","Same source",NA,"Correct Identification",1
+"453","1394","User_351","Case_3_D","Same source","Yes","Same source",NA,"Correct Identification",3
+"454","1397","User_351","Case_3_E","Same source","No","Same source",NA,"Correct Identification",3
+"455","1400","User_351","Case_3_F","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"456","1401","User_115","Case_1_J","Same source","No","Same source",NA,"Correct Identification",1
+"457","1403","User_115","Case_1_K","Different source (not a CNM)","Yes","Different source","Incidental Case","Correct Exclusion",1
+"458","1405","User_115","Case_1_L","Same source","Yes","Same source",NA,"Correct Identification",1
+"459","1404","User_252","Case_2_A","null","null","Different source","Target Case",NA,2
+"460","1399","User_115","Case_1_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"461","1441","User_343","Case_3_C","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",3
+"462","1407","User_252","Case_2_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"463","1423","User_155","Case_1_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"464","1408","User_252","Case_2_C","Different source (not a CNM)","Yes","Different source","Target Case","Correct Exclusion",2
+"465","1409","User_202","Case_2_D","null","null","Same source",NA,NA,2
+"466","1410","User_102","Case_1_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"467","1411","User_107","Case_1_J","Same source","No","Same source",NA,"Correct Identification",1
+"468","1412","User_202","Case_2_E","null","null","Same source",NA,NA,2
+"469","1415","User_252","Case_2_D","Same source","Yes","Same source",NA,"Correct Identification",2
+"470","1418","User_102","Case_1_E","Same source","No","Same source",NA,"Correct Identification",1
+"471","1413","User_114","Case_1_L","Different source (CNM)","null","Same source",NA,"False Exclusion",1
+"472","1402","User_351","Case_3_G","Same source","Yes","Same source",NA,"Correct Identification",3
+"473","1424","User_155","Case_1_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"474","1416","User_107","Case_1_K","Different source (not a CNM)","Yes","Different source","Incidental Case","Correct Exclusion",1
+"475","1422","User_351","Case_3_H","Same source","Yes","Same source",NA,"Correct Identification",3
+"476","1380","User_202","Case_2_A","Different source (CNM)","Yes","Different source","Target Case","Correct Exclusion",2
+"477","1419","User_249","Case_2_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"478","1427","User_155","Case_1_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"479","1428","User_107","Case_1_L","Different source (CNM)","Yes","Same source",NA,"False Exclusion",1
+"480","1433","User_316","Case_3_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"481","1431","User_249","Case_2_D","Same source","No","Same source",NA,"Correct Identification",2
+"482","1421","User_254","Case_2_E","Same source","Yes","Same source",NA,"Correct Identification",2
+"483","1432","User_343","Case_3_A","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",3
+"484","1439","User_343","Case_3_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"485","1435","User_316","Case_3_D","Same source","null","Same source",NA,"Correct Identification",3
+"486","963","User_107","Case_1_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"487","1438","User_207","Case_2_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"488","1429","User_351","Case_3_I","Different source (not a CNM)","Yes","Different source","Target Case","Correct Exclusion",3
+"489","1301","User_114","Case_1_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"490","1436","User_249","Case_2_E","Same source","No","Same source",NA,"Correct Identification",2
+"491","1440","User_316","Case_3_E","Same source","null","Same source",NA,"Correct Identification",3
+"492","1442","User_207","Case_2_G","Same source","Yes","Same source",NA,"Correct Identification",2
+"493","1445","User_249","Case_2_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"494","1447","User_207","Case_2_H","Same source","No","Same source",NA,"Correct Identification",2
+"495","1444","User_343","Case_3_D","Same source","Yes","Same source",NA,"Correct Identification",3
+"496","1448","User_316","Case_3_F","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"497","1450","User_343","Case_3_E","Same source","Yes","Same source",NA,"Correct Identification",3
+"498","1443","User_351","Case_3_J","Same source","Yes","Same source",NA,"Correct Identification",3
+"499","1452","User_351","Case_3_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"500","1451","User_207","Case_2_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"501","1453","User_308","Case_3_D","Same source","Yes","Same source",NA,"Correct Identification",3
+"502","1388","User_202","Case_2_B","Different source (not a CNM)","Yes","Different source","Incidental Case","Correct Exclusion",2
+"503","1454","User_351","Case_3_L","Different source (CNM)","No","Same source",NA,"False Exclusion",3
+"504","1398","User_202","Case_2_C","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",2
+"505","1449","User_249","Case_2_G","Same source","Yes","Same source",NA,"Correct Identification",2
+"506","1446","User_114","Case_1_G","Same source","null","Same source",NA,"Correct Identification",1
+"507","1425","User_114","Case_1_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"508","1628","User_224","Case_2_A","null","null","Different source","Target Case",NA,2
+"509","1455","User_120","Case_1_A","null","null","Different source","Target Case",NA,1
+"510","1305","User_114","Case_1_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"511","1417","User_202","Case_2_F","Different source (not a CNM)","Yes","Different source","Incidental Case","Correct Exclusion",2
+"512","1458","User_120","Case_1_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"513","1457","User_202","Case_2_G","Same source","Yes","Same source",NA,"Correct Identification",2
+"514","1456","User_249","Case_2_H","Same source","Yes","Same source",NA,"Correct Identification",2
+"515","1460","User_202","Case_2_H","Same source","No","Same source",NA,"Correct Identification",2
+"516","1347","User_334","Case_3_L","Same source","null","Same source",NA,"Correct Identification",3
+"517","1459","User_120","Case_1_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"518","1462","User_202","Case_2_I","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",2
+"519","1463","User_120","Case_1_D","Same source","No","Same source",NA,"Correct Identification",1
+"520","1465","User_120","Case_1_E","Same source","No","Same source",NA,"Correct Identification",1
+"521","1464","User_202","Case_2_J","Same source","Yes","Same source",NA,"Correct Identification",2
+"522","1466","User_120","Case_1_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"523","1461","User_249","Case_2_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"524","1470","User_120","Case_1_H","Same source","No","Same source",NA,"Correct Identification",1
+"525","1426","User_243","Case_2_A","null","null","Different source","Target Case",NA,2
+"526","1472","User_120","Case_1_J","Same source","No","Same source",NA,"Correct Identification",1
+"527","1474","User_120","Case_1_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"528","1467","User_202","Case_2_K","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"529","1468","User_249","Case_2_J","Same source","Yes","Same source",NA,"Correct Identification",2
+"530","1475","User_120","Case_1_L","Same source","No","Same source",NA,"Correct Identification",1
+"531","1476","User_202","Case_2_L","Different source (CNM)","Yes","Same source",NA,"False Exclusion",2
+"532","1473","User_243","Case_2_B","Same source","null","Different source","Incidental Case","False Identification",2
+"533","1479","User_249","Case_2_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"534","1480","User_249","Case_2_L","Same source","Yes","Same source",NA,"Correct Identification",2
+"535","1430","User_155","Case_1_D","Same source","null","Same source",NA,"Correct Identification",1
+"536","1482","User_155","Case_1_E","Same source","null","Same source",NA,"Correct Identification",1
+"537","1483","User_155","Case_1_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"538","1484","User_155","Case_1_G","Same source","null","Same source",NA,"Correct Identification",1
+"539","1485","User_155","Case_1_H","Same source","null","Same source",NA,"Correct Identification",1
+"540","1486","User_155","Case_1_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"541","1487","User_155","Case_1_J","Same source","null","Same source",NA,"Correct Identification",1
+"542","1488","User_155","Case_1_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"543","909","User_307","Case_3_L","Different source (not a CNM)","No","Same source",NA,"False Exclusion",3
+"544","1489","User_155","Case_1_L","Same source","null","Same source",NA,"Correct Identification",1
+"545","899","User_307","Case_3_G","Different source (CNM)","Yes","Same source",NA,"False Exclusion",3
+"546","1493","User_331","Case_3_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"547","1494","User_331","Case_3_J","Same source","null","Same source",NA,"Correct Identification",3
+"548","1495","User_331","Case_3_K","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"549","1321","User_213","Case_2_E","Same source","No","Same source",NA,"Correct Identification",2
+"550","1375","User_330","Case_3_G","Same source","null","Same source",NA,"Correct Identification",3
+"551","1496","User_243","Case_2_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"552","1502","User_134","Case_1_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"553","1504","User_243","Case_2_D","Same source","null","Same source",NA,"Correct Identification",2
+"554","1500","User_213","Case_2_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"555","1505","User_134","Case_1_G","Same source","null","Same source",NA,"Correct Identification",1
+"556","1656","User_308","Case_3_E","Same source","No","Same source",NA,"Correct Identification",3
+"557","1506","User_344","Case_3_A","null","null","Different source","Target Case",NA,3
+"558","1507","User_213","Case_2_G","Same source","No","Same source",NA,"Correct Identification",2
+"559","1508","User_134","Case_1_L","Different source (not a CNM)","null","Same source",NA,"False Exclusion",1
+"560","1509","User_213","Case_2_H","Same source","No","Same source",NA,"Correct Identification",2
+"561","1513","User_344","Case_3_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"562","1514","User_213","Case_2_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"563","1503","User_330","Case_3_H","Same source","null","Same source",NA,"Correct Identification",3
+"564","1515","User_344","Case_3_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"565","1511","User_233","Case_2_A","null","null","Different source","Target Case",NA,2
+"566","1516","User_213","Case_2_J","Same source","Yes","Same source",NA,"Correct Identification",2
+"567","1517","User_330","Case_3_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"568","1518","User_344","Case_3_D","Same source","No","Same source",NA,"Correct Identification",3
+"569","1519","User_213","Case_2_K","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"570","1521","User_213","Case_2_L","Same source","No","Same source",NA,"Correct Identification",2
+"571","1520","User_344","Case_3_E","Different source (not a CNM)","No","Same source",NA,"False Exclusion",3
+"572","1307","User_213","Case_2_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"573","1512","User_243","Case_2_E","Same source","null","Same source",NA,"Correct Identification",2
+"574","1092","User_251","Case_2_B","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"575","985","User_236","Case_2_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"576","1525","User_311","Case_3_A","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",3
+"577","979","User_236","Case_2_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"578","1526","User_311","Case_3_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"579","1527","User_311","Case_3_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"580","1528","User_311","Case_3_D","Different source (CNM)","null","Same source",NA,"False Exclusion",3
+"581","1529","User_311","Case_3_E","Same source","null","Same source",NA,"Correct Identification",3
+"582","1531","User_311","Case_3_F","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"583","1522","User_344","Case_3_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"584","1532","User_311","Case_3_G","Same source","null","Same source",NA,"Correct Identification",3
+"585","1524","User_251","Case_2_C","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",2
+"586","1534","User_311","Case_3_H","Different source (CNM)","null","Same source",NA,"False Exclusion",3
+"587","1537","User_311","Case_3_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"588","1538","User_311","Case_3_J","Same source","null","Same source",NA,"Correct Identification",3
+"589","1536","User_248","Case_2_D","Same source","null","Same source",NA,"Correct Identification",2
+"590","1540","User_311","Case_3_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"591","1535","User_251","Case_2_D","Same source","null","Same source",NA,"Correct Identification",2
+"592","1542","User_248","Case_2_G","Same source","null","Same source",NA,"Correct Identification",2
+"593","1541","User_311","Case_3_L","Different source (CNM)","null","Same source",NA,"False Exclusion",3
+"594","1544","User_248","Case_2_H","Same source","null","Same source",NA,"Correct Identification",2
+"595","1533","User_344","Case_3_G","Same source","No","Same source",NA,"Correct Identification",3
+"596","1543","User_251","Case_2_E","Same source","null","Same source",NA,"Correct Identification",2
+"597","1547","User_251","Case_2_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"598","1556","User_131","Case_1_E","null","null","Same source",NA,NA,1
+"599","1554","User_316","Case_3_G","Same source","null","Same source",NA,"Correct Identification",3
+"600","1546","User_344","Case_3_H","Same source","No","Same source",NA,"Correct Identification",3
+"601","1560","User_316","Case_3_H","Same source","null","Same source",NA,"Correct Identification",3
+"602","1561","User_316","Case_3_I","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",3
+"603","1562","User_316","Case_3_J","Same source","null","Same source",NA,"Correct Identification",3
+"604","1564","User_316","Case_3_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"605","1565","User_316","Case_3_L","Same source","null","Same source",NA,"Correct Identification",3
+"606","1066","User_333","Case_3_L","Same source","null","Same source",NA,"Correct Identification",3
+"607","1216","User_317","Case_3_F","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"608","1214","User_317","Case_3_E","Different source (CNM)","null","Same source",NA,"False Exclusion",3
+"609","1567","User_317","Case_3_G","Same source","null","Same source",NA,"Correct Identification",3
+"610","1569","User_102","Case_1_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"611","1568","User_317","Case_3_H","Same source","null","Same source",NA,"Correct Identification",3
+"612","1570","User_102","Case_1_G","Same source","No","Same source",NA,"Correct Identification",1
+"613","975","User_236","Case_2_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"614","1571","User_317","Case_3_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"615","1559","User_344","Case_3_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"616","1572","User_102","Case_1_H","Same source","No","Same source",NA,"Correct Identification",1
+"617","973","User_236","Case_2_B","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"618","1573","User_317","Case_3_J","Same source","null","Same source",NA,"Correct Identification",3
+"619","1574","User_102","Case_1_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"620","1596","User_300","Case_3_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"621","1577","User_210","Case_2_A","Different source (CNM)","Yes","Different source","Target Case","Correct Exclusion",2
+"622","1597","User_300","Case_3_J","Same source","null","Same source",NA,"Correct Identification",3
+"623","1578","User_210","Case_2_B","Different source (CNM)","Yes","Different source","Incidental Case","Correct Exclusion",2
+"624","1575","User_317","Case_3_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"625","1579","User_210","Case_2_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"626","1582","User_210","Case_2_D","Same source","Yes","Same source",NA,"Correct Identification",2
+"627","1581","User_344","Case_3_J","Same source","No","Same source",NA,"Correct Identification",3
+"628","1584","User_300","Case_3_A","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",3
+"629","1586","User_300","Case_3_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"630","1583","User_210","Case_2_E","Same source","Yes","Same source",NA,"Correct Identification",2
+"631","1587","User_300","Case_3_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"632","1589","User_300","Case_3_D","Same source","null","Same source",NA,"Correct Identification",3
+"633","1191","User_141","Case_1_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"634","1590","User_300","Case_3_E","Same source","null","Same source",NA,"Correct Identification",3
+"635","1588","User_210","Case_2_F","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"636","1592","User_300","Case_3_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"637","1593","User_300","Case_3_G","Same source","null","Same source",NA,"Correct Identification",3
+"638","1595","User_300","Case_3_H","Same source","null","Same source",NA,"Correct Identification",3
+"639","1594","User_210","Case_2_G","Same source","Yes","Same source",NA,"Correct Identification",2
+"640","1585","User_344","Case_3_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"641","1598","User_109","Case_1_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"642","1599","User_300","Case_3_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"643","1601","User_109","Case_1_G","Same source","null","Same source",NA,"Correct Identification",1
+"644","1591","User_141","Case_1_B","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"645","1602","User_210","Case_2_H","Same source","null","Same source",NA,"Correct Identification",2
+"646","1580","User_317","Case_3_L","Different source (CNM)","null","Same source",NA,"False Exclusion",3
+"647","1605","User_210","Case_2_I","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",2
+"648","1604","User_141","Case_1_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"649","1607","User_109","Case_1_H","Same source","null","Same source",NA,"Correct Identification",1
+"650","1603","User_300","Case_3_L","Different source (not a CNM)","null","Same source",NA,"False Exclusion",3
+"651","1609","User_109","Case_1_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"652","1558","User_251","Case_2_G","Same source","null","Same source",NA,"Correct Identification",2
+"653","1625","User_141","Case_1_J","Same source","null","Same source",NA,"Correct Identification",1
+"654","1608","User_141","Case_1_D","Same source","null","Same source",NA,"Correct Identification",1
+"655","1611","User_210","Case_2_J","Same source","Yes","Same source",NA,"Correct Identification",2
+"656","1557","User_131","Case_1_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"657","1612","User_109","Case_1_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"658","1614","User_251","Case_2_H","Same source","null","Same source",NA,"Correct Identification",2
+"659","1613","User_141","Case_1_E","Same source","null","Same source",NA,"Correct Identification",1
+"660","1615","User_131","Case_1_G","Same source","No","Same source",NA,"Correct Identification",1
+"661","1616","User_109","Case_1_L","Same source","null","Same source",NA,"Correct Identification",1
+"662","1617","User_141","Case_1_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"663","1627","User_141","Case_1_L","Same source","null","Same source",NA,"Correct Identification",1
+"664","1621","User_141","Case_1_G","Same source","null","Same source",NA,"Correct Identification",1
+"665","1622","User_109","Case_1_J","Same source","null","Same source",NA,"Correct Identification",1
+"666","1623","User_141","Case_1_H","Same source","null","Same source",NA,"Correct Identification",1
+"667","1624","User_141","Case_1_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"668","972","User_236","Case_2_A","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",2
+"669","1644","User_119","Case_1_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"670","1629","User_224","Case_2_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"671","1021","User_229","Case_2_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"672","1265","User_229","Case_2_F","Different source (CNM)","Yes","Different source","Incidental Case","Correct Exclusion",2
+"673","1645","User_119","Case_1_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"674","1646","User_119","Case_1_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"675","1647","User_119","Case_1_D","Same source","null","Same source",NA,"Correct Identification",1
+"676","1648","User_119","Case_1_E","Same source","null","Same source",NA,"Correct Identification",1
+"677","1649","User_119","Case_1_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"678","1650","User_119","Case_1_G","Same source","null","Same source",NA,"Correct Identification",1
+"679","1651","User_119","Case_1_H","Same source","null","Same source",NA,"Correct Identification",1
+"680","1652","User_119","Case_1_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"681","1653","User_119","Case_1_J","Same source","null","Same source",NA,"Correct Identification",1
+"682","1654","User_119","Case_1_K","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"683","1655","User_119","Case_1_L","Different source (CNM)","null","Same source",NA,"False Exclusion",1
+"684","1657","User_308","Case_3_F","Different source (CNM)","Yes","Different source","Incidental Case","Correct Exclusion",3
+"685","1658","User_210","Case_2_K","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"686","1618","User_251","Case_2_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"687","1659","User_210","Case_2_L","Different source (CNM)","Yes","Same source",NA,"False Exclusion",2
+"688","1660","User_251","Case_2_J","Same source","null","Same source",NA,"Correct Identification",2
+"689","1662","User_131","Case_1_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"690","1661","User_251","Case_2_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"691","1666","User_251","Case_2_L","Same source","null","Same source",NA,"Correct Identification",2
+"692","1539","User_131","Case_1_A","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",1
+"693","1548","User_131","Case_1_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"694","1555","User_131","Case_1_D","Same source","No","Same source",NA,"Correct Identification",1
+"695","1619","User_131","Case_1_H","Same source","No","Same source",NA,"Correct Identification",1
+"696","1663","User_131","Case_1_J","Same source","No","Same source",NA,"Correct Identification",1
+"697","1664","User_131","Case_1_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"698","1665","User_131","Case_1_L","Same source","No","Same source",NA,"Correct Identification",1
+"699","1635","User_227","Case_2_E","Same source","Yes","Same source",NA,"Correct Identification",2
+"700","1549","User_131","Case_1_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"701","1634","User_227","Case_2_D","Same source","Yes","Same source",NA,"Correct Identification",2
+"702","1687","User_138","Case_1_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"703","1673","User_128","Case_1_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"704","1674","User_128","Case_1_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"705","1675","User_128","Case_1_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"706","1676","User_128","Case_1_D","Same source","null","Same source",NA,"Correct Identification",1
+"707","1677","User_128","Case_1_E","Same source","null","Same source",NA,"Correct Identification",1
+"708","1678","User_128","Case_1_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"709","1679","User_128","Case_1_G","Same source","null","Same source",NA,"Correct Identification",1
+"710","1682","User_128","Case_1_H","Same source","null","Same source",NA,"Correct Identification",1
+"711","1683","User_128","Case_1_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"712","1681","User_308","Case_3_G","Same source","Yes","Same source",NA,"Correct Identification",3
+"713","1680","User_138","Case_1_A","null","null","Different source","Target Case",NA,1
+"714","1685","User_308","Case_3_H","Same source","No","Same source",NA,"Correct Identification",3
+"715","1684","User_128","Case_1_J","Same source","null","Same source",NA,"Correct Identification",1
+"716","1688","User_128","Case_1_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"717","1689","User_128","Case_1_L","Same source","null","Same source",NA,"Correct Identification",1
+"718","1690","User_138","Case_1_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"719","1691","User_253","Case_2_A","null","null","Different source","Target Case",NA,2
+"720","1692","User_253","Case_2_B","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"721","1693","User_253","Case_2_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"722","1694","User_253","Case_2_D","Same source","null","Same source",NA,"Correct Identification",2
+"723","1695","User_253","Case_2_E","Different source (CNM)","null","Same source",NA,"False Exclusion",2
+"724","1696","User_253","Case_2_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"725","1697","User_253","Case_2_G","Different source (CNM)","null","Same source",NA,"False Exclusion",2
+"726","1698","User_253","Case_2_H","Same source","null","Same source",NA,"Correct Identification",2
+"727","1699","User_253","Case_2_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"728","1700","User_253","Case_2_J","Same source","null","Same source",NA,"Correct Identification",2
+"729","1702","User_253","Case_2_L","Different source (CNM)","null","Same source",NA,"False Exclusion",2
+"730","1701","User_253","Case_2_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"731","1705","User_325","Case_3_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"732","1710","User_325","Case_3_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"733","1711","User_325","Case_3_C","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",3
+"734","1712","User_325","Case_3_D","Same source","null","Same source",NA,"Correct Identification",3
+"735","1126","User_204","Case_2_A","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",2
+"736","1127","User_204","Case_2_B","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"737","1790","User_224","Case_2_F","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"738","1713","User_325","Case_3_E","Same source","null","Same source",NA,"Correct Identification",3
+"739","1128","User_204","Case_2_C","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",2
+"740","1143","User_204","Case_2_E","Same source","No","Same source",NA,"Correct Identification",2
+"741","1717","User_325","Case_3_I","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",3
+"742","1144","User_204","Case_2_F","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"743","1714","User_325","Case_3_F","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"744","1145","User_204","Case_2_G","Same source","Yes","Same source",NA,"Correct Identification",2
+"745","1146","User_204","Case_2_H","Same source","No","Same source",NA,"Correct Identification",2
+"746","1147","User_204","Case_2_I","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",2
+"747","1148","User_204","Case_2_J","Same source","No","Same source",NA,"Correct Identification",2
+"748","1149","User_204","Case_2_K","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"749","1164","User_204","Case_2_L","Same source","Yes","Same source",NA,"Correct Identification",2
+"750","1715","User_325","Case_3_G","Same source","null","Same source",NA,"Correct Identification",3
+"751","1716","User_325","Case_3_H","Same source","null","Same source",NA,"Correct Identification",3
+"752","1796","User_209","Case_2_J","Same source","Yes","Same source",NA,"Correct Identification",2
+"753","1718","User_325","Case_3_J","Same source","null","Same source",NA,"Correct Identification",3
+"754","1719","User_325","Case_3_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"755","1721","User_325","Case_3_L","Same source","null","Same source",NA,"Correct Identification",3
+"756","1276","User_229","Case_2_C","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",2
+"757","1217","User_215","Case_2_B","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"758","1218","User_215","Case_2_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"759","1220","User_215","Case_2_E","Same source","null","Same source",NA,"Correct Identification",2
+"760","1221","User_215","Case_2_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"761","1222","User_215","Case_2_G","Same source","null","Same source",NA,"Correct Identification",2
+"762","1223","User_215","Case_2_H","Same source","null","Same source",NA,"Correct Identification",2
+"763","1224","User_215","Case_2_I","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",2
+"764","1226","User_215","Case_2_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"765","1227","User_215","Case_2_L","Different source (CNM)","null","Same source",NA,"False Exclusion",2
+"766","1725","User_304","Case_3_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"767","1726","User_304","Case_3_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"768","1727","User_304","Case_3_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"769","1728","User_304","Case_3_D","Same source","null","Same source",NA,"Correct Identification",3
+"770","1731","User_304","Case_3_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"771","1733","User_304","Case_3_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"772","1734","User_304","Case_3_J","Same source","null","Same source",NA,"Correct Identification",3
+"773","1735","User_304","Case_3_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"774","1729","User_304","Case_3_E","Same source","null","Same source",NA,"Correct Identification",3
+"775","1730","User_304","Case_3_G","Same source","null","Same source",NA,"Correct Identification",3
+"776","1732","User_304","Case_3_H","Same source","null","Same source",NA,"Correct Identification",3
+"777","1736","User_304","Case_3_L","Different source (CNM)","null","Same source",NA,"False Exclusion",3
+"778","1737","User_110","Case_1_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"779","1740","User_110","Case_1_B","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"780","1741","User_110","Case_1_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"781","1743","User_110","Case_1_D","Same source","null","Same source",NA,"Correct Identification",1
+"782","1742","User_237","Case_2_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"783","1745","User_110","Case_1_E","Same source","null","Same source",NA,"Correct Identification",1
+"784","1215","User_142","Case_1_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"785","1744","User_237","Case_2_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"786","1746","User_142","Case_1_B","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"787","1747","User_237","Case_2_D","Same source","null","Same source",NA,"Correct Identification",2
+"788","1748","User_110","Case_1_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"789","1751","User_110","Case_1_G","Same source","null","Same source",NA,"Correct Identification",1
+"790","1752","User_142","Case_1_D","Same source","Yes","Same source",NA,"Correct Identification",1
+"791","1750","User_237","Case_2_E","Different source (CNM)","null","Same source",NA,"False Exclusion",2
+"792","1753","User_110","Case_1_H","Same source","null","Same source",NA,"Correct Identification",1
+"793","1754","User_142","Case_1_E","Same source","Yes","Same source",NA,"Correct Identification",1
+"794","1755","User_237","Case_2_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"795","1756","User_110","Case_1_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"796","1757","User_142","Case_1_F","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"797","1758","User_237","Case_2_G","Different source (CNM)","null","Same source",NA,"False Exclusion",2
+"798","1760","User_237","Case_2_H","Same source","null","Same source",NA,"Correct Identification",2
+"799","1759","User_110","Case_1_J","Same source","null","Same source",NA,"Correct Identification",1
+"800","1761","User_237","Case_2_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"801","1762","User_110","Case_1_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"802","1763","User_237","Case_2_J","Same source","null","Same source",NA,"Correct Identification",2
+"803","1739","User_237","Case_2_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"804","1765","User_237","Case_2_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"805","1766","User_237","Case_2_L","Different source (CNM)","null","Same source",NA,"False Exclusion",2
+"806","1771","User_142","Case_1_G","Same source","No","Same source",NA,"Correct Identification",1
+"807","1768","User_314","Case_3_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"808","1767","User_209","Case_2_D","Same source","No","Same source",NA,"Correct Identification",2
+"809","1774","User_209","Case_2_E","Same source","No","Same source",NA,"Correct Identification",2
+"810","1775","User_209","Case_2_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"811","1772","User_142","Case_1_H","Same source","null","Same source",NA,"Correct Identification",1
+"812","891","User_209","Case_2_A","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",2
+"813","1773","User_255","Case_2_D","Same source","null","Same source",NA,"Correct Identification",2
+"814","896","User_209","Case_2_C","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",2
+"815","1779","User_224","Case_2_C","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",2
+"816","1778","User_209","Case_2_G","Different source (CNM)","null","Same source",NA,"False Exclusion",2
+"817","1782","User_209","Case_2_H","Different source (CNM)","Yes","Same source",NA,"False Exclusion",2
+"818","1780","User_255","Case_2_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"819","1784","User_255","Case_2_G","Same source","null","Same source",NA,"Correct Identification",2
+"820","1764","User_110","Case_1_L","Same source","null","Same source",NA,"Correct Identification",1
+"821","1781","User_224","Case_2_D","Different source (CNM)","null","Same source",NA,"False Exclusion",2
+"822","1785","User_255","Case_2_H","Same source","null","Same source",NA,"Correct Identification",2
+"823","1786","User_224","Case_2_E","Same source","null","Same source",NA,"Correct Identification",2
+"824","1789","User_255","Case_2_J","Same source","null","Same source",NA,"Correct Identification",2
+"825","1791","User_255","Case_2_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"826","1783","User_209","Case_2_I","Different source (CNM)","Yes","Different source","Target Case","Correct Exclusion",2
+"827","1797","User_255","Case_2_A","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",2
+"828","1794","User_102","Case_1_J","Same source","No","Same source",NA,"Correct Identification",1
+"829","1804","User_209","Case_2_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"830","1803","User_224","Case_2_G","Same source","null","Same source",NA,"Correct Identification",2
+"831","1805","User_209","Case_2_L","Different source (CNM)","Yes","Same source",NA,"False Exclusion",2
+"832","895","User_209","Case_2_B","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"833","1530","User_248","Case_2_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"834","1800","User_348","Case_3_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"835","1498","User_348","Case_3_A","Different source (CNM)","Yes","Different source","Target Case","Correct Exclusion",3
+"836","1806","User_224","Case_2_H","Same source","null","Same source",NA,"Correct Identification",2
+"837","1801","User_102","Case_1_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"838","1809","User_224","Case_2_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"839","1810","User_343","Case_3_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"840","1798","User_255","Case_2_B","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"841","1817","User_224","Case_2_L","Different source (CNM)","null","Same source",NA,"False Exclusion",2
+"842","1777","User_255","Case_2_E","Same source","null","Same source",NA,"Correct Identification",2
+"843","1820","User_142","Case_1_L","Same source","No","Same source",NA,"Correct Identification",1
+"844","1793","User_255","Case_2_L","Same source","null","Same source",NA,"Correct Identification",2
+"845","1819","User_314","Case_3_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"846","1822","User_142","Case_1_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"847","1776","User_142","Case_1_J","Same source","No","Same source",NA,"Correct Identification",1
+"848","1826","User_248","Case_2_J","Same source","null","Same source",NA,"Correct Identification",2
+"849","1824","User_224","Case_2_K","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"850","1828","User_248","Case_2_E","Same source","null","Same source",NA,"Correct Identification",2
+"851","1600","User_344","Case_3_L","Different source (CNM)","No","Same source",NA,"False Exclusion",3
+"852","1831","User_254","Case_2_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"853","1686","User_308","Case_3_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"854","1833","User_308","Case_3_J","Same source","Yes","Same source",NA,"Correct Identification",3
+"855","1832","User_254","Case_2_G","Same source","null","Same source",NA,"Correct Identification",2
+"856","1835","User_254","Case_2_H","Same source","null","Same source",NA,"Correct Identification",2
+"857","1836","User_254","Case_2_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"858","1838","User_152","Case_1_A","null","null","Different source","Target Case",NA,1
+"859","1839","User_152","Case_1_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"860","1840","User_152","Case_1_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"861","1841","User_152","Case_1_D","Same source","No","Same source",NA,"Correct Identification",1
+"862","1842","User_152","Case_1_E","Same source","No","Same source",NA,"Correct Identification",1
+"863","1843","User_152","Case_1_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"864","1844","User_152","Case_1_G","Same source","No","Same source",NA,"Correct Identification",1
+"865","912","User_219","Case_2_B","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"866","1240","User_219","Case_2_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"867","1366","User_219","Case_2_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"868","1845","User_254","Case_2_J","Same source","null","Same source",NA,"Correct Identification",2
+"869","1846","User_254","Case_2_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"870","1847","User_254","Case_2_L","Different source (CNM)","null","Same source",NA,"False Exclusion",2
+"871","1848","User_350","Case_3_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"872","1849","User_350","Case_3_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"873","1850","User_350","Case_3_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"874","1851","User_350","Case_3_D","Same source","null","Same source",NA,"Correct Identification",3
+"875","1823","User_314","Case_3_D","Same source","Yes","Same source",NA,"Correct Identification",3
+"876","1854","User_353","Case_3_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"877","1852","User_350","Case_3_E","Same source","null","Same source",NA,"Correct Identification",3
+"878","1855","User_353","Case_3_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"879","1858","User_241","Case_2_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"880","1856","User_350","Case_3_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"881","1861","User_241","Case_2_H","Same source","null","Same source",NA,"Correct Identification",2
+"882","1862","User_241","Case_2_I","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",2
+"883","1859","User_241","Case_2_G","Same source","null","Same source",NA,"Correct Identification",2
+"884","1857","User_241","Case_2_E","Same source","null","Same source",NA,"Correct Identification",2
+"885","1672","User_241","Case_2_D","Same source","null","Same source",NA,"Correct Identification",2
+"886","1671","User_241","Case_2_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"887","1670","User_241","Case_2_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"888","1669","User_241","Case_2_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"889","1867","User_241","Case_2_L","Same source","null","Same source",NA,"Correct Identification",2
+"890","1863","User_241","Case_2_J","Same source","null","Same source",NA,"Correct Identification",2
+"891","1864","User_350","Case_3_G","Same source","null","Same source",NA,"Correct Identification",3
+"892","1865","User_241","Case_2_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"893","1866","User_350","Case_3_H","Same source","null","Same source",NA,"Correct Identification",3
+"894","1869","User_350","Case_3_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"895","1870","User_350","Case_3_J","Same source","null","Same source",NA,"Correct Identification",3
+"896","1871","User_143","Case_1_A","null","null","Different source","Target Case",NA,1
+"897","1872","User_350","Case_3_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"898","1769","User_255","Case_2_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"899","1788","User_255","Case_2_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"900","1873","User_350","Case_3_L","Different source (not a CNM)","null","Same source",NA,"False Exclusion",3
+"901","1876","User_112","Case_1_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"902","1874","User_243","Case_2_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"903","1877","User_112","Case_1_D","Same source","null","Same source",NA,"Correct Identification",1
+"904","1878","User_243","Case_2_G","Same source","null","Same source",NA,"Correct Identification",2
+"905","1879","User_152","Case_1_H","Same source","No","Same source",NA,"Correct Identification",1
+"906","1880","User_152","Case_1_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"907","1882","User_200","Case_2_A","null","null","Different source","Target Case",NA,2
+"908","1883","User_200","Case_2_B","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"909","1884","User_200","Case_2_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"910","1885","User_200","Case_2_D","Same source","Yes","Same source",NA,"Correct Identification",2
+"911","1887","User_200","Case_2_F","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"912","1881","User_152","Case_1_J","Same source","No","Same source",NA,"Correct Identification",1
+"913","1886","User_200","Case_2_E","Same source","No","Same source",NA,"Correct Identification",2
+"914","1889","User_200","Case_2_G","Same source","Yes","Same source",NA,"Correct Identification",2
+"915","1890","User_200","Case_2_H","Same source","No","Same source",NA,"Correct Identification",2
+"916","1891","User_200","Case_2_I","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",2
+"917","1888","User_152","Case_1_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"918","1892","User_152","Case_1_L","Same source","No","Same source",NA,"Correct Identification",1
+"919","1893","User_240","Case_2_A","Different source (not a CNM)","Yes","Different source","Target Case","Correct Exclusion",2
+"920","1894","User_240","Case_2_B","Different source (CNM)","Yes","Different source","Incidental Case","Correct Exclusion",2
+"921","1895","User_240","Case_2_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"922","1896","User_240","Case_2_D","Same source","No","Same source",NA,"Correct Identification",2
+"923","1897","User_240","Case_2_E","Same source","No","Same source",NA,"Correct Identification",2
+"924","1898","User_240","Case_2_F","Different source (CNM)","Yes","Different source","Incidental Case","Correct Exclusion",2
+"925","1899","User_240","Case_2_G","Same source","Yes","Same source",NA,"Correct Identification",2
+"926","1900","User_240","Case_2_H","Same source","Yes","Same source",NA,"Correct Identification",2
+"927","1901","User_240","Case_2_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"928","1902","User_240","Case_2_J","Same source","No","Same source",NA,"Correct Identification",2
+"929","1903","User_240","Case_2_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"930","1904","User_240","Case_2_L","Different source (CNM)","Yes","Same source",NA,"False Exclusion",2
+"931","1906","User_134","Case_1_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"932","1907","User_134","Case_1_E","Same source","null","Same source",NA,"Correct Identification",1
+"933","1908","User_134","Case_1_D","Different source (CNM)","null","Same source",NA,"False Exclusion",1
+"934","1909","User_330","Case_3_J","Same source","null","Same source",NA,"Correct Identification",3
+"935","1167","User_126","Case_1_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"936","1168","User_126","Case_1_B","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"937","1169","User_126","Case_1_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"938","1171","User_126","Case_1_D","Same source","null","Same source",NA,"Correct Identification",1
+"939","1172","User_126","Case_1_E","Same source","null","Same source",NA,"Correct Identification",1
+"940","1173","User_126","Case_1_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"941","1174","User_126","Case_1_G","Same source","null","Same source",NA,"Correct Identification",1
+"942","1175","User_126","Case_1_H","Same source","null","Same source",NA,"Correct Identification",1
+"943","1176","User_126","Case_1_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"944","1177","User_126","Case_1_J","Same source","null","Same source",NA,"Correct Identification",1
+"945","1179","User_126","Case_1_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"946","1181","User_126","Case_1_L","Same source","null","Same source",NA,"Correct Identification",1
+"947","1911","User_353","Case_3_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"948","1910","User_330","Case_3_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"949","1497","User_331","Case_3_L","Different source (CNM)","Yes","Same source",NA,"False Exclusion",3
+"950","1912","User_353","Case_3_D","Same source","null","Same source",NA,"Correct Identification",3
+"951","1368","User_330","Case_3_E","Different source (CNM)","null","Same source",NA,"False Exclusion",3
+"952","1914","User_353","Case_3_E","Same source","null","Same source",NA,"Correct Identification",3
+"953","1853","User_314","Case_3_E","Same source","Yes","Same source",NA,"Correct Identification",3
+"954","1916","User_314","Case_3_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"955","1915","User_353","Case_3_F","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"956","1918","User_353","Case_3_G","Same source","null","Same source",NA,"Correct Identification",3
+"957","1923","User_124","Case_1_D","null","null","Same source",NA,NA,1
+"958","1917","User_314","Case_3_G","Same source","Yes","Same source",NA,"Correct Identification",3
+"959","1919","User_353","Case_3_H","Same source","null","Same source",NA,"Correct Identification",3
+"960","1920","User_353","Case_3_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"961","1921","User_314","Case_3_H","Different source (CNM)","Yes","Same source",NA,"False Exclusion",3
+"962","1924","User_124","Case_1_E","null","null","Same source",NA,NA,1
+"963","1926","User_329","Case_3_A","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",3
+"964","1927","User_329","Case_3_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"965","1830","User_216","Case_2_D","Same source","null","Same source",NA,"Correct Identification",2
+"966","1925","User_124","Case_1_F","null","null","Different source","Incidental Case",NA,1
+"967","1928","User_329","Case_3_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"968","1930","User_124","Case_1_H","null","null","Same source",NA,NA,1
+"969","1929","User_124","Case_1_G","null","null","Same source",NA,NA,1
+"970","1827","User_216","Case_2_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"971","1932","User_124","Case_1_I","null","null","Different source","Target Case",NA,1
+"972","1933","User_216","Case_2_H","Same source","null","Same source",NA,"Correct Identification",2
+"973","1934","User_216","Case_2_L","Different source (CNM)","null","Same source",NA,"False Exclusion",2
+"974","1935","User_124","Case_1_J","null","null","Same source",NA,NA,1
+"975","1938","User_124","Case_1_K","null","null","Different source","Incidental Case",NA,1
+"976","1937","User_329","Case_3_D","Same source","null","Same source",NA,"Correct Identification",3
+"977","1939","User_124","Case_1_L","null","null","Same source",NA,NA,1
+"978","1941","User_343","Case_3_G","Same source","Yes","Same source",NA,"Correct Identification",3
+"979","1943","User_243","Case_2_H","Same source","null","Same source",NA,"Correct Identification",2
+"980","1942","User_343","Case_3_H","Same source","No","Same source",NA,"Correct Identification",3
+"981","1947","User_343","Case_3_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"982","1945","User_343","Case_3_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"983","1946","User_343","Case_3_J","Same source","Yes","Same source",NA,"Correct Identification",3
+"984","1944","User_243","Case_2_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"985","1948","User_343","Case_3_L","Different source (CNM)","Yes","Same source",NA,"False Exclusion",3
+"986","1975","User_132","Case_1_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"987","1958","User_246","Case_2_A","null","null","Different source","Target Case",NA,2
+"988","1959","User_246","Case_2_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"989","1960","User_246","Case_2_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"990","1961","User_246","Case_2_D","Same source","No","Same source",NA,"Correct Identification",2
+"991","1962","User_246","Case_2_E","Same source","No","Same source",NA,"Correct Identification",2
+"992","1963","User_246","Case_2_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"993","2026","User_252","Case_2_L","Same source","null","Same source",NA,"Correct Identification",2
+"994","1964","User_246","Case_2_G","Different source (not a CNM)","No","Same source",NA,"False Exclusion",2
+"995","1965","User_246","Case_2_H","Same source","No","Same source",NA,"Correct Identification",2
+"996","1966","User_246","Case_2_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"997","1967","User_246","Case_2_J","Different source (CNM)","No","Same source",NA,"False Exclusion",2
+"998","1968","User_246","Case_2_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"999","1969","User_246","Case_2_L","Same source","No","Same source",NA,"Correct Identification",2
+"1000","1972","User_314","Case_3_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"1001","1971","User_132","Case_1_A","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",1
+"1002","1973","User_226","Case_2_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"1003","1974","User_314","Case_3_J","Same source","No","Same source",NA,"Correct Identification",3
+"1004","1749","User_142","Case_1_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"1005","1976","User_226","Case_2_G","Same source","null","Same source",NA,"Correct Identification",2
+"1006","1812","User_142","Case_1_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"1007","1977","User_132","Case_1_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"1008","1980","User_132","Case_1_D","Same source","null","Same source",NA,"Correct Identification",1
+"1009","1979","User_226","Case_2_H","Same source","null","Same source",NA,"Correct Identification",2
+"1010","1981","User_132","Case_1_E","Same source","null","Same source",NA,"Correct Identification",1
+"1011","1983","User_132","Case_1_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"1012","1834","User_308","Case_3_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1013","1984","User_132","Case_1_G","Same source","null","Same source",NA,"Correct Identification",1
+"1014","1985","User_132","Case_1_H","Same source","null","Same source",NA,"Correct Identification",1
+"1015","1978","User_314","Case_3_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1016","1986","User_308","Case_3_L","Same source","Yes","Same source",NA,"Correct Identification",3
+"1017","1988","User_132","Case_1_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"1018","1989","User_132","Case_1_J","Same source","null","Same source",NA,"Correct Identification",1
+"1019","1990","User_132","Case_1_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"1020","1991","User_132","Case_1_L","Same source","null","Same source",NA,"Correct Identification",1
+"1021","1993","User_112","Case_1_E","Same source","null","Same source",NA,"Correct Identification",1
+"1022","1982","User_226","Case_2_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"1023","1994","User_112","Case_1_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"1024","1996","User_112","Case_1_G","Same source","null","Same source",NA,"Correct Identification",1
+"1025","1987","User_314","Case_3_L","Different source (CNM)","Yes","Same source",NA,"False Exclusion",3
+"1026","1997","User_112","Case_1_H","Same source","Yes","Same source",NA,"Correct Identification",1
+"1027","1995","User_226","Case_2_J","Same source","null","Same source",NA,"Correct Identification",2
+"1028","1998","User_112","Case_1_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"1029","2000","User_112","Case_1_J","Same source","No","Same source",NA,"Correct Identification",1
+"1030","2002","User_112","Case_1_K","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"1031","2003","User_112","Case_1_L","Same source","No","Same source",NA,"Correct Identification",1
+"1032","2009","User_329","Case_3_E","Same source","null","Same source",NA,"Correct Identification",3
+"1033","2008","User_341","Case_3_A","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",3
+"1034","2010","User_207","Case_2_J","Same source","Yes","Same source",NA,"Correct Identification",2
+"1035","2011","User_341","Case_3_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"1036","2012","User_207","Case_2_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"1037","2014","User_207","Case_2_L","Different source (CNM)","No","Same source",NA,"False Exclusion",2
+"1038","2019","User_252","Case_2_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"1039","2020","User_252","Case_2_G","Different source (CNM)","null","Same source",NA,"False Exclusion",2
+"1040","2021","User_252","Case_2_H","Same source","null","Same source",NA,"Correct Identification",2
+"1041","1999","User_226","Case_2_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"1042","2022","User_252","Case_2_I","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",2
+"1043","2024","User_252","Case_2_J","Different source (not a CNM)","null","Same source",NA,"False Exclusion",2
+"1044","2025","User_252","Case_2_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"1045","1232","User_219","Case_2_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"1046","1362","User_219","Case_2_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"1047","1327","User_319","Case_3_J","Same source","No","Same source",NA,"Correct Identification",3
+"1048","1317","User_319","Case_3_E","Same source","No","Same source",NA,"Correct Identification",3
+"1049","2028","User_200","Case_2_J","Same source","Yes","Same source",NA,"Correct Identification",2
+"1050","2030","User_243","Case_2_J","Same source","null","Same source",NA,"Correct Identification",2
+"1051","2029","User_200","Case_2_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"1052","2031","User_200","Case_2_L","Different source (CNM)","Yes","Same source",NA,"False Exclusion",2
+"1053","1707","User_137","Case_1_B","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"1054","2036","User_137","Case_1_G","Same source","No","Same source",NA,"Correct Identification",1
+"1055","2035","User_137","Case_1_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"1056","2034","User_137","Case_1_E","Same source","Yes","Same source",NA,"Correct Identification",1
+"1057","1709","User_137","Case_1_D","Same source","No","Same source",NA,"Correct Identification",1
+"1058","1708","User_137","Case_1_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"1059","1706","User_137","Case_1_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"1060","2037","User_137","Case_1_H","Same source","Yes","Same source",NA,"Correct Identification",1
+"1061","2023","User_226","Case_2_L","Same source","null","Same source",NA,"Correct Identification",2
+"1062","2089","User_123","Case_1_H","Same source","Yes","Same source",NA,"Correct Identification",1
+"1063","2038","User_137","Case_1_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"1064","2039","User_137","Case_1_J","Same source","No","Same source",NA,"Correct Identification",1
+"1065","2040","User_137","Case_1_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"1066","2041","User_137","Case_1_L","Different source (not a CNM)","No","Same source",NA,"False Exclusion",1
+"1067","1064","User_226","Case_2_E","Same source","null","Same source",NA,"Correct Identification",2
+"1068","1922","User_353","Case_3_J","Same source","null","Same source",NA,"Correct Identification",3
+"1069","2043","User_353","Case_3_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"1070","2091","User_123","Case_1_J","Same source","No","Same source",NA,"Correct Identification",1
+"1071","2045","User_257","Case_2_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"1072","1636","User_227","Case_2_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"1073","2046","User_257","Case_2_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"1074","2047","User_257","Case_2_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"1075","2048","User_257","Case_2_D","Same source","null","Same source",NA,"Correct Identification",2
+"1076","2050","User_257","Case_2_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"1077","2049","User_257","Case_2_E","Same source","null","Same source",NA,"Correct Identification",2
+"1078","2130","User_342","Case_3_C","Different source (not a CNM)","Yes","Different source","Target Case","Correct Exclusion",3
+"1079","946","User_226","Case_2_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"1080","2051","User_257","Case_2_G","Different source (CNM)","null","Same source",NA,"False Exclusion",2
+"1081","1641","User_227","Case_2_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"1082","2092","User_123","Case_1_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"1083","2053","User_257","Case_2_H","Same source","null","Same source",NA,"Correct Identification",2
+"1084","2054","User_257","Case_2_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"1085","2055","User_257","Case_2_J","Same source","null","Same source",NA,"Correct Identification",2
+"1086","2074","User_329","Case_3_H","Same source","null","Same source",NA,"Correct Identification",3
+"1087","2131","User_342","Case_3_F","Different source (not a CNM)","Yes","Different source","Incidental Case","Correct Exclusion",3
+"1088","2056","User_257","Case_2_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"1089","2070","User_257","Case_2_L","Same source","null","Same source",NA,"Correct Identification",2
+"1090","1322","User_319","Case_3_F","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1091","2093","User_123","Case_1_L","Same source","Yes","Same source",NA,"Correct Identification",1
+"1092","1323","User_319","Case_3_G","Same source","No","Same source",NA,"Correct Identification",3
+"1093","2072","User_329","Case_3_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"1094","1326","User_319","Case_3_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"1095","1328","User_319","Case_3_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1096","2073","User_329","Case_3_G","Same source","null","Same source",NA,"Correct Identification",3
+"1097","1329","User_319","Case_3_L","Same source","Yes","Same source",NA,"Correct Identification",3
+"1098","1325","User_319","Case_3_H","Same source","No","Same source",NA,"Correct Identification",3
+"1099","2075","User_329","Case_3_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"1100","1936","User_216","Case_2_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"1101","1931","User_216","Case_2_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"1102","2077","User_329","Case_3_J","Same source","null","Same source",NA,"Correct Identification",3
+"1103","2076","User_216","Case_2_J","Same source","null","Same source",NA,"Correct Identification",2
+"1104","2135","User_342","Case_3_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"1105","2078","User_329","Case_3_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"1106","2079","User_216","Case_2_G","Same source","null","Same source",NA,"Correct Identification",2
+"1107","2081","User_216","Case_2_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"1108","2083","User_123","Case_1_B","Different source (CNM)","Yes","Different source","Incidental Case","Correct Exclusion",1
+"1109","2082","User_216","Case_2_E","Same source","null","Same source",NA,"Correct Identification",2
+"1110","2137","User_342","Case_3_K","Different source (not a CNM)","Yes","Different source","Incidental Case","Correct Exclusion",3
+"1111","2084","User_123","Case_1_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"1112","2085","User_123","Case_1_D","Same source","No","Same source",NA,"Correct Identification",1
+"1113","2086","User_123","Case_1_E","Same source","No","Same source",NA,"Correct Identification",1
+"1114","2087","User_243","Case_2_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"1115","2088","User_123","Case_1_G","Same source","Yes","Same source",NA,"Correct Identification",1
+"1116","2090","User_123","Case_1_I","Different source (not a CNM)","Yes","Different source","Target Case","Correct Exclusion",1
+"1117","1289","User_248","Case_2_A","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",2
+"1118","1807","User_248","Case_2_C","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",2
+"1119","1815","User_248","Case_2_L","Same source","null","Same source",NA,"Correct Identification",2
+"1120","1563","User_248","Case_2_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"1121","1813","User_248","Case_2_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"1122","2015","User_341","Case_3_D","Same source","null","Same source",NA,"Correct Identification",3
+"1123","2016","User_341","Case_3_E","Same source","null","Same source",NA,"Correct Identification",3
+"1124","2017","User_341","Case_3_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"1125","2138","User_342","Case_3_L","Same source","Yes","Same source",NA,"Correct Identification",3
+"1126","2018","User_341","Case_3_G","Same source","null","Same source",NA,"Correct Identification",3
+"1127","2033","User_341","Case_3_H","Same source","null","Same source",NA,"Correct Identification",3
+"1128","2095","User_341","Case_3_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"1129","2096","User_341","Case_3_J","Same source","null","Same source",NA,"Correct Identification",3
+"1130","2136","User_342","Case_3_J","Same source","No","Same source",NA,"Correct Identification",3
+"1131","2097","User_341","Case_3_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"1132","2032","User_140","Case_1_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"1133","2104","User_140","Case_1_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"1134","2160","User_201","Case_2_D","Same source","No","Same source",NA,"Correct Identification",2
+"1135","2105","User_140","Case_1_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"1136","2106","User_140","Case_1_D","Same source","null","Same source",NA,"Correct Identification",1
+"1137","2107","User_140","Case_1_E","Same source","null","Same source",NA,"Correct Identification",1
+"1138","2108","User_140","Case_1_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"1139","2109","User_140","Case_1_G","Same source","null","Same source",NA,"Correct Identification",1
+"1140","2161","User_201","Case_2_E","Same source","Yes","Same source",NA,"Correct Identification",2
+"1141","2110","User_140","Case_1_H","Different source (CNM)","null","Same source",NA,"False Exclusion",1
+"1142","2111","User_140","Case_1_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"1143","929","User_234","Case_2_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"1144","2112","User_140","Case_1_J","Same source","null","Same source",NA,"Correct Identification",1
+"1145","1112","User_234","Case_2_B","Same source","null","Different source","Incidental Case","False Identification",2
+"1146","2113","User_140","Case_1_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"1147","2115","User_140","Case_1_L","Same source","null","Same source",NA,"Correct Identification",1
+"1148","2114","User_234","Case_2_C","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",2
+"1149","2117","User_234","Case_2_D","Same source","null","Same source",NA,"Correct Identification",2
+"1150","2118","User_234","Case_2_E","Same source","null","Same source",NA,"Correct Identification",2
+"1151","2119","User_234","Case_2_F","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"1152","2120","User_234","Case_2_G","Same source","null","Same source",NA,"Correct Identification",2
+"1153","2121","User_234","Case_2_H","Same source","null","Same source",NA,"Correct Identification",2
+"1154","2122","User_234","Case_2_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"1155","2123","User_234","Case_2_J","Same source","null","Same source",NA,"Correct Identification",2
+"1156","2124","User_234","Case_2_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"1157","2125","User_234","Case_2_L","Same source","null","Same source",NA,"Correct Identification",2
+"1158","2127","User_342","Case_3_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"1159","2128","User_342","Case_3_B","Different source (not a CNM)","Yes","Different source","Incidental Case","Correct Exclusion",3
+"1160","2129","User_342","Case_3_D","Same source","Yes","Same source",NA,"Correct Identification",3
+"1161","2132","User_342","Case_3_E","Different source (CNM)","Yes","Same source",NA,"False Exclusion",3
+"1162","2133","User_342","Case_3_G","Same source","Yes","Same source",NA,"Correct Identification",3
+"1163","2134","User_342","Case_3_H","Same source","Yes","Same source",NA,"Correct Identification",3
+"1164","2140","User_352","Case_3_A","null","null","Different source","Target Case",NA,3
+"1165","2162","User_201","Case_2_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"1166","2141","User_352","Case_3_B","Different source (not a CNM)","Yes","Different source","Incidental Case","Correct Exclusion",3
+"1167","2142","User_352","Case_3_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"1168","1631","User_227","Case_2_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"1169","2157","User_201","Case_2_A","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",2
+"1170","2158","User_201","Case_2_B","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"1171","2159","User_201","Case_2_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"1172","1632","User_227","Case_2_B","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"1173","1633","User_227","Case_2_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"1174","1642","User_227","Case_2_L","Same source","No","Same source",NA,"Correct Identification",2
+"1175","1638","User_227","Case_2_H","Same source","Yes","Same source",NA,"Correct Identification",2
+"1176","2179","User_157","Case_1_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"1177","2180","User_157","Case_1_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"1178","2182","User_157","Case_1_D","Same source","No","Same source",NA,"Correct Identification",1
+"1179","1913","User_330","Case_3_L","Same source","null","Same source",NA,"Correct Identification",3
+"1180","2184","User_157","Case_1_E","Same source","No","Same source",NA,"Correct Identification",1
+"1181","2190","User_243","Case_2_L","Different source (not a CNM)","null","Same source",NA,"False Exclusion",2
+"1182","2183","User_134","Case_1_J","Same source","null","Same source",NA,"Correct Identification",1
+"1183","1235","User_134","Case_1_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"1184","2044","User_353","Case_3_L","Same source","null","Same source",NA,"Correct Identification",3
+"1185","2215","User_118","Case_1_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"1186","2186","User_134","Case_1_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"1187","1637","User_227","Case_2_G","Same source","Yes","Same source",NA,"Correct Identification",2
+"1188","2080","User_329","Case_3_L","Same source","null","Same source",NA,"Correct Identification",3
+"1189","1640","User_227","Case_2_J","Same source","Yes","Same source",NA,"Correct Identification",2
+"1190","2193","User_318","Case_3_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"1191","2194","User_318","Case_3_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1192","2195","User_150","Case_1_D","Same source","Yes","Same source",NA,"Correct Identification",1
+"1193","2197","User_150","Case_1_E","Same source","Yes","Same source",NA,"Correct Identification",1
+"1194","2196","User_318","Case_3_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"1195","2198","User_318","Case_3_D","Same source","Yes","Same source",NA,"Correct Identification",3
+"1196","2199","User_318","Case_3_E","Same source","Yes","Same source",NA,"Correct Identification",3
+"1197","2200","User_318","Case_3_F","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1198","2201","User_318","Case_3_G","Same source","Yes","Same source",NA,"Correct Identification",3
+"1199","2202","User_318","Case_3_H","Same source","No","Same source",NA,"Correct Identification",3
+"1200","2203","User_318","Case_3_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"1201","2217","User_118","Case_1_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"1202","1639","User_227","Case_2_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"1203","2204","User_318","Case_3_J","Same source","No","Same source",NA,"Correct Identification",3
+"1204","2205","User_318","Case_3_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1205","1799","User_118","Case_1_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"1206","2208","User_118","Case_1_B","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"1207","2209","User_118","Case_1_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"1208","2210","User_118","Case_1_D","Same source","null","Same source",NA,"Correct Identification",1
+"1209","2211","User_118","Case_1_E","Same source","null","Same source",NA,"Correct Identification",1
+"1210","2212","User_118","Case_1_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"1211","2213","User_118","Case_1_G","Same source","null","Same source",NA,"Correct Identification",1
+"1212","2214","User_118","Case_1_H","Same source","null","Same source",NA,"Correct Identification",1
+"1213","2216","User_118","Case_1_J","Same source","null","Same source",NA,"Correct Identification",1
+"1214","2206","User_318","Case_3_L","Different source (CNM)","Yes","Same source",NA,"False Exclusion",3
+"1215","2218","User_118","Case_1_L","Same source","null","Same source",NA,"Correct Identification",1
+"1216","2220","User_150","Case_1_L","Different source (CNM)","Yes","Same source",NA,"False Exclusion",1
+"1217","1950","User_345","Case_3_A","Same source","null","Different source","Target Case","False Identification",3
+"1218","1954","User_345","Case_3_B","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"1219","1955","User_345","Case_3_C","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",3
+"1220","1956","User_345","Case_3_D","Same source","null","Same source",NA,"Correct Identification",3
+"1221","1951","User_345","Case_3_E","Same source","null","Same source",NA,"Correct Identification",3
+"1222","1957","User_345","Case_3_F","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"1223","2099","User_345","Case_3_G","Same source","Yes","Same source",NA,"Correct Identification",3
+"1224","2100","User_345","Case_3_H","Same source","null","Same source",NA,"Correct Identification",3
+"1225","1953","User_345","Case_3_I","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",3
+"1226","2101","User_345","Case_3_J","Same source","null","Same source",NA,"Correct Identification",3
+"1227","2102","User_345","Case_3_K","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"1228","2103","User_345","Case_3_L","Same source","Yes","Same source",NA,"Correct Identification",3
+"1229","1825","User_216","Case_2_B","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"1230","1818","User_216","Case_2_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"1231","2222","User_149","Case_1_A","null","null","Different source","Target Case",NA,1
+"1232","2232","User_149","Case_1_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"1233","2223","User_149","Case_1_B","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"1234","2224","User_149","Case_1_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"1235","2225","User_149","Case_1_D","Same source","No","Same source",NA,"Correct Identification",1
+"1236","2226","User_149","Case_1_E","Same source","No","Same source",NA,"Correct Identification",1
+"1237","2227","User_149","Case_1_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"1238","2228","User_149","Case_1_G","Same source","No","Same source",NA,"Correct Identification",1
+"1239","2229","User_149","Case_1_H","Same source","No","Same source",NA,"Correct Identification",1
+"1240","2230","User_149","Case_1_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"1241","2233","User_149","Case_1_L","Same source","No","Same source",NA,"Correct Identification",1
+"1242","2231","User_149","Case_1_J","Same source","No","Same source",NA,"Correct Identification",1
+"1243","2235","User_357","Case_3_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"1244","2236","User_357","Case_3_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1245","2237","User_357","Case_3_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"1246","2243","User_357","Case_3_H","Same source","No","Same source",NA,"Correct Identification",3
+"1247","2244","User_306","Case_3_A","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",3
+"1248","2245","User_306","Case_3_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1249","2246","User_306","Case_3_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"1250","2247","User_306","Case_3_D","Same source","No","Same source",NA,"Correct Identification",3
+"1251","2248","User_306","Case_3_E","Same source","No","Same source",NA,"Correct Identification",3
+"1252","2249","User_347","Case_3_A","null","null","Different source","Target Case",NA,3
+"1253","2250","User_347","Case_3_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1254","2251","User_347","Case_3_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"1255","2252","User_347","Case_3_D","Same source","Yes","Same source",NA,"Correct Identification",3
+"1256","2253","User_347","Case_3_E","Same source","No","Same source",NA,"Correct Identification",3
+"1257","2284","User_108","Case_1_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"1258","2254","User_347","Case_3_F","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1259","2255","User_347","Case_3_G","Same source","Yes","Same source",NA,"Correct Identification",3
+"1260","2256","User_347","Case_3_H","Same source","Yes","Same source",NA,"Correct Identification",3
+"1261","2257","User_347","Case_3_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"1262","2258","User_347","Case_3_J","Same source","No","Same source",NA,"Correct Identification",3
+"1263","2259","User_347","Case_3_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1264","2260","User_347","Case_3_L","Same source","Yes","Same source",NA,"Correct Identification",3
+"1265","2267","User_153","Case_1_D","Same source","Yes","Same source",NA,"Correct Identification",1
+"1266","2268","User_153","Case_1_E","Same source","Yes","Same source",NA,"Correct Identification",1
+"1267","2241","User_357","Case_3_G","Same source","No","Same source",NA,"Correct Identification",3
+"1268","2272","User_357","Case_3_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"1269","2273","User_357","Case_3_J","Same source","No","Same source",NA,"Correct Identification",3
+"1270","2274","User_357","Case_3_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1271","2238","User_357","Case_3_D","Same source","Yes","Same source",NA,"Correct Identification",3
+"1272","2240","User_357","Case_3_E","Different source (not a CNM)","No","Same source",NA,"False Exclusion",3
+"1273","2239","User_357","Case_3_F","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"1274","2275","User_357","Case_3_L","Different source (CNM)","Yes","Same source",NA,"False Exclusion",3
+"1275","2276","User_108","Case_1_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"1276","2277","User_108","Case_1_B","Different source (not a CNM)","Yes","Different source","Incidental Case","Correct Exclusion",1
+"1277","2278","User_108","Case_1_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"1278","2279","User_108","Case_1_D","Same source","Yes","Same source",NA,"Correct Identification",1
+"1279","2280","User_108","Case_1_E","Same source","Yes","Same source",NA,"Correct Identification",1
+"1280","2281","User_108","Case_1_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"1281","2282","User_108","Case_1_G","Same source","No","Same source",NA,"Correct Identification",1
+"1282","2283","User_108","Case_1_H","Same source","Yes","Same source",NA,"Correct Identification",1
+"1283","2285","User_108","Case_1_J","Same source","No","Same source",NA,"Correct Identification",1
+"1284","2286","User_108","Case_1_K","Different source (not a CNM)","Yes","Different source","Incidental Case","Correct Exclusion",1
+"1285","2292","User_203","Case_2_C","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",2
+"1286","1372","User_150","Case_1_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"1287","2288","User_203","Case_2_A","Different source (CNM)","Yes","Different source","Target Case","Correct Exclusion",2
+"1288","2289","User_150","Case_1_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"1289","2271","User_133","Case_1_A","null","null","Different source","Target Case",NA,1
+"1290","2290","User_203","Case_2_B","Different source (CNM)","Yes","Different source","Incidental Case","Correct Exclusion",2
+"1291","2287","User_108","Case_1_L","Different source (CNM)","Yes","Same source",NA,"False Exclusion",1
+"1292","2291","User_150","Case_1_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"1293","2294","User_150","Case_1_G","Same source","null","Same source",NA,"Correct Identification",1
+"1294","2295","User_150","Case_1_H","Same source","Yes","Same source",NA,"Correct Identification",1
+"1295","2297","User_150","Case_1_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"1296","2298","User_203","Case_2_D","Same source","Yes","Same source",NA,"Correct Identification",2
+"1297","2301","User_203","Case_2_F","Different source (not a CNM)","Yes","Different source","Incidental Case","Correct Exclusion",2
+"1298","2302","User_133","Case_1_L","null","null","Same source",NA,NA,1
+"1299","2303","User_203","Case_2_G","Same source","Yes","Same source",NA,"Correct Identification",2
+"1300","2299","User_150","Case_1_J","Same source","Yes","Same source",NA,"Correct Identification",1
+"1301","2312","User_133","Case_1_F","null","null","Different source","Incidental Case",NA,1
+"1302","2304","User_133","Case_1_K","null","null","Different source","Incidental Case",NA,1
+"1303","2306","User_133","Case_1_J","null","null","Same source",NA,NA,1
+"1304","2305","User_203","Case_2_H","Same source","Yes","Same source",NA,"Correct Identification",2
+"1305","2307","User_133","Case_1_I","null","null","Different source","Target Case",NA,1
+"1306","2309","User_133","Case_1_H","null","null","Same source",NA,NA,1
+"1307","2308","User_203","Case_2_I","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",2
+"1308","2310","User_133","Case_1_G","null","null","Same source",NA,NA,1
+"1309","2313","User_133","Case_1_E","null","null","Same source",NA,NA,1
+"1310","2314","User_133","Case_1_D","null","null","Same source",NA,NA,1
+"1311","2315","User_133","Case_1_C","null","null","Different source","Target Case",NA,1
+"1312","2311","User_203","Case_2_L","Different source (CNM)","Yes","Same source",NA,"False Exclusion",2
+"1313","2316","User_203","Case_2_E","Same source","Yes","Same source",NA,"Correct Identification",2
+"1314","1378","User_150","Case_1_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"1315","2317","User_203","Case_2_J","Same source","Yes","Same source",NA,"Correct Identification",2
+"1316","2318","User_203","Case_2_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"1317","2321","User_151","Case_1_B","Different source (CNM)","Yes","Different source","Incidental Case","Correct Exclusion",1
+"1318","2320","User_151","Case_1_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"1319","2322","User_151","Case_1_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"1320","2324","User_143","Case_1_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"1321","2323","User_143","Case_1_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"1322","2325","User_143","Case_1_D","Same source","No","Same source",NA,"Correct Identification",1
+"1323","2326","User_143","Case_1_E","Same source","Yes","Same source",NA,"Correct Identification",1
+"1324","2327","User_143","Case_1_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"1325","2328","User_143","Case_1_G","Same source","Yes","Same source",NA,"Correct Identification",1
+"1326","2329","User_143","Case_1_H","Same source","No","Same source",NA,"Correct Identification",1
+"1327","2330","User_143","Case_1_I","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",1
+"1328","2331","User_143","Case_1_J","Same source","No","Same source",NA,"Correct Identification",1
+"1329","2332","User_143","Case_1_K","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"1330","2333","User_143","Case_1_L","Same source","No","Same source",NA,"Correct Identification",1
+"1331","2335","User_151","Case_1_D","Same source","Yes","Same source",NA,"Correct Identification",1
+"1332","2336","User_151","Case_1_E","Same source","Yes","Same source",NA,"Correct Identification",1
+"1333","2337","User_151","Case_1_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"1334","2338","User_151","Case_1_G","Same source","No","Same source",NA,"Correct Identification",1
+"1335","2339","User_151","Case_1_H","Same source","Yes","Same source",NA,"Correct Identification",1
+"1336","2340","User_138","Case_1_D","Same source","null","Same source",NA,"Correct Identification",1
+"1337","2342","User_138","Case_1_E","Different source (CNM)","null","Same source",NA,"False Exclusion",1
+"1338","2343","User_138","Case_1_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"1339","2341","User_151","Case_1_I","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",1
+"1340","2344","User_151","Case_1_J","Same source","No","Same source",NA,"Correct Identification",1
+"1341","2346","User_250","Case_2_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"1342","2347","User_250","Case_2_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"1343","2348","User_250","Case_2_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"1344","2349","User_250","Case_2_D","Same source","null","Same source",NA,"Correct Identification",2
+"1345","2345","User_151","Case_1_K","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"1346","2350","User_250","Case_2_E","Same source","Yes","Same source",NA,"Correct Identification",2
+"1347","2351","User_250","Case_2_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"1348","2353","User_250","Case_2_G","Same source","null","Same source",NA,"Correct Identification",2
+"1349","2352","User_151","Case_1_L","Same source","Yes","Same source",NA,"Correct Identification",1
+"1350","2354","User_250","Case_2_H","Same source","Yes","Same source",NA,"Correct Identification",2
+"1351","2356","User_250","Case_2_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"1352","2357","User_250","Case_2_J","Same source","null","Same source",NA,"Correct Identification",2
+"1353","2358","User_250","Case_2_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"1354","2359","User_250","Case_2_L","Different source (CNM)","null","Same source",NA,"False Exclusion",2
+"1355","2365","User_121","Case_1_D","Same source","null","Same source",NA,"Correct Identification",1
+"1356","2366","User_121","Case_1_E","Same source","null","Same source",NA,"Correct Identification",1
+"1357","2368","User_138","Case_1_G","Same source","null","Same source",NA,"Correct Identification",1
+"1358","2370","User_121","Case_1_G","Same source","null","Same source",NA,"Correct Identification",1
+"1359","2371","User_121","Case_1_H","Same source","null","Same source",NA,"Correct Identification",1
+"1360","2369","User_138","Case_1_H","Same source","null","Same source",NA,"Correct Identification",1
+"1361","2372","User_121","Case_1_I","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",1
+"1362","2373","User_121","Case_1_J","Same source","null","Same source",NA,"Correct Identification",1
+"1363","2374","User_121","Case_1_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"1364","2375","User_121","Case_1_L","Same source","null","Same source",NA,"Correct Identification",1
+"1365","2362","User_121","Case_1_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"1366","2363","User_121","Case_1_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"1367","2364","User_121","Case_1_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"1368","2367","User_121","Case_1_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"1369","2377","User_138","Case_1_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"1370","2378","User_138","Case_1_J","Same source","null","Same source",NA,"Correct Identification",1
+"1371","2379","User_327","Case_3_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"1372","2380","User_327","Case_3_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"1373","2381","User_320","Case_3_A","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",3
+"1374","2382","User_320","Case_3_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1375","2383","User_320","Case_3_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"1376","2384","User_320","Case_3_D","Same source","No","Same source",NA,"Correct Identification",3
+"1377","2386","User_320","Case_3_E","Same source","Yes","Same source",NA,"Correct Identification",3
+"1378","2387","User_320","Case_3_F","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1379","2388","User_327","Case_3_D","Same source","null","Same source",NA,"Correct Identification",3
+"1380","2389","User_320","Case_3_G","Same source","Yes","Same source",NA,"Correct Identification",3
+"1381","2390","User_327","Case_3_E","Same source","null","Same source",NA,"Correct Identification",3
+"1382","2391","User_320","Case_3_H","Same source","Yes","Same source",NA,"Correct Identification",3
+"1383","2394","User_320","Case_3_J","Same source","Yes","Same source",NA,"Correct Identification",3
+"1384","2395","User_320","Case_3_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1385","2396","User_320","Case_3_L","Different source (CNM)","No","Same source",NA,"False Exclusion",3
+"1386","2392","User_327","Case_3_F","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"1387","2407","User_356","Case_3_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"1388","2408","User_356","Case_3_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1389","2409","User_354","Case_3_A","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",3
+"1390","2410","User_354","Case_3_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1391","2411","User_354","Case_3_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"1392","2417","User_354","Case_3_I","Different source (CNM)","Yes","Different source","Target Case","Correct Exclusion",3
+"1393","1071","User_336","Case_3_A","null","null","Different source","Target Case",NA,3
+"1394","2418","User_354","Case_3_J","Same source","Yes","Same source",NA,"Correct Identification",3
+"1395","2419","User_336","Case_3_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1396","2421","User_336","Case_3_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"1397","2420","User_354","Case_3_K","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1398","2422","User_336","Case_3_D","Same source","No","Same source",NA,"Correct Identification",3
+"1399","2423","User_354","Case_3_L","Different source (CNM)","Yes","Same source",NA,"False Exclusion",3
+"1400","2424","User_336","Case_3_E","Same source","No","Same source",NA,"Correct Identification",3
+"1401","2426","User_336","Case_3_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1402","2427","User_336","Case_3_G","Same source","No","Same source",NA,"Correct Identification",3
+"1403","2428","User_336","Case_3_H","Same source","No","Same source",NA,"Correct Identification",3
+"1404","2429","User_336","Case_3_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"1405","2430","User_336","Case_3_J","Same source","No","Same source",NA,"Correct Identification",3
+"1406","2431","User_336","Case_3_K","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1407","2432","User_336","Case_3_L","Different source (CNM)","Yes","Same source",NA,"False Exclusion",3
+"1408","2435","User_145","Case_1_A","null","null","Different source","Target Case",NA,1
+"1409","2437","User_145","Case_1_B","null","null","Different source","Incidental Case",NA,1
+"1410","2438","User_145","Case_1_C","null","null","Different source","Target Case",NA,1
+"1411","2439","User_145","Case_1_D","null","null","Same source",NA,NA,1
+"1412","2440","User_145","Case_1_E","null","null","Same source",NA,NA,1
+"1413","2441","User_145","Case_1_F","null","null","Different source","Incidental Case",NA,1
+"1414","2442","User_145","Case_1_G","null","null","Same source",NA,NA,1
+"1415","2443","User_145","Case_1_H","null","null","Same source",NA,NA,1
+"1416","2444","User_145","Case_1_I","null","null","Different source","Target Case",NA,1
+"1417","2445","User_145","Case_1_J","null","null","Same source",NA,NA,1
+"1418","2446","User_145","Case_1_K","null","null","Different source","Incidental Case",NA,1
+"1419","2447","User_145","Case_1_L","null","null","Same source",NA,NA,1
+"1420","1213","User_313","Case_3_D","Same source","null","Same source",NA,"Correct Identification",3
+"1421","2449","User_138","Case_1_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"1422","2451","User_223","Case_2_D","Same source","null","Same source",NA,"Correct Identification",2
+"1423","2450","User_138","Case_1_L","Different source (CNM)","null","Same source",NA,"False Exclusion",1
+"1424","2453","User_238","Case_2_B","null","null","Different source","Incidental Case",NA,2
+"1425","2455","User_238","Case_2_D","Same source","Yes","Same source",NA,"Correct Identification",2
+"1426","2456","User_238","Case_2_E","Same source","No","Same source",NA,"Correct Identification",2
+"1427","2457","User_238","Case_2_F","Different source (CNM)","Yes","Different source","Incidental Case","Correct Exclusion",2
+"1428","2458","User_238","Case_2_G","Same source","Yes","Same source",NA,"Correct Identification",2
+"1429","2459","User_238","Case_2_H","Same source","Yes","Same source",NA,"Correct Identification",2
+"1430","2462","User_231","Case_2_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"1431","2463","User_231","Case_2_B","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"1432","2465","User_231","Case_2_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"1433","2466","User_231","Case_2_D","Same source","Yes","Same source",NA,"Correct Identification",2
+"1434","2467","User_231","Case_2_E","Same source","No","Same source",NA,"Correct Identification",2
+"1435","2468","User_231","Case_2_F","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"1436","2469","User_231","Case_2_G","Same source","Yes","Same source",NA,"Correct Identification",2
+"1437","2470","User_231","Case_2_H","Same source","No","Same source",NA,"Correct Identification",2
+"1438","2471","User_231","Case_2_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"1439","2474","User_231","Case_2_L","Different source (not a CNM)","No","Same source",NA,"False Exclusion",2
+"1440","2472","User_231","Case_2_J","Same source","Yes","Same source",NA,"Correct Identification",2
+"1441","2473","User_231","Case_2_K","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"1442","2434","User_324","Case_3_A","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",3
+"1443","2475","User_324","Case_3_B","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"1444","2476","User_324","Case_3_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"1445","2477","User_324","Case_3_D","Same source","null","Same source",NA,"Correct Identification",3
+"1446","2478","User_324","Case_3_E","Same source","null","Same source",NA,"Correct Identification",3
+"1447","2479","User_324","Case_3_F","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"1448","2480","User_324","Case_3_G","Same source","null","Same source",NA,"Correct Identification",3
+"1449","2481","User_324","Case_3_H","Same source","null","Same source",NA,"Correct Identification",3
+"1450","2482","User_324","Case_3_I","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",3
+"1451","2483","User_324","Case_3_J","Same source","null","Same source",NA,"Correct Identification",3
+"1452","2484","User_324","Case_3_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"1453","2485","User_324","Case_3_L","Different source (not a CNM)","null","Same source",NA,"False Exclusion",3
+"1454","2488","User_355","Case_3_B","null","null","Different source","Incidental Case",NA,3
+"1455","2489","User_355","Case_3_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"1456","2490","User_355","Case_3_D","Same source","null","Same source",NA,"Correct Identification",3
+"1457","2491","User_355","Case_3_E","Same source","null","Same source",NA,"Correct Identification",3
+"1458","2492","User_355","Case_3_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"1459","2493","User_355","Case_3_G","Same source","null","Same source",NA,"Correct Identification",3
+"1460","2494","User_355","Case_3_H","Same source","null","Same source",NA,"Correct Identification",3
+"1461","2487","User_355","Case_3_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"1462","2495","User_355","Case_3_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",3
+"1463","2496","User_355","Case_3_J","Same source","null","Same source",NA,"Correct Identification",3
+"1464","2497","User_355","Case_3_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",3
+"1465","2498","User_355","Case_3_L","Same source","null","Same source",NA,"Correct Identification",3
+"1466","2263","User_223","Case_2_J","Same source","null","Same source",NA,"Correct Identification",2
+"1467","2262","User_223","Case_2_G","Same source","null","Same source",NA,"Correct Identification",2
+"1468","1720","User_303","Case_3_A","null","null","Different source","Target Case",NA,3
+"1469","2502","User_303","Case_3_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1470","2503","User_303","Case_3_C","Different source (not a CNM)","Yes","Different source","Target Case","Correct Exclusion",3
+"1471","2504","User_303","Case_3_D","Same source","Yes","Same source",NA,"Correct Identification",3
+"1472","2505","User_303","Case_3_E","Same source","No","Same source",NA,"Correct Identification",3
+"1473","2506","User_303","Case_3_F","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1474","2507","User_303","Case_3_G","Different source (CNM)","No","Same source",NA,"False Exclusion",3
+"1475","2508","User_303","Case_3_H","Same source","No","Same source",NA,"Correct Identification",3
+"1476","2510","User_221","Case_2_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"1477","2512","User_221","Case_2_B","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"1478","2511","User_303","Case_3_I","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",3
+"1479","2513","User_221","Case_2_C","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",2
+"1480","2514","User_303","Case_3_J","Same source","No","Same source",NA,"Correct Identification",3
+"1481","2515","User_303","Case_3_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1482","2516","User_303","Case_3_L","null","No","Same source",NA,NA,3
+"1483","2519","User_221","Case_2_D","Same source","null","Same source",NA,"Correct Identification",2
+"1484","2518","User_222","Case_2_B","Different source (CNM)","Yes","Different source","Incidental Case","Correct Exclusion",2
+"1485","2536","User_339","Case_3_F","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1486","2526","User_221","Case_2_G","Same source","null","Same source",NA,"Correct Identification",2
+"1487","2522","User_222","Case_2_D","Same source","Yes","Same source",NA,"Correct Identification",2
+"1488","2523","User_222","Case_2_E","Same source","No","Same source",NA,"Correct Identification",2
+"1489","2520","User_221","Case_2_E","Same source","null","Same source",NA,"Correct Identification",2
+"1490","2525","User_221","Case_2_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"1491","2524","User_222","Case_2_F","Different source (not a CNM)","Yes","Different source","Incidental Case","Correct Exclusion",2
+"1492","2406","User_222","Case_2_A","Different source (CNM)","Yes","Different source","Target Case","Correct Exclusion",2
+"1493","2521","User_222","Case_2_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"1494","2527","User_221","Case_2_H","Same source","null","Same source",NA,"Correct Identification",2
+"1495","2528","User_221","Case_2_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"1496","2529","User_221","Case_2_J","Same source","null","Same source",NA,"Correct Identification",2
+"1497","2531","User_339","Case_3_A","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",3
+"1498","2532","User_339","Case_3_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1499","2533","User_339","Case_3_C","Different source (not a CNM)","Yes","Different source","Target Case","Correct Exclusion",3
+"1500","2534","User_339","Case_3_D","Same source","No","Same source",NA,"Correct Identification",3
+"1501","2535","User_339","Case_3_E","Same source","Yes","Same source",NA,"Correct Identification",3
+"1502","2537","User_339","Case_3_G","Same source","Yes","Same source",NA,"Correct Identification",3
+"1503","2538","User_339","Case_3_H","Same source","Yes","Same source",NA,"Correct Identification",3
+"1504","2539","User_339","Case_3_I","Different source (CNM)","Yes","Different source","Target Case","Correct Exclusion",3
+"1505","2540","User_339","Case_3_J","Same source","Yes","Same source",NA,"Correct Identification",3
+"1506","2541","User_339","Case_3_K","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1507","2544","User_238","Case_2_J","Same source","Yes","Same source",NA,"Correct Identification",2
+"1508","2545","User_238","Case_2_K","Different source (CNM)","Yes","Different source","Incidental Case","Correct Exclusion",2
+"1509","2546","User_238","Case_2_L","Same source","Yes","Same source",NA,"Correct Identification",2
+"1510","2452","User_238","Case_2_A","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",2
+"1511","2454","User_238","Case_2_C","Different source (CNM)","No","Different source","Target Case","Correct Exclusion",2
+"1512","1258","User_223","Case_2_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"1513","2460","User_238","Case_2_I","Different source (CNM)","Yes","Different source","Target Case","Correct Exclusion",2
+"1514","2530","User_221","Case_2_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"1515","2548","User_221","Case_2_L","Different source (CNM)","null","Same source",NA,"False Exclusion",2
+"1516","1382","User_223","Case_2_C","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"1517","916","User_223","Case_2_A","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"1518","1381","User_223","Case_2_B","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"1519","1385","User_223","Case_2_F","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",2
+"1520","1384","User_223","Case_2_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",2
+"1521","2264","User_153","Case_1_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"1522","2265","User_153","Case_1_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"1523","2187","User_244","Case_2_A","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"1524","2189","User_244","Case_2_B","Different source (CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"1525","2550","User_244","Case_2_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"1526","2551","User_244","Case_2_D","Same source","Yes","Same source",NA,"Correct Identification",2
+"1527","2552","User_244","Case_2_E","Same source","No","Same source",NA,"Correct Identification",2
+"1528","2553","User_244","Case_2_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"1529","2554","User_244","Case_2_G","Same source","Yes","Same source",NA,"Correct Identification",2
+"1530","2555","User_244","Case_2_H","Same source","Yes","Same source",NA,"Correct Identification",2
+"1531","2556","User_244","Case_2_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",2
+"1532","2266","User_153","Case_1_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"1533","2269","User_153","Case_1_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"1534","2557","User_244","Case_2_J","Same source","Yes","Same source",NA,"Correct Identification",2
+"1535","2559","User_244","Case_2_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",2
+"1536","2560","User_244","Case_2_L","Different source (CNM)","Yes","Same source",NA,"False Exclusion",2
+"1537","2562","User_153","Case_1_H","Different source (CNM)","No","Same source",NA,"False Exclusion",1
+"1538","1626","User_141","Case_1_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"1539","2563","User_153","Case_1_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",1
+"1540","2542","User_339","Case_3_L","Same source","Yes","Same source",NA,"Correct Identification",3
+"1541","2566","User_153","Case_1_L","Different source (CNM)","Yes","Same source",NA,"False Exclusion",1
+"1542","2565","User_153","Case_1_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",1
+"1543","2564","User_153","Case_1_J","Same source","Yes","Same source",NA,"Correct Identification",1
+"1544","2558","User_153","Case_1_G","Different source (CNM)","No","Same source",NA,"False Exclusion",1
+"1545","2270","User_125","Case_1_A","null","null","Different source","Target Case",NA,1
+"1546","2568","User_125","Case_1_B","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"1547","2569","User_125","Case_1_C","Different source (CNM)","null","Different source","Target Case","Correct Exclusion",1
+"1548","2575","User_125","Case_1_I","Different source (not a CNM)","null","Different source","Target Case","Correct Exclusion",1
+"1549","2570","User_125","Case_1_D","Different source (not a CNM)","null","Same source",NA,"False Exclusion",1
+"1550","2571","User_125","Case_1_E","Different source (not a CNM)","null","Same source",NA,"False Exclusion",1
+"1551","2572","User_125","Case_1_F","Different source (CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"1552","2573","User_125","Case_1_G","Different source (not a CNM)","null","Same source",NA,"False Exclusion",1
+"1553","2574","User_125","Case_1_H","Same source","null","Same source",NA,"Correct Identification",1
+"1554","2576","User_125","Case_1_J","Same source","null","Same source",NA,"Correct Identification",1
+"1555","2577","User_125","Case_1_K","Different source (not a CNM)","null","Different source","Incidental Case","Correct Exclusion",1
+"1556","2578","User_125","Case_1_L","Same source","null","Same source",NA,"Correct Identification",1
+"1557","2581","User_349","Case_3_A","null","null","Different source","Target Case",NA,3
+"1558","2582","User_349","Case_3_B","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1559","2583","User_349","Case_3_C","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"1560","2584","User_349","Case_3_D","Same source","Yes","Same source",NA,"Correct Identification",3
+"1561","2585","User_349","Case_3_E","Same source","Yes","Same source",NA,"Correct Identification",3
+"1562","2586","User_349","Case_3_F","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1563","2587","User_349","Case_3_G","Same source","Yes","Same source",NA,"Correct Identification",3
+"1564","2588","User_349","Case_3_H","Same source","Yes","Same source",NA,"Correct Identification",3
+"1565","2589","User_349","Case_3_I","Different source (not a CNM)","No","Different source","Target Case","Correct Exclusion",3
+"1566","2590","User_349","Case_3_J","Same source","No","Same source",NA,"Correct Identification",3
+"1567","2591","User_349","Case_3_K","Different source (not a CNM)","No","Different source","Incidental Case","Correct Exclusion",3
+"1568","2592","User_349","Case_3_L","Different source (not a CNM)","No","Same source",NA,"False Exclusion",3

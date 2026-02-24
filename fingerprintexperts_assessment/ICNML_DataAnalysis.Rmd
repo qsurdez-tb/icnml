@@ -1,0 +1,151 @@
+---
+title: "DataAnalysis"
+output: html_document
+date: "2022-07-16"
+author: "Margaux Girod & Christophe Champod"
+---
+# Step 2 : Data Analysis
+This script proposes different ways to represent data obtained from the ICNML study with fingerprint experts. It shows the conclusions experts gave for each case. 
+First a table is created, it recaps every cases and its conclusions. Then different plots show the distribution of these conclusions in a given case.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(tidyverse)
+library(patchwork)
+library(xlsx)
+```
+
+```{r Paths}
+# Replace the path name of the folder containing script and datas with the good one on your computer and run this chunk so every file will be created in this folder
+#setwd("~/Documents/ICNML/ICNML - Data Extraction") #Margaux
+setwd("~/fingerprintexperts_assessment") #Christophe
+```
+
+```{r Load_Data}
+# to load the final complete database
+ICNML_DATABASE <- read_csv("ExportCSV/ICNML_DATABASE.csv")
+```
+
+```{r Create_Table_results}
+# To create a table summarizing results data for each case
+Cases<-c()
+ListCases<-c(unique(ICNML_DATABASE$Case))
+for (i in 1:length(ListCases)){
+  Ex=ListCases[i]
+  C<-subset(ICNML_DATABASE,Case==Ex)
+  GT=unique(C$GroundTruth)
+  NbDCNM=nrow(subset(C,Conclusion=="Different source (CNM)"))
+  NbDnoCNM=nrow(subset(C,Conclusion=="Different source (not CNM)"))
+  NbS=nrow(subset(C,Conclusion=="Same source"))
+  NbTot=nrow(C)
+  NbDec=NbDCNM+NbDnoCNM+NbS
+  NbNA=NbTot-NbDec
+  Tot<-c(Ex,GT,NbDCNM,NbDnoCNM,NbS,NbNA,NbDec,NbTot)
+  Cases<-rbind(Cases,Tot)
+}
+Cases<-as.data.frame(Cases)
+colnames(Cases)<-c("Case", "GroundTruth","Number of different source decision (CNM)","Number of different source decision (not CNM)","Number of same source decision", "Number of NA","Total number of decisions without NA", "Total number of decisions including NA")
+
+#save tables in an XLS spreadsheet
+write.xlsx2(Cases %>% filter(GroundTruth == "Different source"), file="ExportCSV/Cases_Results.xlsx", 
+            sheetName="Different Source",col.names=TRUE, row.names=TRUE, append=FALSE)
+
+write.xlsx2(Cases %>% filter(GroundTruth == "Same source"), file="ExportCSV/Cases_Results.xlsx", 
+            sheetName="Same Source",col.names=TRUE, row.names=TRUE, append=TRUE)
+```
+
+```{r Plot_All_cases}
+# Plot Results for a special case (The case number can be changed on the first line
+
+#adapt the dataframe to have shorter factors
+ICNML_plot <- ICNML_DATABASE
+ICNML_plot$Conclusion <- as.factor(ICNML_plot$Conclusion)
+levels(ICNML_plot$Conclusion) <- c("DS_CNM", "DS_notCNM","NA", "SS")
+
+AllCaseConclusionDS <- ggplot(ICNML_plot %>%
+                              filter(GroundTruth=="Different source")) +
+  geom_bar(aes(x=Conclusion, fill=Conclusion))+
+  xlab("Conlusion") +
+  scale_fill_manual("Decision",
+                    values=c("green3","#BCEE68","grey","red3")) +
+  facet_wrap(CaseType ~ Case, ncol=3) +
+  theme(legend.position="bottom")
+  
+AllCaseConclusionDS
+ggsave("Plots/AllCaseConclusionDS.pdf", width = 30, height = 30, units = "cm")
+
+AllCaseConclusionSS <- ggplot(ICNML_plot %>%
+                              filter(GroundTruth=="Same source")) +
+  geom_bar(aes(x=Conclusion, fill=Conclusion))+
+  xlab("Conlusion") +
+  scale_fill_manual("Decision",
+                    values=c("red3","red1","grey","#BCEE68")) +
+  facet_wrap(~ Case, ncol=3) +
+  theme(legend.position="bottom")
+  
+AllCaseConclusionSS
+ggsave("Plots/AllCaseConclusionSS.pdf", width = 30, height = 30, units = "cm")
+```
+
+```{r plotConclusions, eval=FALSE}
+# Plot conclusions given for every different sources cases
+ConclusionDS <- ggplot(data=subset(ICNML_plot,
+                                  GroundTruth=="Different source")) +
+  geom_bar(aes(x=Case,fill=Conclusion))+
+  xlab("Cases") +
+  ggtitle("Conclusions given for different sources cases")+
+  scale_fill_manual("Decision",values=c("green3","#BCEE68","grey","red3")) +
+  theme(axis.text.x= element_text(angle=90)) +
+  facet_wrap(~CaseType, scales = "free") + 
+  theme(legend.position="bottom")
+#ConclusionDS
+
+# Run to show the conclusions given for every Same source cases
+ConclusionSS<-ggplot(data=subset(ICNML_plot,
+                                 GroundTruth=="Same source")) +
+  geom_bar(aes(x=Case,fill=Conclusion))+
+  xlab("Cases") +
+  ggtitle("Conclusions given for same source cases")+
+  scale_fill_manual("Decision",values=c("red3","red1","grey","green3")) +
+  theme(axis.text.x= element_text(angle=90)) +
+  theme(legend.position="bottom")
+#ConclusionSS
+
+ConclusionDS / ConclusionSS
+ggsave("Plots/ConclusionDS_ConclusionSS.pdf", width = 30, height = 30, units = "cm")
+```
+
+```{r plotDecisions, eval=FALSE}
+# Run to show the results for every CNM cases (last line can be deleted if no need to separate target and incidental cases)
+ResultsDS <- ggplot(data=subset(ICNML_plot,
+                               GroundTruth=="Different source")) +
+  geom_bar(aes(x=Case,
+               fill=Correction))+
+  xlab("Cases") +
+  ggtitle("Results obtained from different sources cases")+
+  scale_fill_manual("Decision",values=c("green3","red3","grey")) +
+  theme(axis.text.x= element_text(angle=90)) +
+  theme(legend.position="bottom") +
+  facet_wrap(~ CaseType, scales = "free") #to avoid the case with no data
+#ResultsDS
+
+ResultsSS<-ggplot(data=subset(ICNML_plot,
+                              GroundTruth=="Same source")) +
+  geom_bar(aes(x=Case,fill=Correction))+
+  xlab("Cases") +
+  ggtitle("Results obtained from same source cases")+
+  scale_fill_manual("Decision",values=c("green3","red3","grey")) +
+  theme(axis.text.x= element_text(angle=90)) +
+  theme(legend.position="bottom")
+
+ResultsDS / ResultsSS
+ggsave("Plots/ResultsDS_ResultsSS.pdf", width = 30, height = 30, units = "cm")
+```
+
+
+
+
+
+
+

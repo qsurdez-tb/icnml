@@ -1,0 +1,74 @@
+"id","name","description","folder","mark","print","hidden_information","fts"
+11,Test,Test,6,7,9,,"'test':1B,2C"
+438,Case_1_C,"Detection : Black Powder
+Surface : Paper",18,434,436,,'1':2B 'black':5C 'c':3B 'case':1B 'detect':4C 'paper':8C 'powder':6C 'surfac':7C
+448,Case_1_I,"Detection : Black Powder
+Surface : Glass",18,444,446,,'1':2B 'black':4C 'case':1B 'detect':3C 'glass':7C 'powder':5C 'surfac':6C
+462,Case_1_K,"Detection : aluminium Powder
+Surface : Glossy cardboard box",18,458,460,,'1':2B 'aluminium':5C 'box':10C 'cardboard':9C 'case':1B 'detect':4C 'glossi':8C 'k':3B 'powder':6C 'surfac':7C
+483,Case_1_H,"Detection : Magnetic Powder
+Surface : Glass",18,479,481,,'1':2B 'case':1B 'detect':4C 'glass':8C 'h':3B 'magnet':5C 'powder':6C 'surfac':7C
+488,Case_1_L,"Detection : Wetwop
+Surface : Tape",18,484,486,,'1':2B 'case':1B 'detect':4C 'l':3B 'surfac':6C 'tape':7C 'wetwop':5C
+526,Case_2_E,"Detection : Black Powder
+Surface : Paper",16,522,781,,'2':2B 'black':5C 'case':1B 'detect':4C 'e':3B 'paper':8C 'powder':6C 'surfac':7C
+531,Case_2_H,"Detection : Black Powder
+Surface : Glass",16,527,529,,'2':2B 'black':5C 'case':1B 'detect':4C 'glass':8C 'h':3B 'powder':6C 'surfac':7C
+580,Case_2_A,"Detection : Cyanoacrylate
+Surface : Metal",16,576,578,,'2':2B 'case':1B 'cyanoacryl':4C 'detect':3C 'metal':6C 'surfac':5C
+587,Case_2_F,"Detection : Black Powder
+Surface : Paper",16,583,585,,'2':2B 'black':5C 'case':1B 'detect':4C 'f':3B 'paper':8C 'powder':6C 'surfac':7C
+594,Case_2_K,"Detection : Ninhydrine
+Surface : Paper",16,590,592,,'2':2B 'case':1B 'detect':4C 'k':3B 'ninhydrin':5C 'paper':7C 'surfac':6C
+603,Case_2_B,"Detection : Black Powder
+Surface : Paper",16,599,601,,'2':2B 'b':3B 'black':5C 'case':1B 'detect':4C 'paper':8C 'powder':6C 'surfac':7C
+626,Case_3_L,"Detection : Cyanoacrylate
+Surface : Metal",17,620,624,,'3':2B 'case':1B 'cyanoacryl':5C 'detect':4C 'l':3B 'metal':7C 'surfac':6C
+643,Case_3_D,"Detection : Black Powder
+Surface : Paper",17,639,641,,'3':2B 'black':5C 'case':1B 'd':3B 'detect':4C 'paper':8C 'powder':6C 'surfac':7C
+649,Case_3_J,"Detection : Ninhydrine
+Surface : Paper",17,644,646,,'3':2B 'case':1B 'detect':4C 'j':3B 'ninhydrin':5C 'paper':7C 'surfac':6C
+671,Case_3_I,"Detection : Magnetic Powder
+Surface : Glass",17,667,669,,'3':2B 'case':1B 'detect':3C 'glass':7C 'magnet':4C 'powder':5C 'surfac':6C
+678,Case_3_A,"Detection : Wetwop
+Surface : Tape",17,672,676,,'3':2B 'case':1B 'detect':3C 'surfac':5C 'tape':6C 'wetwop':4C
+683,Case_3_F,"Detection : Cyanoacrylate
+Surface :Plastic bag",17,679,684,,'3':2B 'bag':8C 'case':1B 'cyanoacryl':5C 'detect':4C 'f':3B 'plastic':7C 'surfac':6C
+561,Case_2_G,"Detection : Black Powder
+Surface : Glass",16,736,559,,'2':2B 'black':5C 'case':1B 'detect':4C 'g':3B 'glass':8C 'powder':6C 'surfac':7C
+619,Case_3_H,"Detection : Black Powder
+Surface : Metal",17,811,813,,'3':2B 'black':5C 'case':1B 'detect':4C 'h':3B 'metal':8C 'powder':6C 'surfac':7C
+547,Case_2_D,"Detection : Cyanoacrylate
+Surface : Plastic bag",16,799,545,,'2':2B 'bag':8C 'case':1B 'cyanoacryl':5C 'd':3B 'detect':4C 'plastic':7C 'surfac':6C
+521,Case_1_G,"Detection : Black Powder
+Surface : Glass",18,710,519,,'1':2B 'black':5C 'case':1B 'detect':4C 'g':3B 'glass':8C 'powder':6C 'surfac':7C
+701,Case_3_B,"Detection : Black Powder
+Surface : Glass",17,712,699,,'3':2B 'b':3B 'black':5C 'case':1B 'detect':4C 'glass':8C 'powder':6C 'surfac':7C
+666,Case_3_C,"Detection : Black Powder
+Surface : Porcelain",17,714,664,,'3':2B 'black':5C 'c':3B 'case':1B 'detect':4C 'porcelain':8C 'powder':6C 'surfac':7C
+472,Case_1_E,"Detection : Black Powder
+Surface : Porcelaine",18,716,706,,'1':2B 'black':5C 'case':1B 'detect':4C 'e':3B 'porcelain':8C 'powder':6C 'surfac':7C
+566,Case_2_C,"Detection : Black Powder Suspension
+Surface : Ceramic Tile",16,815,817,,'2':2B 'black':5C 'c':3B 'case':1B 'ceram':9C 'detect':4C 'powder':6C 'surfac':8C 'suspens':7C 'tile':10C
+694,Case_3_K,"Detection : Aluminium Powder
+Surface : Glass",17,724,692,,'3':2B 'aluminium':5C 'case':1B 'detect':4C 'glass':8C 'k':3B 'powder':6C 'surfac':7C
+516,Case_1_J,"Detection : Aluminium Powder
+Surface : Glass",18,514,512,,'1':2B 'aluminium':5C 'case':1B 'detect':4C 'glass':8C 'j':3B 'powder':6C 'surfac':7C
+467,Case_1_B,"Detection : Black Powder
+Surface : Glass",18,463,702,,'1':2B 'b':3B 'black':5C 'case':1B 'detect':4C 'glass':8C 'powder':6C 'surfac':7C
+556,Case_2_J,"Detection : Aluminium Powder
+Surface : Glossy cardboard box",16,552,728,,'2':2B 'aluminium':5C 'box':10C 'cardboard':9C 'case':1B 'detect':4C 'glossi':8C 'j':3B 'powder':6C 'surfac':7C
+493,Case_1_D,"Detection : Cyanoacrylate
+Surface : Plastic bag",18,489,740,,'1':2B 'bag':8C 'case':1B 'cyanoacryl':5C 'd':3B 'detect':4C 'plastic':7C 'surfac':6C
+443,Case_1_A,"Detection : Black Powder
+Surface : Glass",18,783,441,,'1':2B 'black':4C 'case':1B 'detect':3C 'glass':7C 'powder':5C 'surfac':6C
+536,Case_2_L,"Detection : Black Powder
+Surface : Glass",16,785,534,,'2':2B 'black':5C 'case':1B 'detect':4C 'glass':8C 'l':3B 'powder':6C 'surfac':7C
+453,Case_1_F,"Detection : Cyanoacrylate
+Surface : plastic bag",18,789,704,,'1':2B 'bag':8C 'case':1B 'cyanoacryl':5C 'detect':4C 'f':3B 'plastic':7C 'surfac':6C
+657,Case_3_G,"Detection : Black Powder
+Surface : Paper",17,651,803,,'3':2B 'black':5C 'case':1B 'detect':4C 'g':3B 'paper':8C 'powder':6C 'surfac':7C
+573,Case_2_I,"Detection : Black Powder
+Surface : Metal",16,805,807,,'2':2B 'black':4C 'case':1B 'detect':3C 'metal':7C 'powder':5C 'surfac':6C
+614,Case_3_E,"Detection : Black Powder Suspension
+Surface : Ceramic Tile",17,823,831,,'3':2B 'black':5C 'case':1B 'ceram':9C 'detect':4C 'e':3B 'powder':6C 'surfac':8C 'suspens':7C 'tile':10C

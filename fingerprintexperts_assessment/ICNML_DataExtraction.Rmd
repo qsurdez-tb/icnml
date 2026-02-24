@@ -1,0 +1,308 @@
+---
+title: "ICNML_DataExtraction"
+output: html_document
+date: "2022-07-16"
+author: "Margaux Girod & Christophe Champod"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(tidyverse)
+```
+
+# Step 1 : Data preparation
+
+Because of the large number of data available in the PiAnoS SQL database, multiple raw CVS files have to be extracted and will be processed here to to obtain the final database which will be used for data analysis. 
+Raw data are working with a system of assignment IDs which correspond to a unique couple user/exercise. 
+The goal is to create a new dataset (FINAL_DATA) containing every IDs with corresponding exercise, corresponding user and the corresponding final decision.
+
+```{r setWorkingDirectory}
+# Replace the path name of the folder containing script and datas with the good one on your computer and run this chunk so every file will be created in this folder
+#setwd("~/Documents/ICNML/ICNML - Data Extraction") #Margaux
+setwd("~/fingerprintexperts_assessment") #Christophe
+
+#If you work from a project in the folder, it the path will be set automatically.
+```
+
+This script allows you understand how the final dataset has been prepared.
+You ou can also obtain directly every results without running every chunk.
+
+```{r ImportCSV_data, eval = TRUE}
+# Run this chunk if you want to run all the script and to load only raw extractions obtained from DBweaver. 
+# load("ICNML_DataExtraction_Raw.RData")
+
+Assignment <- read_csv("ExportCSV/assignment__202207121542.csv")
+Exercise <- read_csv("ExportCSV/exercise_202207121542.csv")
+Resultv <- read_csv("ExportCSV/resultv_202207121541.csv")
+Resultvex <-read_csv("ExportCSV/resultvex2_202207121539.csv")
+
+#these objects are saved in: 
+save(Assignment, Exercise, Resultv, Resultvex, 
+     file = "Rdata/ICNML_DataExtraction_RawData.RData")
+```
+"Assignment", "Exercise", "Resultv" and "Resultvex" are the 4 raw CVS files extracted from PiAnoS and used to analyse data. The next chucks are preparing the data for further data analysis.
+
+```{r filter_submitted_comparison_results}
+# Filter both results objects, keeping only comparison phase (stepid = 2) and submitted results (typeid = 3)
+Resultvex_filtered <- Resultvex %>% filter(typeid == 3 & stepid == 2)
+Resultv_filtered <- Resultv %>% filter(typeid == 3 & stepid == 2)
+```
+
+```{r FinalData}
+# Run to create the final database. In this first step it will contain only every assignment ID and the user associated
+FINAL_DATA <- cbind(Resultv_filtered[,1],
+                    Resultv_filtered[,2])
+
+colnames(FINAL_DATA)<-c("ID","User")
+```
+
+```{r Add_ExerciseID}
+# Add the exercise ID associated to each assignment ID
+Exercise_ID<-c()
+for (i in 1:length(c(FINAL_DATA$ID))){
+  ID = c(FINAL_DATA$ID)[i]
+  ExID = subset(Assignment,id==ID)$exercise
+  Exercise_ID<-c(Exercise_ID,ExID)
+}
+FINAL_DATA<-cbind(FINAL_DATA,Exercise_ID)
+colnames(FINAL_DATA)<-c("ID","User","ExerciseID")
+```
+
+```{r Add_ExerciseName}
+# Add the exercise name (case) corresponding to exerciseID to ease the results presentation later
+Exercise_Name<-c()
+for (i in 1:length(Exercise_ID)){
+  ExID = Exercise_ID[i]
+  Name = subset(Exercise,id==ExID)$name
+  Exercise_Name<-c(Exercise_Name,Name)
+}
+FINAL_DATA<-cbind(FINAL_DATA,Exercise_Name)
+colnames(FINAL_DATA)<-c("ID","User","ExerciseID","Case")
+```
+
+```{r Add_Conclusions}
+# Add the conclusion given and the use or not of level 3 features
+Conclusion<-c()
+Level3<-c()
+for (i in 1:length(c(FINAL_DATA$ID))){
+  ID = c(FINAL_DATA$ID)[i]
+  Conc = subset(Resultvex_filtered,assignment==ID)$decision
+  Conclusion<-c(Conclusion,Conc)
+  L3 = subset(Resultvex_filtered,assignment==ID)$comparison_l3details
+  Level3<-c(Level3,L3)
+}
+FINAL_DATA<-cbind(FINAL_DATA,Conclusion,Level3)
+colnames(FINAL_DATA)<-c("ID","User","ExerciseID","Case","Conclusion","Level3")
+```
+
+We manually adapt the answers obtained via e-mail. Changes available in Final Experiment Manual Data.xlsx
+
+```{r Enter_manual_correction}
+#User_116
+FINAL_DATA[371,5] <- 2 #Different source (not a CNM)
+
+#User_123
+FINAL_DATA[92,5] <- 2
+
+#User_133
+FINAL_DATA[1374,5] <- 2
+FINAL_DATA[344,5] <- 2
+FINAL_DATA[1398,5] <- 2
+FINAL_DATA[1396,5] <- 1 #Same source
+FINAL_DATA[1397,5] <- 1
+FINAL_DATA[1388,5] <- 0 #Different source (CNM)
+FINAL_DATA[1395,5] <- 1
+FINAL_DATA[1393,5] <- 2 #Different source (not a CNM)
+FINAL_DATA[1392,5] <- 2 #Different source (not a CNM)
+FINAL_DATA[1390,5] <- 1 #Same source
+FINAL_DATA[1389,5] <- 2
+FINAL_DATA[1385,5] <- 1
+
+#User_143
+FINAL_DATA[956,5] <- 2 #Different source (not a CNM)
+
+#User_149
+FINAL_DATA[1313,5] <- 2 #Different source (not a CNM)
+
+#User_152
+FINAL_DATA[916,5] <- 2 #Different source (not a CNM)
+
+#User_202
+FINAL_DATA[500,5] <- 1
+FINAL_DATA[503,5] <- 1
+
+#User_228
+FINAL_DATA[300,5] <- 0 #Different source (CNM)
+
+#User_236
+FINAL_DATA[197,5] <- 1 #Same source
+
+#User_239
+FINAL_DATA[291,5] <- 2 #Different source (not a CNM)
+
+#User_243
+FINAL_DATA[561,5] <- 2 #Different source (not a CNM)
+
+#User_309
+FINAL_DATA[11,5] <- 0 #Different source (CNM)
+
+#User_328
+FINAL_DATA[276,5] <- 2 #Different source (not a CNM)
+
+#User_333
+FINAL_DATA[110,5] <- 2 #Different source (not a CNM)
+FINAL_DATA[112,5] <- 2 #Different source (not a CNM)
+FINAL_DATA[113,5] <- 2 #Different source (not a CNM)
+
+#User_344
+FINAL_DATA[597,5] <- 2 #Different source (not a CNM)
+
+#User_345 was OK, I think that it should be #User_346 (one answer was missing)
+FINAL_DATA[1299,5] <- 0 #Different source (CNM)
+
+#User_347
+FINAL_DATA[1336,5] <- 2 #Different source (not a CNM)
+```
+
+The correspondence between numerical code entries and conclusion is as follows: 
+0 = Different source (CNM)
+1 = Same source
+2 = Different source (not a CNM)
+
+The correspondence between numerical code entries and level3 use is as follows: 
+0 = No
+1 = Yes
+
+```{r Add_factors}
+# Run to assign numbers for the conclusion and the level3
+Conclusion_bis <- c()
+for (i in 1:length(Conclusion)){
+  Conc=Conclusion[i]
+  if (Conc==0) {
+    Conc_bis="Different source (CNM)"
+  } else if(Conc==1){
+    Conc_bis="Same source"
+  } else if(Conc==2){
+    Conc_bis="Different source (not a CNM)"
+  } else{
+    Conc_bis=Conc
+  }
+  Conclusion_bis<-c(Conclusion_bis,Conc_bis)
+}
+Level3_bis <- c()
+for (i in 1:length(Level3)){
+  L3=Level3[i]
+  if (L3==0) {
+    L3_bis="No"
+  } else if(L3==1){
+    L3_bis="Yes"
+  } else{
+    L3_bis=L3
+  }
+  Level3_bis<-c(Level3_bis,L3_bis)
+}
+FINAL_DATA<-cbind(FINAL_DATA,Conclusion_bis,Level3_bis)
+colnames(FINAL_DATA)<-c("ID","User","ExerciseID","Case","Conclusion","Level3","ConclusionBis","Level3Bis")
+```
+
+```{r Add_groundTruth}
+# Add the "ground truth" for each case so it will be easier to present results later
+GroundTruth<-c()
+Type<-c()
+Case_list<-c(FINAL_DATA$Case)
+for (i in 1:length(Case_list)){
+  Case=Case_list[i]
+  if (Case=="Case_1_E"|Case=="Case_1_H"|Case=="Case_1_L"|Case=="Case_1_D"|Case=="Case_1_J"|Case=="Case_1_G"|Case=="Case_2_E"|Case=="Case_2_H"|Case=="Case_2_L"|Case=="Case_2_D"|Case=="Case_2_J"|Case=="Case_2_G"|Case=="Case_3_E"|Case=="Case_3_H"|Case=="Case_3_L"|Case=="Case_3_D"|Case=="Case_3_J"|Case=="Case_3_G"){
+    GT="Same source"
+    Ty=NA
+  } else if (Case=="Case_1_C"|Case=="Case_2_C"|Case=="Case_3_C"|Case=="Case_1_I"|Case=="Case_2_I"|Case=="Case_3_I"|Case=="Case_1_A"|Case=="Case_2_A"|Case=="Case_3_A"){
+    GT="Different source"
+    Ty="Target Case"
+  } else if (Case=="Case_1_F"|Case=="Case_2_F"|Case=="Case_3_F"|Case=="Case_1_K"|Case=="Case_2_K"|Case=="Case_3_K"|Case=="Case_1_B"|Case=="Case_2_B"|Case=="Case_3_B"){
+    GT="Different source"
+    Ty="Incidental Case"
+  } else {
+    GT=NA
+    Ty=NA
+  }
+  GroundTruth<-c(GroundTruth,GT)
+  Type<-c(Type,Ty)
+}
+FINAL_DATA<-cbind(FINAL_DATA,GroundTruth,Type)
+colnames(FINAL_DATA)<-c("ID","User","ExerciseID","Case","Conclusion","Level3","ConclusionBis","Level3Bis","GroundTruth","CaseType")
+```
+
+```{r Add_Correction}
+# Add a "Correction" : comparison between conclusion and ground truth to know whether the conclusion is correct or false
+Correction<-c()
+for (i in 1:nrow(FINAL_DATA)){
+  Row = FINAL_DATA[i,]
+  Dec=Row$ConclusionBis
+  GT=Row$GroundTruth
+  if(is.na(GT)==FALSE){
+    if (GT=="Same source"&Dec=="Same source"){
+      Corr="Correct Identification"
+    } else if (GT=="Different source"&(Dec=="Different source (CNM)"|Dec=="Different source (not a CNM)")){
+      Corr="Correct Exclusion"
+    } else if (GT=="Different source"&Dec=="Same source"){
+      Corr="False Identification"
+    } else if (GT=="Same source"&(Dec=="Different source (CNM)"|Dec=="Different source (not a CNM)")){
+     Corr="False Exclusion"
+    } else {
+     Corr=NA
+    }
+  }else{
+    Corr=NA
+  }
+  Correction<-c(Correction,Corr)
+}
+FINAL_DATA<-cbind(FINAL_DATA,Correction)
+colnames(FINAL_DATA)<-c("ID","User","ExerciseID","Case","Conclusion","Level3","ConclusionBis","Level3Bis","GroundTruth","CaseType","Correction")
+```
+
+```{r DB_Select}
+# Create a clean and filtered database (DATABASE) that will be used for data analysis later
+DATABASE<-subset(FINAL_DATA, Case!="Test")
+DATABASE<-cbind(DATABASE$ID,DATABASE$User,DATABASE$Case,DATABASE$ConclusionBis,DATABASE$Level3Bis,DATABASE$GroundTruth,DATABASE$CaseType,DATABASE$Correction)
+colnames(DATABASE)<-c("AssignmentID","User","Case","Conclusion","Level3Features","GroundTruth","CaseType","Correction")
+DATABASE<-as.data.frame(DATABASE)
+```
+
+```{r Add_GroupNumber}
+# Add the group number
+Group<-c()
+for (i in 1:nrow(DATABASE)){
+  Row=DATABASE[i,]
+  C=Row$Case
+  if (C=="Case_1_A"|C=="Case_1_B"|C=="Case_1_C"|C=="Case_1_D"|C=="Case_1_E"|C=="Case_1_F"|C=="Case_1_G"|C=="Case_1_H"|C=="Case_1_I"|C=="Case_1_J"|C=="Case_1_K"|C=="Case_1_L"){
+    G=1
+  }else if(C=="Case_2_A"|C=="Case_2_B"|C=="Case_2_C"|C=="Case_2_D"|C=="Case_2_E"|C=="Case_2_F"|C=="Case_2_G"|C=="Case_2_H"|C=="Case_2_I"|C=="Case_2_J"|C=="Case_2_K"|C=="Case_2_L"){
+    G=2
+  }else{
+    G=3
+  }
+  Group<-c(Group,G)
+}
+DATABASE <- cbind(DATABASE, Group)
+colnames(DATABASE)<-c("AssignmentID","User","Case",
+                      "Conclusion", "Level3Features",
+                      "GroundTruth", "CaseType",
+                      "Correction","Group")
+```
+
+```{r Save_and_Export, eval=TRUE}
+# Run if you want to export the final database as a .csv file
+
+save(Assignment, Exercise, Resultv, Resultvex, 
+     file = "Rdata/ICNML_DataExtraction_RawData.RData")
+
+save.image(file="Rdata/ICNML_DataExtraction.RData") 
+
+write.csv(DATABASE,file="ExportCSV/ICNML_DATABASE.csv")
+```
+
+
+
+
+
