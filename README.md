@@ -1,11 +1,7 @@
 ## ICNML
 
-This repository contains all the repos within the ICNML gitlab project. It was written mainly by Marco De Donno [here](https://esc-md-git.unil.ch/ICNML).
+This repository holds the code for my bachelor thesis and mirrors the structure of the [ICNML gitlab project](https://esc-md-git.unil.ch/ICNML),
+originally written by Marco De Donno.
 
-This will host the code for my bachelor thesis. Any changes or additions will be made within this repository.
-
-The structure from the ICNML gitlab project is mimicked within one repository. In deed, within the ICNML gitlab project,
-all the folders seen at root here are repos. This choice was made so that it would be easier to track what changes and how
-the different repos interact with one another.
-
-
+Each folder at the root of this repository corresponds to a separate repo in the ICNML gitlab project.
+This choice was made to make it easier to track what changes and how the different repositories interact with one another
